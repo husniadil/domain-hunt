@@ -3,7 +3,7 @@ import Image from 'next/image';
 export default function Home() {
   return (
     <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
-      <div className="flex flex-col items-center justify-center space-y-8 text-center min-h-[calc(100vh-4rem)]">
+      <div className="flex flex-col items-center justify-center space-y-8 text-center min-h-[calc(100vh-8rem)]">
         <div className="flex flex-col gap-8 items-center sm:items-start">
           <Image
             className="dark:invert"
