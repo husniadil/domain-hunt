@@ -11,7 +11,10 @@ export function Header() {
               Domain Hunt
             </span>
           </Link>
-          <nav className="flex items-center gap-6 text-sm">
+          <nav
+            className="flex items-center gap-6 text-sm"
+            aria-label="Main navigation"
+          >
             <Link
               href="/"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
@@ -19,13 +22,13 @@ export function Header() {
               Home
             </Link>
             <Link
-              href="#"
+              href="/search"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
               Search
             </Link>
             <Link
-              href="#"
+              href="/about"
               className="transition-colors hover:text-foreground/80 text-foreground/60"
             >
               About
