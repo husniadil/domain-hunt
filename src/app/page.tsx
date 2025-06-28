@@ -44,7 +44,7 @@ export default function Home() {
             <p className="text-sm text-center">
               <strong>✨ Theme Toggle:</strong> Try the theme switcher in the
               header! Choose between Light, Dark, or System preference to see
-              the Claude theme in action.
+              the theme switcher in action.
             </p>
           </div>
 
