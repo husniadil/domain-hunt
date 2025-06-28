@@ -1,8 +1,13 @@
 import Image from 'next/image';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 export default function Home() {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
+      {/* Header with theme toggle */}
+      <header className="fixed top-4 right-4 z-10">
+        <ThemeToggle />
+      </header>
       <main className="flex flex-col gap-[32px] row-start-2 items-center sm:items-start">
         <Image
           className="dark:invert"
@@ -12,18 +17,40 @@ export default function Home() {
           height={38}
           priority
         />
-        <ol className="list-inside list-decimal text-sm/6 text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2 tracking-[-.01em]">
-            Get started by editing{' '}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-[family-name:var(--font-geist-mono)] font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li className="tracking-[-.01em]">
-            Save and see your changes instantly.
-          </li>
-        </ol>
+        <div className="text-center sm:text-left">
+          <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4">
+            Domain Hunt
+          </h1>
+          <p className="text-lg text-muted-foreground mb-6">
+            Find and hunt for the perfect domain names for your next project
+          </p>
+        </div>
+
+        {/* Theme showcase cards */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full max-w-2xl">
+          <div className="bg-card text-card-foreground p-6 rounded-lg border border-border">
+            <h3 className="font-semibold mb-2">🌅 Light Theme</h3>
+            <p className="text-sm text-muted-foreground">
+              Clean and bright interface for daytime usage with optimal contrast
+              and readability.
+            </p>
+          </div>
+          <div className="bg-card text-card-foreground p-6 rounded-lg border border-border">
+            <h3 className="font-semibold mb-2">🌙 Dark Theme</h3>
+            <p className="text-sm text-muted-foreground">
+              Eye-friendly dark mode for comfortable nighttime browsing and
+              reduced eye strain.
+            </p>
+          </div>
+        </div>
+
+        <div className="bg-muted text-muted-foreground p-4 rounded-lg border border-border w-full max-w-2xl">
+          <p className="text-sm text-center">
+            <strong>✨ Theme Toggle:</strong> Try the theme switcher in the
+            top-right corner! Choose between Light, Dark, or System preference
+            to see the Claude theme in action.
+          </p>
+        </div>
 
         <div className="flex gap-4 items-center flex-col sm:flex-row">
           <a
