@@ -45,7 +45,34 @@ export interface MultiTldResult {
   totalDuration: number; // in milliseconds
 }
 
-// Configuration for concurrent multi-TLD lookup
+// Enhanced progress tracking for multi-domain operations
+export interface UnifiedLookupProgress extends DomainLookupProgress {
+  currentDomain?: string;
+  domainsCompleted?: number;
+  totalDomains?: number;
+  overallPercentage?: number;
+}
+
+// Configuration for unified domain checking (single or multiple domains)
+export interface UnifiedLookupConfig extends DomainCheckConfig {
+  maxConcurrency?: number; // Max concurrent requests (default: 10)
+  progressCallback?: (progress: UnifiedLookupProgress) => void;
+  abortSignal?: AbortSignal; // For cancellation support
+}
+
+// Result for unified domain checking (single or multiple domains)
+export interface UnifiedDomainResult {
+  domains: string[];
+  tlds: string[];
+  resultsByDomain: Map<string, MultiTldResult>;
+  overallProgress: UnifiedLookupProgress;
+  startedAt: Date;
+  completedAt: Date;
+  totalDuration: number;
+  cancelled?: boolean;
+}
+
+// Configuration for concurrent multi-TLD lookup (kept for backward compatibility)
 export interface ConcurrentLookupConfig extends DomainCheckConfig {
   maxConcurrency?: number; // Max concurrent requests (default: 10)
   progressCallback?: (progress: DomainLookupProgress) => void;

@@ -4,6 +4,9 @@ import {
   MultiTldResult,
   ConcurrentLookupConfig,
   DomainLookupProgress,
+  UnifiedDomainResult,
+  UnifiedLookupConfig,
+  UnifiedLookupProgress,
 } from '@/types/domain';
 
 // Default configuration for domain checking
@@ -98,8 +101,9 @@ export async function checkDomain(
 }
 
 /**
- * Check multiple domains against multiple TLDs
+ * Check multiple domains against multiple TLDs (legacy compatibility)
  *
+ * @deprecated Use checkDomainsUnified for better progress tracking and features
  * @param domains - Array of domain names
  * @param tlds - Array of TLD extensions
  * @param config - Optional configuration
@@ -110,32 +114,11 @@ export async function checkMultipleDomains(
   tlds: string[],
   config: DomainCheckConfig = {}
 ): Promise<DomainResult[]> {
-  // Create all domain + TLD combinations and run lookups with Promise.allSettled
-  const promises = domains.flatMap(domain =>
-    tlds.map(tld => checkDomain(domain, tld, config))
+  // Use unified function and flatten results for backward compatibility
+  const unifiedResult = await checkDomainsUnified(domains, tlds, config);
+  return Array.from(unifiedResult.resultsByDomain.values()).flatMap(
+    r => r.results
   );
-
-  const results = await Promise.allSettled(promises);
-
-  // Extract successful results and handle failed ones gracefully
-  return results.map((result, index) => {
-    if (result.status === 'fulfilled') {
-      return result.value;
-    } else {
-      // Create error result for failed promise
-      // Index mapping: promises are ordered as [domain0+tld0, domain0+tld1, ..., domain1+tld0, ...]
-      // So domainIndex = floor(index / tlds.length), tldIndex = index % tlds.length
-      const domainIndex = Math.floor(index / tlds.length);
-      const tldIndex = index % tlds.length;
-      return {
-        domain: domains[domainIndex],
-        tld: tlds[tldIndex],
-        status: 'error' as const,
-        error: result.reason?.message || 'Unknown error',
-        checkedAt: new Date(),
-      };
-    }
-  });
 }
 
 /**
@@ -150,7 +133,7 @@ export async function checkMultipleDomains(
 export async function checkDomainMultipleTlds(
   domain: string,
   tlds: string[],
-  config: ConcurrentLookupConfig = {}
+  config: ConcurrentLookupConfig & { abortSignal?: AbortSignal } = {}
 ): Promise<MultiTldResult> {
   const startedAt = new Date();
   const finalConfig = {
@@ -207,6 +190,11 @@ export async function checkDomainMultipleTlds(
   // Create lookup promises for all TLDs
   const lookupPromises = tlds.map(async tld => {
     try {
+      // Check for cancellation before starting each lookup
+      if (config.abortSignal?.aborted) {
+        throw new Error('Operation cancelled');
+      }
+
       const result = await checkDomain(domain, tld, finalConfig);
       completed++;
       if (result.status === 'error') failed++;
@@ -273,5 +261,164 @@ export async function checkDomainMultipleTlds(
     startedAt,
     completedAt,
     totalDuration,
+  };
+}
+
+/**
+ * Unified domain checking function - handles single or multiple domains with progress tracking
+ *
+ * @param domains - Array of domain names to check
+ * @param tlds - Array of TLD extensions to check against
+ * @param config - Configuration with progress tracking and cancellation support
+ * @returns Promise<UnifiedDomainResult> - Comprehensive results with progress tracking
+ */
+export async function checkDomainsUnified(
+  domains: string[],
+  tlds: string[],
+  config: UnifiedLookupConfig = {}
+): Promise<UnifiedDomainResult> {
+  const startedAt = new Date();
+  const finalConfig = {
+    ...DEFAULT_CONFIG,
+    maxConcurrency: 10,
+    ...config,
+  };
+
+  // Validation
+  if (!domains.length || !tlds.length) {
+    return {
+      domains,
+      tlds,
+      resultsByDomain: new Map(),
+      overallProgress: {
+        total: 0,
+        completed: 0,
+        failed: 0,
+        remaining: 0,
+        percentage: 0,
+        currentDomain: undefined,
+        domainsCompleted: 0,
+        totalDomains: domains.length,
+        overallPercentage: 0,
+      },
+      startedAt,
+      completedAt: new Date(),
+      totalDuration: 0,
+      cancelled: false,
+    };
+  }
+
+  const resultsByDomain = new Map<string, MultiTldResult>();
+  const totalOperations = domains.length * tlds.length;
+  let completedOperations = 0;
+  let failedOperations = 0;
+  let domainsCompleted = 0;
+  let cancelled = false;
+
+  // Progress tracking helper
+  const updateOverallProgress = (
+    currentDomain?: string
+  ): UnifiedLookupProgress => {
+    const remaining = totalOperations - completedOperations;
+    const percentage =
+      totalOperations > 0
+        ? Math.round((completedOperations / totalOperations) * 100)
+        : 0;
+    const overallPercentage =
+      domains.length > 0
+        ? Math.round((domainsCompleted / domains.length) * 100)
+        : 0;
+
+    const progress: UnifiedLookupProgress = {
+      total: totalOperations,
+      completed: completedOperations,
+      failed: failedOperations,
+      remaining,
+      percentage,
+      currentDomain,
+      domainsCompleted,
+      totalDomains: domains.length,
+      overallPercentage,
+    };
+
+    // Call progress callback if provided
+    if (finalConfig.progressCallback) {
+      finalConfig.progressCallback(progress);
+    }
+
+    return progress;
+  };
+
+  // Check cancellation helper
+  const checkCancellation = () => {
+    if (finalConfig.abortSignal?.aborted) {
+      cancelled = true;
+      throw new Error('Operation cancelled');
+    }
+  };
+
+  try {
+    // Process each domain sequentially to provide clear progress tracking
+    for (const domain of domains) {
+      checkCancellation();
+
+      // Create progress callback for individual domain
+      const domainProgressCallback = (progress: DomainLookupProgress) => {
+        // Update global counters (recalculate from scratch to avoid delta errors)
+        completedOperations = 0;
+        failedOperations = 0;
+
+        // Count completed operations from finished domains
+        for (let i = 0; i < domains.indexOf(domain); i++) {
+          const finishedResult = resultsByDomain.get(domains[i]);
+          if (finishedResult) {
+            completedOperations += finishedResult.progress.completed;
+            failedOperations += finishedResult.progress.failed;
+          }
+        }
+
+        // Add current domain progress
+        completedOperations += progress.completed;
+        failedOperations += progress.failed;
+
+        updateOverallProgress(domain);
+      };
+
+      // Check the domain against all TLDs
+      const domainResult = await checkDomainMultipleTlds(domain, tlds, {
+        ...finalConfig,
+        progressCallback: domainProgressCallback,
+        abortSignal: finalConfig.abortSignal,
+      });
+
+      checkCancellation();
+
+      resultsByDomain.set(domain, domainResult);
+      domainsCompleted++;
+
+      // Final update for this domain
+      updateOverallProgress();
+    }
+  } catch (error) {
+    if (error instanceof Error && error.message === 'Operation cancelled') {
+      cancelled = true;
+    } else {
+      throw error;
+    }
+  }
+
+  const completedAt = new Date();
+  const totalDuration = completedAt.getTime() - startedAt.getTime();
+  const finalProgress = updateOverallProgress();
+
+  return {
+    domains,
+    tlds,
+    resultsByDomain,
+    overallProgress: finalProgress,
+    startedAt,
+    completedAt,
+    totalDuration,
+    cancelled,
   };
 }

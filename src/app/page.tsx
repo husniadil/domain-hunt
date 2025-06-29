@@ -5,71 +5,60 @@ import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import {
-  checkMultipleDomains,
-  checkDomainMultipleTlds,
-} from '@/services/domain-checker';
+import { checkDomainsUnified } from '@/services/domain-checker';
 import {
   DomainResult,
-  MultiTldResult,
-  DomainLookupProgress,
+  UnifiedDomainResult,
+  UnifiedLookupProgress,
 } from '@/types/domain';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 
 export default function Home() {
   const [domains, setDomains] = useState<string[]>([]);
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
-  const [results, setResults] = useState<DomainResult[]>([]);
+  const [unifiedResult, setUnifiedResult] =
+    useState<UnifiedDomainResult | null>(null);
+  const [progress, setProgress] = useState<UnifiedLookupProgress | null>(null);
   const [isChecking, setIsChecking] = useState(false);
-
-  // Multi-TLD concurrent lookup test
-  const [multiTldResult, setMultiTldResult] = useState<MultiTldResult | null>(
-    null
-  );
-  const [multiTldProgress, setMultiTldProgress] =
-    useState<DomainLookupProgress | null>(null);
-  const [isMultiTldChecking, setIsMultiTldChecking] = useState(false);
+  const [abortController, setAbortController] =
+    useState<AbortController | null>(null);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
       return;
     }
 
+    // Create new abort controller for cancellation support
+    const controller = new AbortController();
+    setAbortController(controller);
     setIsChecking(true);
-    setResults([]);
+    setUnifiedResult(null);
+    setProgress(null);
 
     try {
-      const checkResults = await checkMultipleDomains(domains, selectedTlds);
-      setResults(checkResults);
+      const result = await checkDomainsUnified(domains, selectedTlds, {
+        progressCallback: progressUpdate => {
+          setProgress(progressUpdate);
+        },
+        abortSignal: controller.signal,
+      });
+
+      setUnifiedResult(result);
     } catch (error) {
-      console.error('Error checking domains:', error);
+      if (error instanceof Error && error.message !== 'Operation cancelled') {
+        console.error('Error checking domains:', error);
+      }
     } finally {
       setIsChecking(false);
+      setAbortController(null);
     }
   };
 
-  // Test single domain + multiple TLDs with progress tracking
-  const handleMultiTldTest = async () => {
-    if (domains.length === 0 || selectedTlds.length === 0) {
-      return;
-    }
-
-    const testDomain = domains[0]; // Use first domain for test
-    setIsMultiTldChecking(true);
-    setMultiTldResult(null);
-    setMultiTldProgress(null);
-
-    try {
-      const result = await checkDomainMultipleTlds(testDomain, selectedTlds, {
-        progressCallback: progress => {
-          setMultiTldProgress(progress);
-        },
-      });
-      setMultiTldResult(result);
-    } catch (error) {
-      console.error('Error in multi-TLD lookup:', error);
-    } finally {
-      setIsMultiTldChecking(false);
+  const handleCancelCheck = () => {
+    if (abortController) {
+      abortController.abort();
+      setIsChecking(false);
+      setAbortController(null);
     }
   };
 
@@ -118,164 +107,191 @@ export default function Home() {
 
           <TldSelector onTldsChange={setSelectedTlds} />
 
-          <Button
-            onClick={handleCheckDomains}
-            disabled={!canCheck}
-            className="w-full"
-          >
-            {isChecking ? (
-              <>
-                <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                Checking Domains...
-              </>
-            ) : (
-              `Check ${domains.length} Domain${domains.length !== 1 ? 's' : ''} × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''}`
-            )}
-          </Button>
+          <div className="space-y-2">
+            <Button
+              onClick={handleCheckDomains}
+              disabled={!canCheck}
+              className="w-full"
+            >
+              {isChecking ? (
+                <>
+                  <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                  Checking Domains...
+                </>
+              ) : (
+                `Check ${domains.length} Domain${domains.length !== 1 ? 's' : ''} × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''}`
+              )}
+            </Button>
 
-          {/* Multi-TLD Concurrent Lookup Test */}
-          {domains.length > 0 && selectedTlds.length > 0 && (
-            <div className="border-t pt-6 space-y-4">
+            {isChecking && (
+              <Button
+                onClick={handleCancelCheck}
+                variant="outline"
+                size="sm"
+                className="w-full"
+              >
+                Cancel Check
+              </Button>
+            )}
+          </div>
+
+          {/* Progress Display */}
+          {progress && (
+            <div className="space-y-3">
               <div className="text-center">
-                <h3 className="text-sm font-medium text-muted-foreground mb-2">
-                  Concurrent Multi-TLD Test
-                </h3>
-                <Button
-                  onClick={handleMultiTldTest}
-                  disabled={isMultiTldChecking}
-                  variant="outline"
-                  className="w-full"
-                >
-                  {isMultiTldChecking ? (
-                    <>
-                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                      Testing {domains[0]} across {selectedTlds.length} TLD
-                      {selectedTlds.length !== 1 ? 's' : ''}...
-                    </>
-                  ) : (
-                    `Test "${domains[0]}" × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''} (with progress)`
+                <div className="text-sm text-muted-foreground">
+                  {progress.currentDomain && (
+                    <div className="mb-1">
+                      Checking:{' '}
+                      <span className="font-medium">
+                        {progress.currentDomain}
+                      </span>
+                    </div>
                   )}
-                </Button>
+                  <div className="flex justify-between">
+                    <span>
+                      Overall Progress: {progress.completed}/{progress.total}
+                    </span>
+                    <span>{progress.percentage}%</span>
+                  </div>
+                  {progress.totalDomains && progress.totalDomains > 1 && (
+                    <div className="flex justify-between text-xs mt-1">
+                      <span>
+                        Domains: {progress.domainsCompleted}/
+                        {progress.totalDomains}
+                      </span>
+                      <span>{progress.overallPercentage}%</span>
+                    </div>
+                  )}
+                </div>
               </div>
 
-              {/* Progress Bar */}
-              {multiTldProgress && (
-                <div className="space-y-2">
-                  <div className="flex justify-between text-xs text-muted-foreground">
-                    <span>
-                      Progress: {multiTldProgress.completed}/
-                      {multiTldProgress.total}
-                    </span>
-                    <span>{multiTldProgress.percentage}%</span>
-                  </div>
-                  <div className="w-full bg-gray-200 rounded-full h-2">
-                    <div
-                      className="bg-blue-500 h-2 rounded-full transition-all"
-                      style={{ width: `${multiTldProgress.percentage}%` }}
-                    />
-                  </div>
-                </div>
-              )}
+              <div className="w-full bg-gray-200 rounded-full h-2">
+                <div
+                  className="bg-blue-500 h-2 rounded-full transition-all"
+                  style={{ width: `${progress.percentage}%` }}
+                />
+              </div>
 
-              {/* Multi-TLD Results */}
-              {multiTldResult && (
-                <div className="space-y-3 text-left">
-                  <div className="flex justify-between items-center">
-                    <h4 className="font-medium">
-                      Results for &quot;{multiTldResult.domain}&quot;
-                    </h4>
-                    <Badge variant="outline" className="text-xs">
-                      {multiTldResult.totalDuration}ms
-                    </Badge>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-2 text-sm">
-                    <div className="flex justify-between">
-                      <span>Total:</span>
-                      <span>{multiTldResult.results.length}</span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Success:</span>
-                      <span className="text-green-600">
-                        {multiTldResult.successful.length}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Failed:</span>
-                      <span className="text-red-600">
-                        {multiTldResult.failed.length}
-                      </span>
-                    </div>
-                    <div className="flex justify-between">
-                      <span>Progress:</span>
-                      <span>{multiTldResult.progress.percentage}%</span>
-                    </div>
-                  </div>
-
-                  <div className="max-h-32 overflow-y-auto space-y-1">
-                    {multiTldResult.results.slice(0, 8).map(result => (
-                      <div
-                        key={`${result.domain}${result.tld}`}
-                        className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
-                      >
-                        <span>
-                          {result.domain}
-                          {result.tld}
-                        </span>
-                        <Badge
-                          variant="outline"
-                          className={`text-xs ${getStatusColor(result.status)}`}
-                        >
-                          {result.status}
-                        </Badge>
-                      </div>
-                    ))}
-                    {multiTldResult.results.length > 8 && (
-                      <div className="text-xs text-muted-foreground text-center">
-                        ... and {multiTldResult.results.length - 8} more
-                      </div>
-                    )}
-                  </div>
+              {progress.totalDomains && progress.totalDomains > 1 && (
+                <div className="w-full bg-gray-100 rounded-full h-1">
+                  <div
+                    className="bg-green-500 h-1 rounded-full transition-all"
+                    style={{ width: `${progress.overallPercentage}%` }}
+                  />
                 </div>
               )}
             </div>
           )}
 
-          {/* Results Section */}
-          {results.length > 0 && (
-            <div className="w-full space-y-4">
-              <h3 className="text-lg font-semibold">Domain Check Results</h3>
-              <div className="space-y-2 max-h-80 overflow-y-auto">
-                {results.map(result => (
-                  <div
-                    key={`${result.domain}${result.tld}`}
-                    className="flex items-center justify-between p-3 border rounded-lg"
-                  >
-                    <div className="flex items-center space-x-2">
-                      {getStatusIcon(result.status)}
-                      <span className="font-medium">
-                        {result.domain}
-                        {result.tld}
-                      </span>
-                    </div>
-                    <div className="flex items-center space-x-2">
-                      <Badge
-                        variant="outline"
-                        className={getStatusColor(result.status)}
-                      >
-                        {result.status}
-                      </Badge>
-                    </div>
-                  </div>
-                ))}
+          {/* Unified Results Section */}
+          {unifiedResult && (
+            <div className="w-full space-y-4 text-left">
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold">Domain Check Results</h3>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline" className="text-xs">
+                    {unifiedResult.totalDuration}ms
+                  </Badge>
+                  {unifiedResult.cancelled && (
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-yellow-100 text-yellow-800"
+                    >
+                      Cancelled
+                    </Badge>
+                  )}
+                </div>
               </div>
 
-              {/* Summary */}
-              <div className="text-sm text-muted-foreground border-t pt-3">
-                Available:{' '}
-                {results.filter(r => r.status === 'available').length} | Taken:{' '}
-                {results.filter(r => r.status === 'taken').length} | Errors:{' '}
-                {results.filter(r => r.status === 'error').length}
+              {/* Summary Stats */}
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
+                <div className="flex justify-between p-2 bg-gray-50 rounded">
+                  <span>Total:</span>
+                  <span>{unifiedResult.overallProgress.total}</span>
+                </div>
+                <div className="flex justify-between p-2 bg-green-50 rounded">
+                  <span>Available:</span>
+                  <span className="text-green-600">
+                    {
+                      Array.from(unifiedResult.resultsByDomain.values())
+                        .flatMap(r => r.successful)
+                        .filter(r => r.status === 'available').length
+                    }
+                  </span>
+                </div>
+                <div className="flex justify-between p-2 bg-red-50 rounded">
+                  <span>Taken:</span>
+                  <span className="text-red-600">
+                    {
+                      Array.from(unifiedResult.resultsByDomain.values())
+                        .flatMap(r => r.successful)
+                        .filter(r => r.status === 'taken').length
+                    }
+                  </span>
+                </div>
+                <div className="flex justify-between p-2 bg-yellow-50 rounded">
+                  <span>Errors:</span>
+                  <span className="text-yellow-600">
+                    {
+                      Array.from(
+                        unifiedResult.resultsByDomain.values()
+                      ).flatMap(r => r.failed).length
+                    }
+                  </span>
+                </div>
+              </div>
+
+              {/* Results by Domain */}
+              <div className="space-y-4 max-h-96 overflow-y-auto">
+                {Array.from(unifiedResult.resultsByDomain.entries()).map(
+                  ([domain, domainResult]) => (
+                    <div
+                      key={domain}
+                      className="border rounded-lg p-3 space-y-2"
+                    >
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-medium">{domain}</h4>
+                        <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                          <span>{domainResult.totalDuration}ms</span>
+                          <span>
+                            {domainResult.successful.length +
+                              domainResult.failed.length}{' '}
+                            checked
+                          </span>
+                        </div>
+                      </div>
+
+                      <div className="grid gap-1 max-h-32 overflow-y-auto">
+                        {domainResult.results.slice(0, 12).map(result => (
+                          <div
+                            key={`${result.domain}${result.tld}`}
+                            className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
+                          >
+                            <span className="font-mono">
+                              {result.domain}
+                              {result.tld}
+                            </span>
+                            <div className="flex items-center space-x-2">
+                              {getStatusIcon(result.status)}
+                              <Badge
+                                variant="outline"
+                                className={`text-xs ${getStatusColor(result.status)}`}
+                              >
+                                {result.status}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                        {domainResult.results.length > 12 && (
+                          <div className="text-xs text-muted-foreground text-center p-1">
+                            ... and {domainResult.results.length - 12} more
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  )
+                )}
               </div>
             </div>
           )}
