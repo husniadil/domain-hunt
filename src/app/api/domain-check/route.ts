@@ -6,9 +6,40 @@ interface WhoisResult {
   [key: string]: string | string[] | Record<string, unknown> | undefined;
 }
 
+interface DebugInfo {
+  timestamp: string;
+  step: string;
+  data?: Record<string, unknown>;
+  timing?: number;
+  error?: string;
+}
+
 export async function POST(request: NextRequest) {
+  const debugInfo: DebugInfo[] = [];
+  const startTime = Date.now();
+
+  // Check if debug mode is enabled via headers
+  const isDebug = request.headers.get('x-debug') === 'true';
+
+  const addDebugInfo = (
+    step: string,
+    data?: Record<string, unknown>,
+    error?: string
+  ) => {
+    if (isDebug) {
+      debugInfo.push({
+        timestamp: new Date().toISOString(),
+        step,
+        data,
+        timing: Date.now() - startTime,
+        error,
+      });
+    }
+  };
+
   try {
     const { domain, tld } = await request.json();
+    addDebugInfo('request_parsed', { domain, tld });
 
     if (!domain || !tld) {
       return NextResponse.json(
@@ -26,10 +57,13 @@ export async function POST(request: NextRequest) {
     }
 
     const fullDomain = `${domain}${tld}`;
+    addDebugInfo('domain_formatted', { fullDomain });
 
     try {
       // Perform DNS lookup with timeout
+      addDebugInfo('dns_lookup_start');
       await performDnsLookup(fullDomain, 5000);
+      addDebugInfo('dns_lookup_success');
 
       // If we get here, DNS lookup succeeded - domain is taken
       return NextResponse.json({
@@ -37,47 +71,92 @@ export async function POST(request: NextRequest) {
         tld,
         status: 'taken',
         checkedAt: new Date().toISOString(),
+        ...(isDebug && { debugInfo }),
       });
     } catch (error) {
       const errorMessage =
         error instanceof Error ? error.message : 'Unknown error';
+      addDebugInfo('dns_lookup_failed', { errorMessage }, errorMessage);
 
       // Check if it's a DNS resolution failure (domain might be available)
       if (
         errorMessage.includes('NXDOMAIN') ||
         errorMessage.includes('NOTFOUND')
       ) {
+        addDebugInfo('dns_indicates_available');
         return NextResponse.json({
           domain,
           tld,
           status: 'available',
           checkedAt: new Date().toISOString(),
+          ...(isDebug && { debugInfo }),
         });
       }
 
       // Other errors (network, timeout, etc.) - try whois fallback
       try {
+        addDebugInfo('whois_fallback_start', { reason: errorMessage });
+
         // Use structured logging for production environments
         console.info(
           `DNS lookup failed for domain: ${fullDomain}, attempting whois fallback`,
           {
             domain: fullDomain,
             fallback: 'whois',
+            dnsError: errorMessage,
             timestamp: new Date().toISOString(),
           }
         );
-        const whoisData = await performWhoisLookup(fullDomain, 10000);
+
+        // Use shorter timeout for Vercel serverless environment
+        const whoisTimeout = process.env.VERCEL ? 7000 : 10000;
+        const whoisStartTime = Date.now();
+
+        const whoisData = await performWhoisLookup(fullDomain, whoisTimeout);
+        const whoisDuration = Date.now() - whoisStartTime;
+
+        addDebugInfo('whois_lookup_completed', {
+          duration: whoisDuration,
+          dataKeys: Object.keys(whoisData || {}),
+          dataSize: JSON.stringify(whoisData || {}).length,
+        });
+
+        // Log whois response for debugging (in production, consider sanitizing)
+        console.info('Whois response received', {
+          domain: fullDomain,
+          duration: whoisDuration,
+          dataKeys: Object.keys(whoisData || {}),
+          dataSize: JSON.stringify(whoisData || {}).length,
+          ...(isDebug && { whoisData }), // Only include full data in debug mode
+        });
+
         const whoisStatus = parseWhoisAvailability(whoisData);
+        addDebugInfo('whois_parsed', { whoisStatus });
 
         if (whoisStatus === 'unknown') {
+          addDebugInfo('whois_status_unknown');
+          console.warn('Whois parsing resulted in unknown status', {
+            domain: fullDomain,
+            whoisDataKeys: Object.keys(whoisData || {}),
+            ...(isDebug && { whoisData }),
+          });
+
           return NextResponse.json({
             domain,
             tld,
             status: 'error',
             error: 'Could not determine availability from DNS or whois',
             checkedAt: new Date().toISOString(),
+            fallbackUsed: 'whois',
+            ...(isDebug && { debugInfo }),
           });
         }
+
+        console.info('Whois fallback successful', {
+          domain: fullDomain,
+          status: whoisStatus,
+          duration: whoisDuration,
+        });
 
         return NextResponse.json({
           domain,
@@ -85,6 +164,7 @@ export async function POST(request: NextRequest) {
           status: whoisStatus,
           checkedAt: new Date().toISOString(),
           fallbackUsed: 'whois',
+          ...(isDebug && { debugInfo }),
         });
       } catch (whoisError) {
         const whoisErrorMessage =
@@ -92,19 +172,44 @@ export async function POST(request: NextRequest) {
             ? whoisError.message
             : 'Unknown whois error';
 
+        addDebugInfo(
+          'whois_lookup_failed',
+          { whoisErrorMessage },
+          whoisErrorMessage
+        );
+
+        // Enhanced error logging for whois failures
+        console.error('Whois fallback failed', {
+          domain: fullDomain,
+          dnsError: errorMessage,
+          whoisError: whoisErrorMessage,
+          timestamp: new Date().toISOString(),
+          stack: whoisError instanceof Error ? whoisError.stack : undefined,
+        });
+
         return NextResponse.json({
           domain,
           tld,
           status: 'error',
           error: `DNS failed: ${errorMessage}, Whois failed: ${whoisErrorMessage}`,
           checkedAt: new Date().toISOString(),
+          fallbackUsed: 'whois',
+          ...(isDebug && { debugInfo }),
         });
       }
     }
   } catch (error) {
+    addDebugInfo(
+      'api_error',
+      null,
+      error instanceof Error ? error.message : 'Unknown error'
+    );
     console.error('API error:', error);
     return NextResponse.json(
-      { error: 'Internal server error' },
+      {
+        error: 'Internal server error',
+        ...(isDebug && { debugInfo }),
+      },
       { status: 500 }
     );
   }
@@ -135,14 +240,60 @@ async function performWhoisLookup(
   timeout: number = 10000
 ): Promise<WhoisResult> {
   try {
+    console.info(
+      `Starting whois lookup for ${domain} with timeout ${timeout}ms`
+    );
+
     const result = await whoisDomain(domain, {
       timeout,
+      // Additional options for better compatibility in serverless environments
+      follow: 2, // Limit redirects
+      verbose: false, // Reduce noise in logs
     });
+
+    console.info(`Whois lookup completed for ${domain}`, {
+      resultKeys: Object.keys(result || {}),
+      hasData: !!result && Object.keys(result).length > 0,
+    });
+
     return result;
   } catch (error) {
-    if (error instanceof Error && error.message.includes('timeout')) {
-      throw new Error('Whois lookup timeout');
+    // Enhanced error classification
+    if (error instanceof Error) {
+      const errorMessage = error.message.toLowerCase();
+
+      if (errorMessage.includes('timeout')) {
+        console.error(`Whois timeout for ${domain}`, {
+          timeout,
+          error: error.message,
+        });
+        throw new Error(`Whois lookup timeout after ${timeout}ms`);
+      }
+
+      if (errorMessage.includes('connection')) {
+        console.error(`Whois connection error for ${domain}`, {
+          error: error.message,
+        });
+        throw new Error(
+          'Whois connection failed - possible network restriction'
+        );
+      }
+
+      if (errorMessage.includes('refused') || errorMessage.includes('denied')) {
+        console.error(`Whois access denied for ${domain}`, {
+          error: error.message,
+        });
+        throw new Error(
+          'Whois access denied - possible rate limiting or blocking'
+        );
+      }
+
+      console.error(`Whois lookup failed for ${domain}`, {
+        error: error.message,
+        stack: error.stack,
+      });
     }
+
     throw error;
   }
 }
@@ -153,6 +304,7 @@ function parseWhoisAvailability(
   try {
     // Check if whois data is empty or null
     if (!whoisData || Object.keys(whoisData).length === 0) {
+      console.warn('Whois data is empty or null');
       return 'unknown';
     }
 
@@ -161,48 +313,100 @@ function parseWhoisAvailability(
     const firstServerData = whoisData[serverKeys[0]];
 
     if (!firstServerData) {
+      console.warn('First server data is null/undefined', { serverKeys });
       return 'unknown';
     }
 
     // Convert structured data to string for pattern matching
     const dataString = JSON.stringify(firstServerData).toLowerCase();
 
+    // Log sample of the data for debugging (first 500 chars)
+    console.info('Whois data sample for parsing', {
+      serverKeys,
+      dataProperties: Object.keys(firstServerData),
+      dataSample: dataString.substring(0, 500),
+      dataLength: dataString.length,
+    });
+
     // Check for "No Match" or similar indicators that suggest availability
-    if (
-      dataString.includes('no match') ||
-      dataString.includes('not found') ||
-      dataString.includes('no matching record') ||
-      dataString.includes('available') ||
-      dataString.includes('not registered') ||
-      dataString.includes('status: free') ||
-      dataString.includes('no data found') ||
-      dataString.includes('domain not found')
-    ) {
+    const availabilityIndicators = [
+      'no match',
+      'not found',
+      'no matching record',
+      'available',
+      'not registered',
+      'status: free',
+      'no data found',
+      'domain not found',
+    ];
+
+    const foundAvailabilityIndicator = availabilityIndicators.find(indicator =>
+      dataString.includes(indicator)
+    );
+
+    if (foundAvailabilityIndicator) {
+      console.info('Domain appears available', {
+        indicator: foundAvailabilityIndicator,
+        matchedText: dataString.substring(
+          dataString.indexOf(foundAvailabilityIndicator) - 50,
+          dataString.indexOf(foundAvailabilityIndicator) + 100
+        ),
+      });
       return 'available';
     }
 
     // Check for registration indicators
-    if (
-      firstServerData.hasOwnProperty('domain') ||
-      firstServerData.hasOwnProperty('registrar') ||
-      firstServerData.hasOwnProperty('creation_date') ||
-      firstServerData.hasOwnProperty('created_date') ||
-      firstServerData.hasOwnProperty('registrant') ||
-      firstServerData.hasOwnProperty('admin_contact') ||
-      firstServerData.hasOwnProperty('name_servers') ||
-      dataString.includes('registrar:') ||
-      dataString.includes('creation date') ||
-      dataString.includes('created on') ||
-      dataString.includes('registration time') ||
-      dataString.includes('registered')
-    ) {
+    const registrationProperties = [
+      'domain',
+      'registrar',
+      'creation_date',
+      'created_date',
+      'registrant',
+      'admin_contact',
+      'name_servers',
+    ];
+
+    const registrationStrings = [
+      'registrar:',
+      'creation date',
+      'created on',
+      'registration time',
+      'registered',
+    ];
+
+    const foundRegistrationProperty = registrationProperties.find(prop =>
+      firstServerData.hasOwnProperty(prop)
+    );
+
+    const foundRegistrationString = registrationStrings.find(str =>
+      dataString.includes(str)
+    );
+
+    if (foundRegistrationProperty || foundRegistrationString) {
+      console.info('Domain appears taken', {
+        foundProperty: foundRegistrationProperty,
+        foundString: foundRegistrationString,
+        ...(foundRegistrationString && {
+          matchedText: dataString.substring(
+            dataString.indexOf(foundRegistrationString) - 50,
+            dataString.indexOf(foundRegistrationString) + 100
+          ),
+        }),
+      });
       return 'taken';
     }
 
     // If we can't determine, return unknown
+    console.warn('Could not determine domain status from whois data', {
+      dataKeys: Object.keys(firstServerData),
+      dataSample: dataString.substring(0, 200),
+    });
     return 'unknown';
   } catch (error) {
-    console.error('Error parsing whois data:', error);
+    console.error('Error parsing whois data:', error, {
+      whoisDataKeys: whoisData ? Object.keys(whoisData) : 'null/undefined',
+      errorStack: error instanceof Error ? error.stack : undefined,
+    });
     return 'unknown';
   }
 }
