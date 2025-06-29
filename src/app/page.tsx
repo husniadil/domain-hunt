@@ -41,8 +41,6 @@ export default function Home() {
         return <XCircle className="w-4 h-4 text-red-500" />;
       case 'error':
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      case 'checking':
-        return <Loader2 className="w-4 h-4 animate-spin text-blue-500" />;
       default:
         return null;
     }
@@ -100,9 +98,9 @@ export default function Home() {
             <div className="w-full space-y-4">
               <h3 className="text-lg font-semibold">Domain Check Results</h3>
               <div className="space-y-2 max-h-80 overflow-y-auto">
-                {results.map((result, index) => (
+                {results.map(result => (
                   <div
-                    key={index}
+                    key={`${result.domain}${result.tld}`}
                     className="flex items-center justify-between p-3 border rounded-lg"
                   >
                     <div className="flex items-center space-x-2">
