@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { lookup } from 'dns-lookup';
+import { lookup } from 'dns';
 
 export async function POST(request: NextRequest) {
   try {
