@@ -23,9 +23,6 @@ importers:
       clsx:
         specifier: ^2.1.1
         version: 2.1.1
-      dns-lookup:
-        specifier: ^0.1.0
-        version: 0.1.0
       lucide-react:
         specifier: ^0.525.0
         version: 0.525.0(react@19.1.0)
@@ -1212,9 +1209,6 @@ packages:
 
   detect-node-es@1.1.0:
     resolution: {integrity: sha512-ypdmJU/TbBby2Dxibuv7ZLW3Bs1QEmM7nHjEANfohJLvE0XVujisn1qPJcZxg+qDucsr+bP6fLD1rPS3AhJ7EQ==}
-
-  dns-lookup@0.1.0:
-    resolution: {integrity: sha512-eQM0vt8EJZc5gaBCegHn9YRzdeDmMIFdzEAhRXb+mN7bli3KUoPAYXZKKUPjXaMH5NZ1L/FchjXC66zdcRcp2g==}
 
   doctrine@2.1.0:
     resolution: {integrity: sha512-35mSku4ZXK0vfCuHEDAwt55dg2jNajHZ1odvF+8SSr82EsZY4QmXfuWso8oEd8zRhVObSN18aM0CjSdoBX7zIw==}
@@ -3529,8 +3523,6 @@ snapshots:
   detect-libc@2.0.4: {}
 
   detect-node-es@1.1.0: {}
-
-  dns-lookup@0.1.0: {}
 
   doctrine@2.1.0:
     dependencies:
