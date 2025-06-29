@@ -16,6 +16,37 @@ const DEFAULT_CONFIG: Required<DomainCheckConfig> = {
 };
 
 /**
+ * Helper function to execute promises with concurrency limit
+ * Processes promises in batches to avoid overwhelming the API
+ */
+async function executeBatchedPromises<T>(
+  promiseFactories: (() => Promise<T>)[],
+  maxConcurrency: number = 10
+): Promise<T[]> {
+  const results: T[] = [];
+
+  for (let i = 0; i < promiseFactories.length; i += maxConcurrency) {
+    const batch = promiseFactories.slice(i, i + maxConcurrency);
+    const batchPromises = batch.map(factory => factory());
+    const batchResults = await Promise.allSettled(batchPromises);
+
+    // Convert settled results to actual results (handle rejections)
+    const processedResults = batchResults.map(settled => {
+      if (settled.status === 'fulfilled') {
+        return settled.value;
+      } else {
+        // This should not happen as our promises handle their own errors
+        throw settled.reason;
+      }
+    });
+
+    results.push(...processedResults);
+  }
+
+  return results;
+}
+
+/**
  * Performs DNS lookup for a single domain + TLD combination
  *
  * @param domain - Domain name without TLD (e.g., 'google')
@@ -103,6 +134,10 @@ export async function checkDomain(
 /**
  * Check multiple domains against multiple TLDs (legacy compatibility)
  *
+ * NOTE: This function maintains the original flattened promise ordering for backward compatibility.
+ * Index calculation follows the pattern: index = domainIndex * tlds.length + tldIndex
+ * where domainIndex = Math.floor(index / tlds.length), tldIndex = index % tlds.length
+ *
  * @deprecated Use checkDomainsUnified for better progress tracking and features
  * @param domains - Array of domain names
  * @param tlds - Array of TLD extensions
@@ -187,62 +222,49 @@ export async function checkDomainMultipleTlds(
     return progress;
   };
 
-  // Create lookup promises for all TLDs
-  const lookupPromises = tlds.map(async tld => {
-    try {
-      // Check for cancellation before starting each lookup
-      if (config.abortSignal?.aborted) {
-        throw new Error('Operation cancelled');
-      }
+  // Create lookup promise factories (not promises yet)
+  const lookupFactories = tlds.map(tld => () => {
+    return new Promise<DomainResult>(async resolve => {
+      try {
+        // Check for cancellation before starting each lookup
+        if (config.abortSignal?.aborted) {
+          throw new Error('Operation cancelled');
+        }
 
-      const result = await checkDomain(domain, tld, finalConfig);
-      completed++;
-      if (result.status === 'error') failed++;
-      updateProgress();
-      return result;
-    } catch (error) {
-      completed++;
-      failed++;
-      updateProgress();
-      // Return error result if promise itself fails
-      return {
-        domain,
-        tld,
-        status: 'error' as const,
-        error: error instanceof Error ? error.message : 'Unknown error',
-        checkedAt: new Date(),
-      };
-    }
+        const result = await checkDomain(domain, tld, finalConfig);
+        completed++;
+        if (result.status === 'error') failed++;
+        updateProgress();
+        resolve(result);
+      } catch (error) {
+        completed++;
+        failed++;
+        updateProgress();
+        // Return error result if promise itself fails
+        resolve({
+          domain,
+          tld,
+          status: 'error' as const,
+          error: error instanceof Error ? error.message : 'Unknown error',
+          checkedAt: new Date(),
+        });
+      }
+    });
   });
 
-  // Use Promise.allSettled to handle partial failures
-  const settledResults = await Promise.allSettled(lookupPromises);
+  // Execute with concurrency limiting
+  const results = await executeBatchedPromises(
+    lookupFactories,
+    finalConfig.maxConcurrency
+  );
   const completedAt = new Date();
   const totalDuration = completedAt.getTime() - startedAt.getTime();
 
   // Process results - extract successful and failed lookups
-  const results: DomainResult[] = [];
   const successful: DomainResult[] = [];
   const failedResults: DomainResult[] = [];
 
-  settledResults.forEach((settledResult, index) => {
-    let result: DomainResult;
-
-    if (settledResult.status === 'fulfilled') {
-      result = settledResult.value;
-    } else {
-      // Fallback error result if the promise itself was rejected
-      result = {
-        domain,
-        tld: tlds[index],
-        status: 'error',
-        error: settledResult.reason?.message || 'Lookup promise rejected',
-        checkedAt: new Date(),
-      };
-    }
-
-    results.push(result);
-
+  results.forEach(result => {
     if (result.status === 'error') {
       failedResults.push(result);
     } else {
@@ -358,28 +380,20 @@ export async function checkDomainsUnified(
   };
 
   try {
+    // Initialize incremental counters for progress tracking
+    let incrementalCompletedOperations = 0;
+    let incrementalFailedOperations = 0;
+
     // Process each domain sequentially to provide clear progress tracking
     for (const domain of domains) {
       checkCancellation();
 
       // Create progress callback for individual domain
       const domainProgressCallback = (progress: DomainLookupProgress) => {
-        // Update global counters (recalculate from scratch to avoid delta errors)
-        completedOperations = 0;
-        failedOperations = 0;
-
-        // Count completed operations from finished domains
-        for (let i = 0; i < domains.indexOf(domain); i++) {
-          const finishedResult = resultsByDomain.get(domains[i]);
-          if (finishedResult) {
-            completedOperations += finishedResult.progress.completed;
-            failedOperations += finishedResult.progress.failed;
-          }
-        }
-
-        // Add current domain progress
-        completedOperations += progress.completed;
-        failedOperations += progress.failed;
+        // Use base count for finished domains plus current domain progress
+        completedOperations =
+          incrementalCompletedOperations + progress.completed;
+        failedOperations = incrementalFailedOperations + progress.failed;
 
         updateOverallProgress(domain);
       };
@@ -395,6 +409,10 @@ export async function checkDomainsUnified(
 
       resultsByDomain.set(domain, domainResult);
       domainsCompleted++;
+
+      // Update incremental counters with completed domain's final counts
+      incrementalCompletedOperations += domainResult.progress.completed;
+      incrementalFailedOperations += domainResult.progress.failed;
 
       // Final update for this domain
       updateOverallProgress();
