@@ -73,12 +73,12 @@ export function TldSelector({ onTldsChange, className }: TldSelectorProps) {
         {STATIC_TLDS.map(tld => (
           <div key={tld} className="flex items-center space-x-2">
             <Checkbox
-              id={`tld-${tld}`}
+              id={`tld-${tld.replace('.', '-')}`}
               checked={selectedTlds.includes(tld)}
               onCheckedChange={checked => handleTldToggle(tld, !!checked)}
             />
             <label
-              htmlFor={`tld-${tld}`}
+              htmlFor={`tld-${tld.replace('.', '-')}`}
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
             >
               {tld}
