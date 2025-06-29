@@ -27,12 +27,13 @@ export function DomainInput({
     const newValue = e.target.value;
     const valid = validateDomain(newValue);
 
+    // Always update the displayed value so users can see what they typed
+    setValue(newValue);
+    setIsValid(valid);
+
+    // Only call onValueChange for valid inputs
     if (valid) {
-      setValue(newValue);
-      setIsValid(true);
       onValueChange?.(newValue);
-    } else {
-      setIsValid(false);
     }
   };
 
