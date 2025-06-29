@@ -53,7 +53,15 @@ export async function POST(request: NextRequest) {
 
       // Other errors (network, timeout, etc.) - try whois fallback
       try {
-        console.log(`DNS failed for ${fullDomain}, trying whois fallback`);
+        // Use structured logging for production environments
+        console.info(
+          `DNS lookup failed for domain: ${fullDomain}, attempting whois fallback`,
+          {
+            domain: fullDomain,
+            fallback: 'whois',
+            timestamp: new Date().toISOString(),
+          }
+        );
         const whoisData = await performWhoisLookup(fullDomain, 10000);
         const whoisStatus = parseWhoisAvailability(whoisData);
 
