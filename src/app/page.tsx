@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
+import { BookmarkButton } from '@/components/bookmark-button';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { checkDomainsUnified } from '@/services/domain-checker';
@@ -273,6 +274,12 @@ export default function Home() {
                               {result.tld}
                             </span>
                             <div className="flex items-center space-x-2">
+                              <BookmarkButton
+                                domain={result.domain}
+                                tld={result.tld}
+                                status={result.status}
+                                size="sm"
+                              />
                               {getStatusIcon(result.status)}
                               <Badge
                                 variant="outline"
