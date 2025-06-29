@@ -153,7 +153,7 @@ export default function Home() {
                       {selectedTlds.length !== 1 ? 's' : ''}...
                     </>
                   ) : (
-                    `Test &quot;${domains[0]}&quot; × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''} (with progress)`
+                    `Test "${domains[0]}" × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''} (with progress)`
                   )}
                 </Button>
               </div>

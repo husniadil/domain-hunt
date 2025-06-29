@@ -123,6 +123,8 @@ export async function checkMultipleDomains(
       return result.value;
     } else {
       // Create error result for failed promise
+      // Index mapping: promises are ordered as [domain0+tld0, domain0+tld1, ..., domain1+tld0, ...]
+      // So domainIndex = floor(index / tlds.length), tldIndex = index % tlds.length
       const domainIndex = Math.floor(index / tlds.length);
       const tldIndex = index % tlds.length;
       return {
