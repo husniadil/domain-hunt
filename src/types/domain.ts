@@ -1,5 +1,5 @@
 // Domain availability status types
-export type DomainStatus = 'available' | 'taken' | 'error' | 'checking';
+export type DomainStatus = 'available' | 'taken' | 'error';
 
 // Result of a single domain + TLD check
 export interface DomainResult {
