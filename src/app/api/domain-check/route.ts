@@ -354,7 +354,7 @@ function parseWhoisAvailability(
       return 'available';
     }
 
-    // Check for registration indicators
+    // Check for registration indicators - both property names and string patterns
     const registrationProperties = [
       'domain',
       'registrar',
@@ -363,6 +363,14 @@ function parseWhoisAvailability(
       'registrant',
       'admin_contact',
       'name_servers',
+      // Add title case versions that whoiser returns
+      'Domain Name',
+      'Created Date',
+      'Registrar',
+      'Registrant Name',
+      'Admin Name',
+      'Domain Status',
+      'Name Server',
     ];
 
     const registrationStrings = [
@@ -371,6 +379,10 @@ function parseWhoisAvailability(
       'created on',
       'registration time',
       'registered',
+      'domain status',
+      'registrant name',
+      'admin name',
+      'created date',
     ];
 
     const foundRegistrationProperty = registrationProperties.find(prop =>
