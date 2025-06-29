@@ -3,7 +3,7 @@ import { lookup } from 'dns';
 import { whoisDomain } from 'whoiser';
 
 interface WhoisResult {
-  [key: string]: string | string[] | Record<string, unknown> | undefined;
+  [key: string]: Record<string, unknown> | undefined;
 }
 
 interface DebugInfo {
@@ -235,6 +235,45 @@ function performDnsLookup(hostname: string, timeout: number): Promise<string> {
   });
 }
 
+// Helper function to classify whois errors
+function classifyWhoisError(
+  error: Error,
+  domain: string,
+  timeout: number
+): Error {
+  const errorMessage = error.message.toLowerCase();
+
+  if (errorMessage.includes('timeout')) {
+    console.error(`Whois timeout for ${domain}`, {
+      timeout,
+      error: error.message,
+    });
+    return new Error(`Whois lookup timeout after ${timeout}ms`);
+  }
+
+  if (errorMessage.includes('connection')) {
+    console.error(`Whois connection error for ${domain}`, {
+      error: error.message,
+    });
+    return new Error('Whois connection failed - possible network restriction');
+  }
+
+  if (errorMessage.includes('refused') || errorMessage.includes('denied')) {
+    console.error(`Whois access denied for ${domain}`, {
+      error: error.message,
+    });
+    return new Error(
+      'Whois access denied - possible rate limiting or blocking'
+    );
+  }
+
+  console.error(`Whois lookup failed for ${domain}`, {
+    error: error.message,
+    stack: error.stack,
+  });
+  return error;
+}
+
 async function performWhoisLookup(
   domain: string,
   timeout: number = 10000
@@ -257,44 +296,69 @@ async function performWhoisLookup(
 
     return result;
   } catch (error) {
-    // Enhanced error classification
     if (error instanceof Error) {
-      const errorMessage = error.message.toLowerCase();
-
-      if (errorMessage.includes('timeout')) {
-        console.error(`Whois timeout for ${domain}`, {
-          timeout,
-          error: error.message,
-        });
-        throw new Error(`Whois lookup timeout after ${timeout}ms`);
-      }
-
-      if (errorMessage.includes('connection')) {
-        console.error(`Whois connection error for ${domain}`, {
-          error: error.message,
-        });
-        throw new Error(
-          'Whois connection failed - possible network restriction'
-        );
-      }
-
-      if (errorMessage.includes('refused') || errorMessage.includes('denied')) {
-        console.error(`Whois access denied for ${domain}`, {
-          error: error.message,
-        });
-        throw new Error(
-          'Whois access denied - possible rate limiting or blocking'
-        );
-      }
-
-      console.error(`Whois lookup failed for ${domain}`, {
-        error: error.message,
-        stack: error.stack,
-      });
+      throw classifyWhoisError(error, domain, timeout);
     }
-
     throw error;
   }
+}
+
+// Helper function to check if domain appears available based on string patterns
+function checkAvailabilityPatterns(firstServerData: Record<string, unknown>): {
+  isAvailable: boolean;
+  indicator?: string;
+  matchedText?: string;
+} {
+  const availabilityIndicators = [
+    'no match',
+    'not found',
+    'no matching record',
+    'available',
+    'not registered',
+    'status: free',
+    'no data found',
+    'domain not found',
+  ];
+
+  // Only stringify specific fields that commonly contain availability status
+  const statusFields = ['status', 'text', 'raw', 'result', 'response'];
+  let searchText = '';
+
+  for (const field of statusFields) {
+    const fieldValue = firstServerData[field];
+    if (fieldValue && typeof fieldValue === 'string') {
+      searchText += fieldValue.toLowerCase() + ' ';
+    }
+  }
+
+  // If no specific status fields found, fallback to limited JSON stringify
+  if (!searchText.trim()) {
+    // Only stringify up to 1000 chars to avoid performance issues
+    const limitedString = JSON.stringify(firstServerData)
+      .substring(0, 1000)
+      .toLowerCase();
+    searchText = limitedString;
+  }
+
+  const foundIndicator = availabilityIndicators.find(indicator =>
+    searchText.includes(indicator)
+  );
+
+  if (foundIndicator) {
+    const matchStart = Math.max(0, searchText.indexOf(foundIndicator) - 50);
+    const matchEnd = Math.min(
+      searchText.length,
+      searchText.indexOf(foundIndicator) + 100
+    );
+
+    return {
+      isAvailable: true,
+      indicator: foundIndicator,
+      matchedText: searchText.substring(matchStart, matchEnd),
+    };
+  }
+
+  return { isAvailable: false };
 }
 
 function parseWhoisAvailability(
@@ -316,40 +380,22 @@ function parseWhoisAvailability(
       return 'unknown';
     }
 
-    // Convert structured data to string for pattern matching
-    const dataString = JSON.stringify(firstServerData).toLowerCase();
-
-    // Log sample of the data for debugging (first 500 chars)
+    // Log sample of the data for debugging (avoid expensive JSON.stringify)
     console.info('Whois data sample for parsing', {
       serverKeys,
       dataProperties: Object.keys(firstServerData),
-      dataSample: dataString.substring(0, 500),
-      dataLength: dataString.length,
+      hasStatus: !!firstServerData['status'],
+      hasText: !!firstServerData['text'],
+      hasRaw: !!firstServerData['raw'],
     });
 
-    // Check for "No Match" or similar indicators that suggest availability
-    const availabilityIndicators = [
-      'no match',
-      'not found',
-      'no matching record',
-      'available',
-      'not registered',
-      'status: free',
-      'no data found',
-      'domain not found',
-    ];
+    // Check for availability patterns first
+    const availabilityCheck = checkAvailabilityPatterns(firstServerData);
 
-    const foundAvailabilityIndicator = availabilityIndicators.find(indicator =>
-      dataString.includes(indicator)
-    );
-
-    if (foundAvailabilityIndicator) {
+    if (availabilityCheck.isAvailable) {
       console.info('Domain appears available', {
-        indicator: foundAvailabilityIndicator,
-        matchedText: dataString.substring(
-          dataString.indexOf(foundAvailabilityIndicator) - 50,
-          dataString.indexOf(foundAvailabilityIndicator) + 100
-        ),
+        indicator: availabilityCheck.indicator,
+        matchedText: availabilityCheck.matchedText,
       });
       return 'available';
     }
@@ -389,19 +435,28 @@ function parseWhoisAvailability(
       firstServerData.hasOwnProperty(prop)
     );
 
-    const foundRegistrationString = registrationStrings.find(str =>
-      dataString.includes(str)
-    );
+    // Check registration strings in a more efficient way
+    let foundRegistrationString: string | undefined;
+
+    // Check specific fields first before doing expensive string search
+    const searchableFields = ['status', 'text', 'raw', 'result', 'response'];
+    for (const field of searchableFields) {
+      const fieldValue = firstServerData[field];
+      if (fieldValue && typeof fieldValue === 'string') {
+        const fieldContent = fieldValue.toLowerCase();
+        foundRegistrationString = registrationStrings.find(str =>
+          fieldContent.includes(str)
+        );
+        if (foundRegistrationString) break;
+      }
+    }
 
     if (foundRegistrationProperty || foundRegistrationString) {
       console.info('Domain appears taken', {
         foundProperty: foundRegistrationProperty,
         foundString: foundRegistrationString,
         ...(foundRegistrationString && {
-          matchedText: dataString.substring(
-            dataString.indexOf(foundRegistrationString) - 50,
-            dataString.indexOf(foundRegistrationString) + 100
-          ),
+          matchedText: `Found in whois response: ${foundRegistrationString}`,
         }),
       });
       return 'taken';
@@ -410,7 +465,11 @@ function parseWhoisAvailability(
     // If we can't determine, return unknown
     console.warn('Could not determine domain status from whois data', {
       dataKeys: Object.keys(firstServerData),
-      dataSample: dataString.substring(0, 200),
+      hasCommonFields: {
+        status: !!firstServerData['status'],
+        text: !!firstServerData['text'],
+        raw: !!firstServerData['raw'],
+      },
     });
     return 'unknown';
   } catch (error) {
