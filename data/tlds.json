@@ -1,0 +1,19 @@
+{
+  "tlds": [
+    {
+      "extension": ".com",
+      "name": "Commercial",
+      "popular": true
+    },
+    {
+      "extension": ".net",
+      "name": "Network",
+      "popular": true
+    },
+    {
+      "extension": ".org",
+      "name": "Organization",
+      "popular": true
+    }
+  ]
+}
