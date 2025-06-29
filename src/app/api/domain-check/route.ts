@@ -201,7 +201,7 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     addDebugInfo(
       'api_error',
-      null,
+      undefined,
       error instanceof Error ? error.message : 'Unknown error'
     );
     console.error('API error:', error);
@@ -248,7 +248,6 @@ async function performWhoisLookup(
       timeout,
       // Additional options for better compatibility in serverless environments
       follow: 2, // Limit redirects
-      verbose: false, // Reduce noise in logs
     });
 
     console.info(`Whois lookup completed for ${domain}`, {
