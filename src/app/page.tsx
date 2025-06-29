@@ -5,8 +5,15 @@ import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { checkMultipleDomains } from '@/services/domain-checker';
-import { DomainResult } from '@/types/domain';
+import {
+  checkMultipleDomains,
+  checkDomainMultipleTlds,
+} from '@/services/domain-checker';
+import {
+  DomainResult,
+  MultiTldResult,
+  DomainLookupProgress,
+} from '@/types/domain';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 
 export default function Home() {
@@ -14,6 +21,14 @@ export default function Home() {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
   const [results, setResults] = useState<DomainResult[]>([]);
   const [isChecking, setIsChecking] = useState(false);
+
+  // Multi-TLD concurrent lookup test
+  const [multiTldResult, setMultiTldResult] = useState<MultiTldResult | null>(
+    null
+  );
+  const [multiTldProgress, setMultiTldProgress] =
+    useState<DomainLookupProgress | null>(null);
+  const [isMultiTldChecking, setIsMultiTldChecking] = useState(false);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -30,6 +45,31 @@ export default function Home() {
       console.error('Error checking domains:', error);
     } finally {
       setIsChecking(false);
+    }
+  };
+
+  // Test single domain + multiple TLDs with progress tracking
+  const handleMultiTldTest = async () => {
+    if (domains.length === 0 || selectedTlds.length === 0) {
+      return;
+    }
+
+    const testDomain = domains[0]; // Use first domain for test
+    setIsMultiTldChecking(true);
+    setMultiTldResult(null);
+    setMultiTldProgress(null);
+
+    try {
+      const result = await checkDomainMultipleTlds(testDomain, selectedTlds, {
+        progressCallback: progress => {
+          setMultiTldProgress(progress);
+        },
+      });
+      setMultiTldResult(result);
+    } catch (error) {
+      console.error('Error in multi-TLD lookup:', error);
+    } finally {
+      setIsMultiTldChecking(false);
     }
   };
 
@@ -92,6 +132,114 @@ export default function Home() {
               `Check ${domains.length} Domain${domains.length !== 1 ? 's' : ''} × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''}`
             )}
           </Button>
+
+          {/* Multi-TLD Concurrent Lookup Test */}
+          {domains.length > 0 && selectedTlds.length > 0 && (
+            <div className="border-t pt-6 space-y-4">
+              <div className="text-center">
+                <h3 className="text-sm font-medium text-muted-foreground mb-2">
+                  Concurrent Multi-TLD Test
+                </h3>
+                <Button
+                  onClick={handleMultiTldTest}
+                  disabled={isMultiTldChecking}
+                  variant="outline"
+                  className="w-full"
+                >
+                  {isMultiTldChecking ? (
+                    <>
+                      <Loader2 className="w-4 h-4 mr-2 animate-spin" />
+                      Testing {domains[0]} across {selectedTlds.length} TLD
+                      {selectedTlds.length !== 1 ? 's' : ''}...
+                    </>
+                  ) : (
+                    `Test &quot;${domains[0]}&quot; × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''} (with progress)`
+                  )}
+                </Button>
+              </div>
+
+              {/* Progress Bar */}
+              {multiTldProgress && (
+                <div className="space-y-2">
+                  <div className="flex justify-between text-xs text-muted-foreground">
+                    <span>
+                      Progress: {multiTldProgress.completed}/
+                      {multiTldProgress.total}
+                    </span>
+                    <span>{multiTldProgress.percentage}%</span>
+                  </div>
+                  <div className="w-full bg-gray-200 rounded-full h-2">
+                    <div
+                      className="bg-blue-500 h-2 rounded-full transition-all"
+                      style={{ width: `${multiTldProgress.percentage}%` }}
+                    />
+                  </div>
+                </div>
+              )}
+
+              {/* Multi-TLD Results */}
+              {multiTldResult && (
+                <div className="space-y-3 text-left">
+                  <div className="flex justify-between items-center">
+                    <h4 className="font-medium">
+                      Results for &quot;{multiTldResult.domain}&quot;
+                    </h4>
+                    <Badge variant="outline" className="text-xs">
+                      {multiTldResult.totalDuration}ms
+                    </Badge>
+                  </div>
+
+                  <div className="grid grid-cols-2 gap-2 text-sm">
+                    <div className="flex justify-between">
+                      <span>Total:</span>
+                      <span>{multiTldResult.results.length}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Success:</span>
+                      <span className="text-green-600">
+                        {multiTldResult.successful.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Failed:</span>
+                      <span className="text-red-600">
+                        {multiTldResult.failed.length}
+                      </span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span>Progress:</span>
+                      <span>{multiTldResult.progress.percentage}%</span>
+                    </div>
+                  </div>
+
+                  <div className="max-h-32 overflow-y-auto space-y-1">
+                    {multiTldResult.results.slice(0, 8).map(result => (
+                      <div
+                        key={`${result.domain}${result.tld}`}
+                        className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
+                      >
+                        <span>
+                          {result.domain}
+                          {result.tld}
+                        </span>
+                        <Badge
+                          variant="outline"
+                          className={`text-xs ${getStatusColor(result.status)}`}
+                        >
+                          {result.status}
+                        </Badge>
+                      </div>
+                    ))}
+                    {multiTldResult.results.length > 8 && (
+                      <div className="text-xs text-muted-foreground text-center">
+                        ... and {multiTldResult.results.length - 8} more
+                      </div>
+                    )}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           {/* Results Section */}
           {results.length > 0 && (
