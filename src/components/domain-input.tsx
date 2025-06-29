@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface DomainInputProps {
   onDomainsChange?: (domains: string[]) => void;
@@ -57,15 +58,13 @@ export function DomainInput({
     setValue(newValue);
     setIsValid(valid);
 
-    // Only call onValueChange for valid inputs
-    if (valid) {
-      onValueChange?.(newValue);
-    }
+    // Call onValueChange callback for all value changes
+    onValueChange?.(newValue);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if ((e.key === ' ' || e.key === 'Tab') && value.trim()) {
-      e.preventDefault(); // Prevent space/tab from being added to input
+    if ((e.key === ' ' || e.key === 'Enter') && value.trim()) {
+      e.preventDefault(); // Prevent space/enter from being added to input
 
       if (addDomain(value.trim())) {
         setValue(''); // Clear input after successful pill creation
@@ -81,7 +80,10 @@ export function DomainInput({
         onChange={handleInputChange}
         onKeyDown={handleKeyDown}
         placeholder={placeholder}
-        className={`${className} ${!isValid ? 'border-red-500 focus-visible:ring-red-500' : ''}`}
+        className={cn(
+          className,
+          !isValid && 'border-red-500 focus-visible:ring-red-500'
+        )}
       />
 
       {!isValid && (
@@ -96,16 +98,16 @@ export function DomainInput({
 
       {value && isValid && !isDuplicate(value) && (
         <p className="text-sm text-muted-foreground">
-          Press space or tab to add &ldquo;{value}&rdquo; as a pill
+          Press space or enter to add &ldquo;{value}&rdquo; as a pill
         </p>
       )}
 
       {/* Display created pills */}
       {domains.length > 0 && (
         <div className="flex flex-wrap gap-2">
-          {domains.map((domain, index) => (
+          {domains.map(domain => (
             <Badge
-              key={index}
+              key={domain}
               variant="secondary"
               className="flex items-center gap-1 pl-3 pr-1 py-1"
             >
