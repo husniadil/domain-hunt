@@ -104,15 +104,11 @@ export async function checkMultipleDomains(
   tlds: string[],
   config: DomainCheckConfig = {}
 ): Promise<DomainResult[]> {
-  const results: DomainResult[] = [];
-
-  // Check all domain + TLD combinations
-  for (const domain of domains) {
-    for (const tld of tlds) {
-      const result = await checkDomain(domain, tld, config);
-      results.push(result);
-    }
-  }
+  // Create all domain + TLD combinations and run lookups in parallel
+  const promises = domains.flatMap(domain =>
+    tlds.map(tld => checkDomain(domain, tld, config))
+  );
+  const results = await Promise.all(promises);
 
   return results;
 }
