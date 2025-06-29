@@ -1,6 +1,7 @@
 'use client';
 
 import { DomainInput } from '@/components/domain-input';
+import { TldSelector } from '@/components/tld-selector';
 
 export default function Home() {
   return (
@@ -15,13 +16,17 @@ export default function Home() {
           </p>
         </div>
 
-        <div className="w-full max-w-md">
+        <div className="w-full max-w-md space-y-6">
           <DomainInput
             onDomainsChange={domains =>
               console.log('Selected domains:', domains)
             }
             onValueChange={value => console.log('Current input:', value)}
             className="text-center"
+          />
+
+          <TldSelector
+            onTldsChange={tlds => console.log('Selected TLDs:', tlds)}
           />
         </div>
       </div>
