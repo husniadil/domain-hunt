@@ -17,7 +17,10 @@ export default function Home() {
 
         <div className="w-full max-w-md">
           <DomainInput
-            onValueChange={value => console.log('Domain value:', value)}
+            onDomainsChange={domains =>
+              console.log('Selected domains:', domains)
+            }
+            onValueChange={value => console.log('Current input:', value)}
             className="text-center"
           />
         </div>
