@@ -12,7 +12,24 @@ interface TldSelectorProps {
   className?: string;
 }
 
-// Validate and extract TLD data from JSON
+// Default TLD list used as fallback when JSON data is invalid
+const DEFAULT_TLDS: TLD[] = [
+  { extension: '.com', name: 'Commercial', popular: true },
+  { extension: '.net', name: 'Network', popular: true },
+  { extension: '.org', name: 'Organization', popular: true },
+];
+
+/**
+ * Validates and extracts TLD data from unknown input.
+ *
+ * @param data - Unknown data that should conform to TLDConfig structure
+ * @returns Array of valid TLD objects. Returns DEFAULT_TLDS if input is invalid.
+ *
+ * This function performs runtime validation to ensure the data matches the expected
+ * TLDConfig structure with valid TLD entries. If validation fails at any level,
+ * it falls back to a predefined set of default TLDs to ensure the component
+ * always has usable data.
+ */
 const validateTldData = (data: unknown): TLD[] => {
   if (
     !data ||
@@ -20,11 +37,7 @@ const validateTldData = (data: unknown): TLD[] => {
     !Array.isArray((data as TLDConfig).tlds)
   ) {
     console.warn('Invalid TLD data structure, falling back to default TLDs');
-    return [
-      { extension: '.com', name: 'Commercial', popular: true },
-      { extension: '.net', name: 'Network', popular: true },
-      { extension: '.org', name: 'Organization', popular: true },
-    ];
+    return DEFAULT_TLDS;
   }
 
   return (data as TLDConfig).tlds.filter(
