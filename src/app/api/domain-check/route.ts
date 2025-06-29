@@ -1,6 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { lookup } from 'dns';
-import whois from 'whois';
+import { whoisDomain } from 'whoiser';
+
+interface WhoisResult {
+  [key: string]: string | string[] | Record<string, unknown> | undefined;
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -126,75 +130,79 @@ function performDnsLookup(hostname: string, timeout: number): Promise<string> {
   });
 }
 
-function performWhoisLookup(
+async function performWhoisLookup(
   domain: string,
   timeout: number = 10000
-): Promise<string> {
-  return new Promise((resolve, reject) => {
-    const timeoutId = setTimeout(() => {
-      reject(new Error('Whois lookup timeout'));
-    }, timeout);
-
-    whois.lookup(domain, (error, data) => {
-      clearTimeout(timeoutId);
-
-      if (error) {
-        reject(error);
-      } else if (data) {
-        resolve(data);
-      } else {
-        reject(new Error('No whois data returned'));
-      }
+): Promise<WhoisResult> {
+  try {
+    const result = await whoisDomain(domain, {
+      timeout,
     });
-  });
+    return result;
+  } catch (error) {
+    if (error instanceof Error && error.message.includes('timeout')) {
+      throw new Error('Whois lookup timeout');
+    }
+    throw error;
+  }
 }
 
 function parseWhoisAvailability(
-  whoisData: string
+  whoisData: WhoisResult
 ): 'available' | 'taken' | 'unknown' {
-  const lowerData = whoisData.toLowerCase();
+  try {
+    // Check if whois data is empty or null
+    if (!whoisData || Object.keys(whoisData).length === 0) {
+      return 'unknown';
+    }
 
-  // Common availability indicators
-  const availabilityIndicators = [
-    'no matching record',
-    'not found',
-    'no match',
-    'available',
-    'not registered',
-    'free',
-    'status: free',
-    'no data found',
-    'domain not found',
-  ];
+    // Get the first (and usually only) server result
+    const serverKeys = Object.keys(whoisData);
+    const firstServerData = whoisData[serverKeys[0]];
 
-  // Common unavailability indicators
-  const unavailabilityIndicators = [
-    'creation date',
-    'created on',
-    'registration time',
-    'registered',
-    'domain status: clienttransferprohibited',
-    'registration-status: registeredandoperational',
-    'registrar:',
-    'registrant',
-    'admin contact',
-    'name server',
-  ];
+    if (!firstServerData) {
+      return 'unknown';
+    }
 
-  // Check for availability indicators first
-  for (const indicator of availabilityIndicators) {
-    if (lowerData.includes(indicator)) {
+    // Convert structured data to string for pattern matching
+    const dataString = JSON.stringify(firstServerData).toLowerCase();
+
+    // Check for "No Match" or similar indicators that suggest availability
+    if (
+      dataString.includes('no match') ||
+      dataString.includes('not found') ||
+      dataString.includes('no matching record') ||
+      dataString.includes('available') ||
+      dataString.includes('not registered') ||
+      dataString.includes('status: free') ||
+      dataString.includes('no data found') ||
+      dataString.includes('domain not found')
+    ) {
       return 'available';
     }
-  }
 
-  // Check for unavailability indicators
-  for (const indicator of unavailabilityIndicators) {
-    if (lowerData.includes(indicator)) {
+    // Check for registration indicators
+    if (
+      firstServerData.hasOwnProperty('domain') ||
+      firstServerData.hasOwnProperty('registrar') ||
+      firstServerData.hasOwnProperty('creation_date') ||
+      firstServerData.hasOwnProperty('created_date') ||
+      firstServerData.hasOwnProperty('registrant') ||
+      firstServerData.hasOwnProperty('admin_contact') ||
+      firstServerData.hasOwnProperty('name_servers') ||
+      dataString.includes('registrar:') ||
+      dataString.includes('creation date') ||
+      dataString.includes('created on') ||
+      dataString.includes('registration time') ||
+      dataString.includes('registered')
+    ) {
       return 'taken';
     }
-  }
 
-  // If we can't determine, return unknown
-  return 'unknown';
+    // If we can't determine, return unknown
+    return 'unknown';
+  } catch (error) {
+    console.error('Error parsing whois data:', error);
+    return 'unknown';
+  }
 }
