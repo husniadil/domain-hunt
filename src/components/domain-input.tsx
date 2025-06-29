@@ -64,8 +64,8 @@ export function DomainInput({
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.key === ' ' && value.trim()) {
-      e.preventDefault(); // Prevent space from being added to input
+    if ((e.key === ' ' || e.key === 'Tab') && value.trim()) {
+      e.preventDefault(); // Prevent space/tab from being added to input
 
       if (addDomain(value.trim())) {
         setValue(''); // Clear input after successful pill creation
@@ -96,7 +96,7 @@ export function DomainInput({
 
       {value && isValid && !isDuplicate(value) && (
         <p className="text-sm text-muted-foreground">
-          Press space to add &ldquo;{value}&rdquo; as a pill
+          Press space or tab to add &ldquo;{value}&rdquo; as a pill
         </p>
       )}
 
