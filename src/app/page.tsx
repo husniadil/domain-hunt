@@ -17,6 +17,7 @@ import {
 } from 'lucide-react';
 import { useHomepageState } from '@/hooks/useHomepageState';
 import { useResultFilters } from '@/hooks/use-result-filters';
+import { FilterToggleButton } from '@/components/filter-toggle-button';
 
 export default function Home() {
   const {
@@ -248,83 +249,27 @@ export default function Home() {
                   <span>Showing:</span>
                   <span>{counts.showing}</span>
                 </div>
-                <button
+                <FilterToggleButton
+                  type="available"
+                  label="Available"
+                  count={counts.available}
+                  isActive={toggleStates.available}
                   onClick={() => onToggle('available')}
-                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
-                    toggleStates.available
-                      ? 'bg-green-100 border-2 border-green-300'
-                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
-                  }`}
-                >
-                  <span
-                    className={
-                      toggleStates.available
-                        ? 'text-green-800'
-                        : 'text-gray-600'
-                    }
-                  >
-                    Available:
-                  </span>
-                  <span
-                    className={
-                      toggleStates.available
-                        ? 'text-green-600 font-medium'
-                        : 'text-gray-500'
-                    }
-                  >
-                    {counts.available}
-                  </span>
-                </button>
-                <button
+                />
+                <FilterToggleButton
+                  type="taken"
+                  label="Taken"
+                  count={counts.taken}
+                  isActive={toggleStates.taken}
                   onClick={() => onToggle('taken')}
-                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
-                    toggleStates.taken
-                      ? 'bg-red-100 border-2 border-red-300'
-                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
-                  }`}
-                >
-                  <span
-                    className={
-                      toggleStates.taken ? 'text-red-800' : 'text-gray-600'
-                    }
-                  >
-                    Taken:
-                  </span>
-                  <span
-                    className={
-                      toggleStates.taken
-                        ? 'text-red-600 font-medium'
-                        : 'text-gray-500'
-                    }
-                  >
-                    {counts.taken}
-                  </span>
-                </button>
-                <button
+                />
+                <FilterToggleButton
+                  type="error"
+                  label="Errors"
+                  count={counts.error}
+                  isActive={toggleStates.error}
                   onClick={() => onToggle('error')}
-                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
-                    toggleStates.error
-                      ? 'bg-yellow-100 border-2 border-yellow-300'
-                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
-                  }`}
-                >
-                  <span
-                    className={
-                      toggleStates.error ? 'text-yellow-800' : 'text-gray-600'
-                    }
-                  >
-                    Errors:
-                  </span>
-                  <span
-                    className={
-                      toggleStates.error
-                        ? 'text-yellow-600 font-medium'
-                        : 'text-gray-500'
-                    }
-                  >
-                    {counts.error}
-                  </span>
-                </button>
+                />
               </div>
 
               {/* Results by Domain */}
@@ -340,60 +285,61 @@ export default function Home() {
                 </div>
               ) : (
                 <div className="space-y-4 max-h-96 overflow-y-auto">
-                  {Array.from(filteredResults!.resultsByDomain.entries()).map(
-                    ([domain, domainResult]) => (
-                      <div
-                        key={domain}
-                        className="border rounded-lg p-3 space-y-2"
-                      >
-                        <div className="flex justify-between items-center">
-                          <h4 className="font-medium">{domain}</h4>
-                          <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                            <span>{domainResult.totalDuration}ms</span>
-                            <span>
-                              {domainResult.successful.length +
-                                domainResult.failed.length}{' '}
-                              checked
-                            </span>
+                  {filteredResults &&
+                    Array.from(filteredResults.resultsByDomain.entries()).map(
+                      ([domain, domainResult]) => (
+                        <div
+                          key={domain}
+                          className="border rounded-lg p-3 space-y-2"
+                        >
+                          <div className="flex justify-between items-center">
+                            <h4 className="font-medium">{domain}</h4>
+                            <div className="flex items-center space-x-2 text-xs text-muted-foreground">
+                              <span>{domainResult.totalDuration}ms</span>
+                              <span>
+                                {domainResult.successful.length +
+                                  domainResult.failed.length}{' '}
+                                checked
+                              </span>
+                            </div>
+                          </div>
+
+                          <div className="grid gap-1 max-h-32 overflow-y-auto">
+                            {domainResult.results.slice(0, 12).map(result => (
+                              <div
+                                key={`${result.domain}${result.tld}`}
+                                className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
+                              >
+                                <span className="font-mono">
+                                  {result.domain}
+                                  {result.tld}
+                                </span>
+                                <div className="flex items-center space-x-2">
+                                  {getStatusIcon(result.status)}
+                                  <Badge
+                                    variant="outline"
+                                    className={`text-xs ${getStatusColor(result.status)}`}
+                                  >
+                                    {result.status}
+                                  </Badge>
+                                  <BookmarkButton
+                                    domain={result.domain}
+                                    tld={result.tld}
+                                    status={result.status}
+                                    size="sm"
+                                  />
+                                </div>
+                              </div>
+                            ))}
+                            {domainResult.results.length > 12 && (
+                              <div className="text-xs text-muted-foreground text-center p-1">
+                                ... and {domainResult.results.length - 12} more
+                              </div>
+                            )}
                           </div>
                         </div>
-
-                        <div className="grid gap-1 max-h-32 overflow-y-auto">
-                          {domainResult.results.slice(0, 12).map(result => (
-                            <div
-                              key={`${result.domain}${result.tld}`}
-                              className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
-                            >
-                              <span className="font-mono">
-                                {result.domain}
-                                {result.tld}
-                              </span>
-                              <div className="flex items-center space-x-2">
-                                {getStatusIcon(result.status)}
-                                <Badge
-                                  variant="outline"
-                                  className={`text-xs ${getStatusColor(result.status)}`}
-                                >
-                                  {result.status}
-                                </Badge>
-                                <BookmarkButton
-                                  domain={result.domain}
-                                  tld={result.tld}
-                                  status={result.status}
-                                  size="sm"
-                                />
-                              </div>
-                            </div>
-                          ))}
-                          {domainResult.results.length > 12 && (
-                            <div className="text-xs text-muted-foreground text-center p-1">
-                              ... and {domainResult.results.length - 12} more
-                            </div>
-                          )}
-                        </div>
-                      </div>
-                    )
-                  )}
+                      )
+                    )}
                 </div>
               )}
             </div>
