@@ -115,7 +115,6 @@ function DefaultErrorFallback({ error, retry }: DefaultErrorFallbackProps) {
 
 // Domain-specific error fallback for domain checking operations
 interface DomainErrorFallbackProps {
-  error?: Error;
   retry: () => void;
 }
 
