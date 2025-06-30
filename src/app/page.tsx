@@ -49,10 +49,16 @@ export default function Home() {
   // Listen for bookmark changes and sync with homepage results
   useEffect(() => {
     const handleBookmarkChange = () => {
-      if (!unifiedResult) return;
+      console.log('📢 Homepage: bookmark change event received');
+      if (!unifiedResult) {
+        console.log('⚠️ Homepage: no unifiedResult, skipping sync');
+        return;
+      }
 
       // Get current bookmarks to sync status
       const bookmarks = getAllBookmarks();
+      console.log('📊 Homepage: found', bookmarks.length, 'bookmarks');
+
       const bookmarkMap = new Map();
       bookmarks.forEach(bookmark => {
         const key = `${bookmark.domain}${bookmark.tld}`;
@@ -71,6 +77,9 @@ export default function Home() {
 
             // If this domain is bookmarked and status is different, update it
             if (bookmarkStatus && bookmarkStatus !== result.status) {
+              console.log(
+                `🔄 Homepage: updating ${key} from ${result.status} to ${bookmarkStatus}`
+              );
               hasChanges = true;
               return { ...result, status: bookmarkStatus };
             }
@@ -86,10 +95,13 @@ export default function Home() {
 
       // Update state if there were changes
       if (hasChanges) {
+        console.log('✅ Homepage: applying changes to unifiedResult');
         setUnifiedResult({
           ...unifiedResult,
           resultsByDomain: updatedResultsByDomain,
         });
+      } else {
+        console.log('ℹ️ Homepage: no changes needed');
       }
     };
 
