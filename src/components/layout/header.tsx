@@ -14,7 +14,7 @@ export function Header() {
     total: 0,
     available: 0,
     taken: 0,
-    unknown: 0,
+    errors: 0,
   });
 
   useEffect(() => {

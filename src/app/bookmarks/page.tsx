@@ -13,6 +13,7 @@ import {
 import { checkDomainsUnified } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
+import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
 import {
   CheckCircle2,
   XCircle,
@@ -31,7 +32,7 @@ export default function BookmarksPage() {
     total: 0,
     available: 0,
     taken: 0,
-    unknown: 0,
+    errors: 0,
   });
 
   // Load bookmarks on mount
@@ -159,9 +160,9 @@ export default function BookmarksPage() {
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <div className="text-2xl font-bold text-gray-600">
-              {stats.unknown}
+              {stats.errors}
             </div>
-            <div className="text-sm text-gray-600">Unknown</div>
+            <div className="text-sm text-gray-600">Errors</div>
           </div>
         </div>
 
@@ -260,7 +261,7 @@ export default function BookmarksPage() {
                           variant="outline"
                           className={`text-xs ${getStatusColor(bookmark.lastKnownStatus)}`}
                         >
-                          {bookmark.lastKnownStatus || 'unknown'}
+                          {bookmark.lastKnownStatus || DEFAULT_ERROR_STATUS}
                         </Badge>
                       </div>
                     </div>
