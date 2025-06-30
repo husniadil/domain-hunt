@@ -15,14 +15,7 @@ import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
 import { getStatusColor } from '@/lib/utils';
 import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
-import {
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  RefreshCw,
-  Search,
-  ChevronDown,
-} from 'lucide-react';
+import { RefreshCw, Search, ChevronDown } from 'lucide-react';
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -92,19 +85,6 @@ export default function BookmarksPage() {
       console.error('Error rechecking bookmarks:', error);
     } finally {
       setIsChecking(false);
-    }
-  };
-
-  const getStatusIcon = (status?: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-      case 'taken':
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      default:
-        return <AlertCircle className="w-4 h-4 text-gray-400" />;
     }
   };
 
@@ -250,7 +230,6 @@ export default function BookmarksPage() {
                         {bookmark.tld}
                       </span>
                       <div className="flex items-center space-x-2">
-                        {getStatusIcon(bookmark.lastKnownStatus)}
                         <Badge
                           variant="outline"
                           className={`text-xs ${getStatusColor(bookmark.lastKnownStatus)}`}

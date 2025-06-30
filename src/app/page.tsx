@@ -11,15 +11,8 @@ import {
   retryDomainCheck,
 } from '@/services/domain-checker';
 import { getStatusColor } from '@/lib/utils';
-import { DomainResult, UnifiedLookupProgress } from '@/types/domain';
-import {
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Filter,
-  RefreshCw,
-} from 'lucide-react';
+import { UnifiedLookupProgress } from '@/types/domain';
+import { Loader2, Filter, RefreshCw } from 'lucide-react';
 import { useHomepageState } from '@/hooks/useHomepageState';
 import { useResultFilters } from '@/hooks/use-result-filters';
 import { FilterToggleButton } from '@/components/filter-toggle-button';
@@ -204,19 +197,6 @@ export default function Home() {
         newSet.delete(domainKey);
         return newSet;
       });
-    }
-  };
-
-  const getStatusIcon = (status: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-      case 'taken':
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      default:
-        return null;
     }
   };
 
@@ -433,7 +413,6 @@ export default function Home() {
                                     {result.tld}
                                   </span>
                                   <div className="flex items-center space-x-2">
-                                    {getStatusIcon(result.status)}
                                     <Badge
                                       variant="outline"
                                       className={`text-xs ${getStatusColor(result.status)}`}
