@@ -20,7 +20,7 @@ export function getStatusColor(status: DomainStatus | undefined) {
   }
 }
 
-export function getStatusFilterClasses(type: string, isActive: boolean) {
+export function getStatusFilterClasses(type: DomainStatus, isActive: boolean) {
   if (!isActive) {
     return {
       activeBackground: 'bg-background border border-border hover:bg-accent',
@@ -51,7 +51,7 @@ export function getStatusFilterClasses(type: string, isActive: boolean) {
   };
 
   return (
-    colorMap[type as keyof typeof colorMap] || {
+    colorMap[type] || {
       activeBackground: 'bg-background border border-border',
       activeLabel: 'text-foreground',
       activeCount: 'text-foreground',
