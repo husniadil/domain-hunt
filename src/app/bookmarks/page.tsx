@@ -161,7 +161,7 @@ export default function BookmarksPage() {
             <div className="text-2xl font-bold text-gray-600">
               {stats.unknown}
             </div>
-            <div className="text-sm text-gray-600">Unknown</div>
+            <div className="text-sm text-gray-600">Errors</div>
           </div>
         </div>
 
@@ -260,7 +260,7 @@ export default function BookmarksPage() {
                           variant="outline"
                           className={`text-xs ${getStatusColor(bookmark.lastKnownStatus)}`}
                         >
-                          {bookmark.lastKnownStatus || 'unknown'}
+                          {bookmark.lastKnownStatus || 'error'}
                         </Badge>
                       </div>
                     </div>
