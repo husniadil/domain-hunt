@@ -407,12 +407,6 @@ export default function Home() {
                               {result.tld}
                             </span>
                             <div className="flex items-center space-x-2">
-                              <BookmarkButton
-                                domain={result.domain}
-                                tld={result.tld}
-                                status={result.status}
-                                size="sm"
-                              />
                               {getStatusIcon(result.status)}
                               <Badge
                                 variant="outline"
@@ -420,6 +414,12 @@ export default function Home() {
                               >
                                 {result.status}
                               </Badge>
+                              <BookmarkButton
+                                domain={result.domain}
+                                tld={result.tld}
+                                status={result.status}
+                                size="sm"
+                              />
                             </div>
                           </div>
                         ))}
