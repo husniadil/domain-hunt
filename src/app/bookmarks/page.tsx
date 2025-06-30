@@ -21,6 +21,7 @@ import {
   AlertCircle,
   RefreshCw,
   Search,
+  ChevronDown,
 } from 'lucide-react';
 
 export default function BookmarksPage() {
@@ -171,23 +172,26 @@ export default function BookmarksPage() {
           </div>
 
           <div className="flex gap-2">
-            <select
-              value={filter.status || ''}
-              onChange={e =>
-                setFilter({
-                  ...filter,
-                  status: e.target.value
-                    ? (e.target.value as DomainResult['status'])
-                    : undefined,
-                })
-              }
-              className="h-10 px-3 border rounded-lg"
-            >
-              <option value="">All Status</option>
-              <option value="available">Available</option>
-              <option value="taken">Taken</option>
-              <option value="error">Error</option>
-            </select>
+            <div className="relative">
+              <select
+                value={filter.status || ''}
+                onChange={e =>
+                  setFilter({
+                    ...filter,
+                    status: e.target.value
+                      ? (e.target.value as DomainResult['status'])
+                      : undefined,
+                  })
+                }
+                className="h-10 pl-3 pr-8 border rounded-lg appearance-none bg-background w-full"
+              >
+                <option value="">All Status</option>
+                <option value="available">Available</option>
+                <option value="taken">Taken</option>
+                <option value="error">Error</option>
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
 
             <Button
               onClick={handleRecheckAll}
