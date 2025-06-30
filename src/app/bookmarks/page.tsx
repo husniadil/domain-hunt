@@ -13,6 +13,7 @@ import {
 import { checkDomainsUnified } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
+import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
 import {
   CheckCircle2,
   XCircle,
@@ -260,7 +261,7 @@ export default function BookmarksPage() {
                           variant="outline"
                           className={`text-xs ${getStatusColor(bookmark.lastKnownStatus)}`}
                         >
-                          {bookmark.lastKnownStatus || 'error'}
+                          {bookmark.lastKnownStatus || DEFAULT_ERROR_STATUS}
                         </Badge>
                       </div>
                     </div>

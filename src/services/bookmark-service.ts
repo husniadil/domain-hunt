@@ -8,6 +8,7 @@ import {
   BookmarkFilter,
   BookmarkStats,
 } from '@/types/bookmark';
+import { DOMAIN_STATUS } from '@/constants/domain-status';
 import { DomainResult } from '@/types/domain';
 
 const STORAGE_KEY = 'domain-hunt-bookmarks';
@@ -333,10 +334,13 @@ export const getBookmarkStats = (): BookmarkStats => {
 
   return {
     total: bookmarks.length,
-    available: bookmarks.filter(b => b.lastKnownStatus === 'available').length,
-    taken: bookmarks.filter(b => b.lastKnownStatus === 'taken').length,
+    available: bookmarks.filter(
+      b => b.lastKnownStatus === DOMAIN_STATUS.AVAILABLE
+    ).length,
+    taken: bookmarks.filter(b => b.lastKnownStatus === DOMAIN_STATUS.TAKEN)
+      .length,
     errors: bookmarks.filter(
-      b => !b.lastKnownStatus || b.lastKnownStatus === 'error'
+      b => !b.lastKnownStatus || b.lastKnownStatus === DOMAIN_STATUS.ERROR
     ).length,
   };
 };
