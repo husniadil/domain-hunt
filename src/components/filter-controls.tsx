@@ -63,21 +63,19 @@ export function FilterControls({
               variant={isActive ? 'default' : 'ghost'}
               size="sm"
               onClick={() => onFilterChange(filter)}
-              className="flex items-center gap-1.5"
+              className="flex items-center justify-center gap-1.5 h-8 min-w-fit"
             >
-              {filterLabels[filter]}
-              {count > 0 && (
-                <Badge
-                  variant="outline"
-                  className={`text-xs px-1.5 py-0.5 ${
-                    isActive
-                      ? 'bg-white/20 text-white border-white/30'
-                      : filterColors[filter]
-                  }`}
-                >
-                  {count}
-                </Badge>
-              )}
+              <span className="whitespace-nowrap">{filterLabels[filter]}</span>
+              <Badge
+                variant="outline"
+                className={`text-xs px-1.5 py-0.5 min-w-[1.75rem] text-center ${
+                  isActive
+                    ? 'bg-white/20 text-white border-white/30'
+                    : filterColors[filter]
+                }`}
+              >
+                {count}
+              </Badge>
             </Button>
           );
         })}
