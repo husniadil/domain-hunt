@@ -16,6 +16,8 @@ import { DomainResult } from '@/types/domain';
 import { getStatusColor } from '@/lib/utils';
 import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
 import { RefreshCw, Search, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
+import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -33,6 +35,18 @@ export default function BookmarksPage() {
   // Load bookmarks on mount
   useEffect(() => {
     loadBookmarks();
+  }, []);
+
+  // Listen for bookmark changes from other components/pages
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      loadBookmarks();
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    };
   }, []);
 
   // Apply filters when bookmarks or filter changes
@@ -58,7 +72,17 @@ export default function BookmarksPage() {
   };
 
   const handleRecheckAll = async () => {
-    if (bookmarks.length === 0) return;
+    if (bookmarks.length === 0) {
+      toast.warning('No bookmarks to recheck');
+      return;
+    }
+
+    if (isOffline()) {
+      toast.error('You appear to be offline', {
+        description: 'Please check your internet connection and try again.',
+      });
+      return;
+    }
 
     setIsChecking(true);
     try {
@@ -81,8 +105,35 @@ export default function BookmarksPage() {
 
       // Reload bookmarks to reflect updates
       loadBookmarks();
+
+      // Show success toast with summary
+      const totalChecked = result.overallProgress.completed;
+      const failed = result.overallProgress.failed;
+
+      if (failed === 0) {
+        toast.success(
+          `Successfully rechecked ${totalChecked} bookmarked domains`
+        );
+      } else if (failed < totalChecked) {
+        toast.warning(
+          `Rechecked ${totalChecked} domains with ${failed} errors`,
+          {
+            description:
+              'Some domains could not be checked. See individual results for details.',
+          }
+        );
+      } else {
+        toast.error('Bookmark recheck failed', {
+          description:
+            'Could not check any domains. Please check your connection and try again.',
+        });
+      }
     } catch (error) {
       console.error('Error rechecking bookmarks:', error);
+      const errorFormat = formatErrorForToast(error);
+      toast.error(errorFormat.title, {
+        description: errorFormat.description,
+      });
     } finally {
       setIsChecking(false);
     }

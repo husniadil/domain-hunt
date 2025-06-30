@@ -19,6 +19,10 @@ import { FilterToggleButton } from '@/components/filter-toggle-button';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
+import {
+  updateBookmarkStatus,
+  isBookmarked,
+} from '@/services/bookmark-service';
 
 export default function Home() {
   const {
@@ -170,6 +174,11 @@ export default function Home() {
             resultsByDomain: updatedResultsByDomain,
           });
         }
+      }
+
+      // Update bookmark status if domain is bookmarked
+      if (result.status !== 'error' && isBookmarked(domain, tld)) {
+        updateBookmarkStatus(domain, tld, result.status);
       }
 
       // Show success/error toast

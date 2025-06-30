@@ -31,6 +31,18 @@ export function BookmarkButton({
     setBookmarked(isBookmarked(domain, tld));
   }, [domain, tld]);
 
+  // Listen for bookmark changes from other components/pages
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      setBookmarked(isBookmarked(domain, tld));
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    };
+  }, [domain, tld]);
+
   const handleToggle = async () => {
     setIsLoading(true);
 
