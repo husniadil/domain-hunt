@@ -3,21 +3,24 @@
 import { useState } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
+import { BookmarkButton } from '@/components/bookmark-button';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { checkDomainsUnified } from '@/services/domain-checker';
-import {
-  DomainResult,
-  UnifiedDomainResult,
-  UnifiedLookupProgress,
-} from '@/types/domain';
+import { DomainResult, UnifiedLookupProgress } from '@/types/domain';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
+import { useHomepageState } from '@/hooks/useHomepageState';
 
 export default function Home() {
-  const [domains, setDomains] = useState<string[]>([]);
-  const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
-  const [unifiedResult, setUnifiedResult] =
-    useState<UnifiedDomainResult | null>(null);
+  const {
+    domains,
+    selectedTlds,
+    unifiedResult,
+    setDomains,
+    setSelectedTlds,
+    setUnifiedResult,
+    clearState,
+  } = useHomepageState();
   const [progress, setProgress] = useState<UnifiedLookupProgress | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [abortController, setAbortController] =
@@ -62,6 +65,11 @@ export default function Home() {
     }
   };
 
+  const handleClearResults = () => {
+    clearState();
+    setProgress(null);
+  };
+
   const getStatusIcon = (status: DomainResult['status']) => {
     switch (status) {
       case 'available':
@@ -103,9 +111,16 @@ export default function Home() {
         </div>
 
         <div className="w-full max-w-md space-y-6">
-          <DomainInput onDomainsChange={setDomains} className="text-center" />
+          <DomainInput
+            onDomainsChange={setDomains}
+            className="text-center"
+            initialDomains={domains}
+          />
 
-          <TldSelector onTldsChange={setSelectedTlds} />
+          <TldSelector
+            onTldsChange={setSelectedTlds}
+            initialTlds={selectedTlds}
+          />
 
           <div className="space-y-2">
             <Button
@@ -133,6 +148,19 @@ export default function Home() {
                 Cancel Check
               </Button>
             )}
+
+            {/* Clear Results Button - show when we have results or saved state */}
+            {(unifiedResult || domains.length > 0 || selectedTlds.length > 0) &&
+              !isChecking && (
+                <Button
+                  onClick={handleClearResults}
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                >
+                  Clear Results
+                </Button>
+              )}
           </div>
 
           {/* Progress Display */}
@@ -280,6 +308,12 @@ export default function Home() {
                               >
                                 {result.status}
                               </Badge>
+                              <BookmarkButton
+                                domain={result.domain}
+                                tld={result.tld}
+                                status={result.status}
+                                size="sm"
+                              />
                             </div>
                           </div>
                         ))}
