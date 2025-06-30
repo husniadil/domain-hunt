@@ -13,6 +13,7 @@ import {
 import { checkDomainsUnified } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
+import { getStatusColor } from '@/lib/utils';
 import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
 import {
   CheckCircle2,
@@ -103,19 +104,6 @@ export default function BookmarksPage() {
         return <AlertCircle className="w-4 h-4 text-yellow-500" />;
       default:
         return <AlertCircle className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status?: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'taken':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'error':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 

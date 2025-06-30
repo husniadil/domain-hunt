@@ -75,6 +75,15 @@
   --shadow-opacity: 0.1;
   --color-shadow-color: oklch(0 0 0);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-status-available: var(--status-available);
+  --color-status-available-bg: var(--status-available-bg);
+  --color-status-available-border: var(--status-available-border);
+  --color-status-taken: var(--status-taken);
+  --color-status-taken-bg: var(--status-taken-bg);
+  --color-status-taken-border: var(--status-taken-border);
+  --color-status-error: var(--status-error);
+  --color-status-error-bg: var(--status-error-bg);
+  --color-status-error-border: var(--status-error-border);
 }
 
 body {
@@ -115,6 +124,15 @@ body {
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
   --destructive-foreground: oklch(1 0 0);
+  --status-available: oklch(0.7 0.15 142);
+  --status-available-bg: oklch(0.95 0.05 142);
+  --status-available-border: oklch(0.85 0.1 142);
+  --status-taken: oklch(0.65 0.18 25);
+  --status-taken-bg: oklch(0.95 0.05 25);
+  --status-taken-border: oklch(0.85 0.12 25);
+  --status-error: oklch(0.7 0.12 85);
+  --status-error-bg: oklch(0.95 0.04 85);
+  --status-error-border: oklch(0.85 0.08 85);
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
@@ -179,6 +197,15 @@ body {
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
   --destructive-foreground: oklch(1 0 0);
+  --status-available: oklch(0.75 0.12 142);
+  --status-available-bg: oklch(0.25 0.08 142);
+  --status-available-border: oklch(0.4 0.1 142);
+  --status-taken: oklch(0.7 0.15 25);
+  --status-taken-bg: oklch(0.25 0.08 25);
+  --status-taken-border: oklch(0.4 0.1 25);
+  --status-error: oklch(0.75 0.1 85);
+  --status-error-bg: oklch(0.25 0.06 85);
+  --status-error-border: oklch(0.4 0.08 85);
   --radius: 0.5rem;
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
