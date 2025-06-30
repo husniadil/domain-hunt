@@ -402,7 +402,7 @@ export default function Home() {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                  <div className="space-y-4">
                     {filteredResults &&
                       Array.from(filteredResults.resultsByDomain.entries()).map(
                         ([domain, domainResult]) => (
@@ -422,8 +422,8 @@ export default function Home() {
                               </div>
                             </div>
 
-                            <div className="grid gap-1 max-h-32 overflow-y-auto">
-                              {domainResult.results.slice(0, 12).map(result => (
+                            <div className="grid gap-1">
+                              {domainResult.results.map(result => (
                                 <div
                                   key={`${result.domain}${result.tld}`}
                                   className="flex items-center justify-between text-xs p-2 bg-container-bg border border-container-border rounded"
