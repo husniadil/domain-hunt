@@ -1,133 +1,30 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { checkDomainsUnified } from '@/services/domain-checker';
-import {
-  DomainResult,
-  UnifiedDomainResult,
-  UnifiedLookupProgress,
-} from '@/types/domain';
+import { DomainResult, UnifiedLookupProgress } from '@/types/domain';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
-
-// Constants for localStorage keys
-const HOMEPAGE_STATE_KEY = 'domain-hunt-homepage-state';
-const STATE_EXPIRY_HOURS = 24; // State expires after 24 hours
-
-// Types for persisted state
-interface HomepageState {
-  domains: string[];
-  selectedTlds: string[];
-  unifiedResult: UnifiedDomainResult | null;
-  savedAt: number;
-}
-
-// Helper functions for state persistence
-const saveHomepageState = (state: Omit<HomepageState, 'savedAt'>) => {
-  if (typeof window !== 'undefined') {
-    // Convert Map to serializable format
-    const serializableState = {
-      ...state,
-      unifiedResult: state.unifiedResult
-        ? {
-            ...state.unifiedResult,
-            // Convert Map to array of [key, value] pairs for serialization
-            resultsByDomain: Array.from(
-              state.unifiedResult.resultsByDomain.entries()
-            ),
-          }
-        : null,
-      savedAt: Date.now(),
-    };
-    localStorage.setItem(HOMEPAGE_STATE_KEY, JSON.stringify(serializableState));
-  }
-};
-
-const loadHomepageState = (): Partial<HomepageState> | null => {
-  if (typeof window === 'undefined') return null;
-
-  try {
-    const saved = localStorage.getItem(HOMEPAGE_STATE_KEY);
-    if (!saved) return null;
-
-    const rawState = JSON.parse(saved);
-
-    // Check if state is expired
-    const hoursElapsed = (Date.now() - rawState.savedAt) / (1000 * 60 * 60);
-    if (hoursElapsed > STATE_EXPIRY_HOURS) {
-      localStorage.removeItem(HOMEPAGE_STATE_KEY);
-      return null;
-    }
-
-    // Convert serialized state back to proper format
-    const state: Partial<HomepageState> = {
-      domains: rawState.domains,
-      selectedTlds: rawState.selectedTlds,
-      unifiedResult: rawState.unifiedResult
-        ? {
-            ...rawState.unifiedResult,
-            // Convert array back to Map
-            resultsByDomain: new Map(rawState.unifiedResult.resultsByDomain),
-          }
-        : null,
-      savedAt: rawState.savedAt,
-    };
-
-    return state;
-  } catch (error) {
-    console.error('Failed to load homepage state:', error);
-    localStorage.removeItem(HOMEPAGE_STATE_KEY);
-    return null;
-  }
-};
-
-const clearHomepageState = () => {
-  if (typeof window !== 'undefined') {
-    localStorage.removeItem(HOMEPAGE_STATE_KEY);
-  }
-};
+import { useHomepageState } from '@/hooks/useHomepageState';
 
 export default function Home() {
-  const [domains, setDomains] = useState<string[]>([]);
-  const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
-  const [unifiedResult, setUnifiedResult] =
-    useState<UnifiedDomainResult | null>(null);
+  const {
+    domains,
+    selectedTlds,
+    unifiedResult,
+    setDomains,
+    setSelectedTlds,
+    setUnifiedResult,
+    clearState,
+  } = useHomepageState();
   const [progress, setProgress] = useState<UnifiedLookupProgress | null>(null);
   const [isChecking, setIsChecking] = useState(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
-
-  // Load saved state on component mount
-  useEffect(() => {
-    const savedState = loadHomepageState();
-    if (savedState) {
-      if (savedState.domains && savedState.domains.length > 0) {
-        setDomains(savedState.domains);
-      }
-      if (savedState.selectedTlds && savedState.selectedTlds.length > 0) {
-        setSelectedTlds(savedState.selectedTlds);
-      }
-      if (savedState.unifiedResult) {
-        setUnifiedResult(savedState.unifiedResult);
-      }
-    }
-  }, []);
-
-  // Save state whenever relevant data changes
-  useEffect(() => {
-    // Only save if we have meaningful data
-    if (domains.length > 0 || selectedTlds.length > 0 || unifiedResult) {
-      saveHomepageState({
-        domains,
-        selectedTlds,
-        unifiedResult,
-      });
-    }
-  }, [domains, selectedTlds, unifiedResult]);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -169,11 +66,8 @@ export default function Home() {
   };
 
   const handleClearResults = () => {
-    setDomains([]);
-    setSelectedTlds([]);
-    setUnifiedResult(null);
+    clearState();
     setProgress(null);
-    clearHomepageState();
   };
 
   const getStatusIcon = (status: DomainResult['status']) => {
