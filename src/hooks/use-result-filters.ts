@@ -1,8 +1,13 @@
 'use client';
 
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 import { DomainResult, UnifiedDomainResult } from '@/types/domain';
 import { isBookmarked } from '@/services/bookmark-service';
+import {
+  loadFilterStates,
+  saveFilterStates,
+  FilterToggleStates,
+} from '@/services/filter-state-service';
 
 export type StatusToggle = 'available' | 'taken' | 'error';
 
@@ -14,18 +19,18 @@ export interface FilterCounts {
   showing: number;
 }
 
-export interface ToggleStates {
-  available: boolean;
-  taken: boolean;
-  error: boolean;
-}
+// Re-export the type from service for consistency
+export type ToggleStates = FilterToggleStates;
 
 export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
-  const [toggleStates, setToggleStates] = useState<ToggleStates>({
-    available: true,
-    taken: true,
-    error: true,
-  });
+  const [toggleStates, setToggleStates] = useState<ToggleStates>(() =>
+    loadFilterStates()
+  );
+
+  // Save toggle states to localStorage whenever they change
+  useEffect(() => {
+    saveFilterStates(toggleStates);
+  }, [toggleStates]);
 
   const { filteredResults, counts, isEmpty } = useMemo(() => {
     if (!unifiedResult) {
