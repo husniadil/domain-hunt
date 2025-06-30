@@ -8,6 +8,12 @@ import {
   UnifiedLookupConfig,
   UnifiedLookupProgress,
 } from '@/types/domain';
+import {
+  categorizeError,
+  getRetryDelay,
+  isOffline,
+  createOfflineError,
+} from '@/utils/error-handling';
 
 // Default configuration for domain checking
 const DEFAULT_CONFIG: Required<DomainCheckConfig> = {
@@ -83,10 +89,22 @@ export async function checkDomain(
     };
   }
 
-  let lastError: string | undefined;
+  // Check if offline
+  if (isOffline()) {
+    const offlineError = createOfflineError();
+    return {
+      domain,
+      tld,
+      status: 'error',
+      error: offlineError.userMessage,
+      checkedAt: new Date(),
+    };
+  }
 
-  // Retry logic
-  for (let attempt = 0; attempt <= finalConfig.retries; attempt++) {
+  let lastError: Error | undefined;
+
+  // Retry logic with intelligent delay
+  for (let attempt = 1; attempt <= finalConfig.retries + 1; attempt++) {
     try {
       // Call API route for DNS lookup
       const response = await fetch('/api/domain-check', {
@@ -108,27 +126,47 @@ export async function checkDomain(
         checkedAt: new Date(result.checkedAt),
       };
     } catch (error) {
-      const errorMessage =
-        error instanceof Error ? error.message : 'Unknown error';
-      lastError = errorMessage;
+      const err = error instanceof Error ? error : new Error('Unknown error');
+      lastError = err;
 
-      // For network errors, retry if we have attempts left
-      if (attempt < finalConfig.retries) {
-        // Wait briefly before retry
-        await new Promise(resolve => setTimeout(resolve, 1000));
-        continue;
+      // Check if we should retry
+      const categorized = categorizeError(err);
+
+      if (attempt <= finalConfig.retries && categorized.retryable) {
+        // Calculate intelligent retry delay
+        const delay = getRetryDelay(err, attempt);
+        if (delay > 0) {
+          await new Promise(resolve => setTimeout(resolve, delay));
+          continue;
+        }
       }
+
+      // If not retryable or retries exhausted, break
+      break;
     }
   }
 
-  // All retries exhausted, return error
+  // All retries exhausted or non-retryable error, return error with categorized message
+  const categorized = categorizeError(lastError || 'DNS lookup failed');
   return {
     domain,
     tld,
     status: 'error',
-    error: lastError || 'DNS lookup failed',
+    error: categorized.userMessage,
     checkedAt: new Date(),
   };
+}
+
+/**
+ * Retry a failed domain check
+ */
+export async function retryDomainCheck(
+  domain: string,
+  tld: string,
+  config: DomainCheckConfig = {}
+): Promise<DomainResult> {
+  // Use standard checkDomain with enhanced error handling
+  return checkDomain(domain, tld, config);
 }
 
 /**
