@@ -130,7 +130,9 @@ export default function BookmarksPage() {
       }
     } catch (error) {
       console.error('Error rechecking bookmarks:', error);
-      const errorFormat = formatErrorForToast(error);
+      const errorFormat = formatErrorForToast(
+        error instanceof Error ? error : 'Unknown error occurred'
+      );
       toast.error(errorFormat.title, {
         description: errorFormat.description,
       });
