@@ -363,7 +363,7 @@ export default function Home() {
 
                 {/* Toggleable Filter Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                  <div className="flex justify-between p-2 bg-gray-50 rounded">
+                  <div className="flex justify-between p-2 bg-container-bg border border-container-border rounded">
                     <span>Showing:</span>
                     <span>{counts.showing}</span>
                   </div>
@@ -426,7 +426,7 @@ export default function Home() {
                               {domainResult.results.slice(0, 12).map(result => (
                                 <div
                                   key={`${result.domain}${result.tld}`}
-                                  className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
+                                  className="flex items-center justify-between text-xs p-2 bg-container-bg border border-container-border rounded"
                                 >
                                   <span className="font-mono">
                                     {result.domain}

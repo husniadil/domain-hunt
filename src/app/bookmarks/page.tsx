@@ -132,21 +132,21 @@ export default function BookmarksPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white border rounded-lg p-4">
+          <div className="bg-container-bg border border-container-border rounded-lg p-4">
             <div className="text-2xl font-bold">{stats.total}</div>
             <div className="text-sm text-muted-foreground">Total</div>
           </div>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+          <div className="bg-status-available-bg border border-status-available-border rounded-lg p-4">
             <div className="text-2xl font-bold text-green-600">
               {stats.available}
             </div>
             <div className="text-sm text-green-600">Available</div>
           </div>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
+          <div className="bg-status-taken-bg border border-status-taken-border rounded-lg p-4">
             <div className="text-2xl font-bold text-red-600">{stats.taken}</div>
             <div className="text-sm text-red-600">Taken</div>
           </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
+          <div className="bg-status-error-bg border border-status-error-border rounded-lg p-4">
             <div className="text-2xl font-bold text-gray-600">
               {stats.errors}
             </div>
@@ -234,7 +234,7 @@ export default function BookmarksPage() {
             {filteredBookmarks.map(bookmark => (
               <div
                 key={bookmark.id}
-                className="border rounded-lg p-4 bg-white hover:bg-gray-50 transition-colors"
+                className="border border-container-border rounded-lg p-4 bg-container-bg hover:bg-muted transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
