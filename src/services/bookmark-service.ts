@@ -19,10 +19,40 @@ export const createBookmarkId = (domain: string, tld: string): BookmarkId => {
 };
 
 // Helper function to parse domain and TLD from bookmark ID
+// Note: This is a fallback method. The preferred approach is to use
+// the separate domain/tld fields stored in the Bookmark object.
 export const parseBookmarkId = (
   id: BookmarkId
 ): { domain: string; tld: string } => {
-  // Find the last dot to separate domain from TLD
+  // For proper parsing of multi-part TLD domains like example.co.uk,
+  // we need to check against known multi-part TLD patterns
+  const multiPartTlds = [
+    '.co.uk',
+    '.org.uk',
+    '.ac.uk',
+    '.gov.uk',
+    '.net.uk',
+    '.com.au',
+    '.net.au',
+    '.org.au',
+    '.edu.au',
+    '.gov.au',
+    '.co.nz',
+    '.net.nz',
+    '.org.nz',
+    '.ac.nz',
+    '.govt.nz',
+  ];
+
+  // Check for multi-part TLDs first
+  for (const tld of multiPartTlds) {
+    if (id.endsWith(tld)) {
+      const domain = id.substring(0, id.length - tld.length);
+      return { domain, tld };
+    }
+  }
+
+  // Fallback to simple last-dot parsing for standard TLDs
   const lastDotIndex = id.lastIndexOf('.');
   if (lastDotIndex === -1) {
     throw new Error(`Invalid bookmark ID format: ${id}`);

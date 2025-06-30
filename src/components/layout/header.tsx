@@ -23,14 +23,19 @@ export function Header() {
       setStats(getBookmarkStats());
     };
 
-    loadStats();
+    if (pathname === '/bookmarks') {
+      loadStats();
 
-    // Update stats every 5 seconds when on bookmarks page
-    // This helps keep the count fresh when bookmarks are added/removed
-    const interval = setInterval(loadStats, 5000);
+      // Update stats every 5 seconds when on bookmarks page
+      // This helps keep the count fresh when bookmarks are added/removed
+      const interval = setInterval(loadStats, 5000);
 
-    return () => clearInterval(interval);
-  }, []);
+      return () => clearInterval(interval);
+    } else {
+      // Load stats once for other pages
+      loadStats();
+    }
+  }, [pathname]);
 
   const isBookmarksPage = pathname === '/bookmarks';
 
