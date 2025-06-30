@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
@@ -22,6 +22,7 @@ import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
   updateBookmarkStatus,
   isBookmarked,
+  getAllBookmarks,
 } from '@/services/bookmark-service';
 
 export default function Home() {
@@ -44,6 +45,59 @@ export default function Home() {
 
   const { filteredResults, toggleStates, counts, isEmpty, onToggle } =
     useResultFilters(unifiedResult);
+
+  // Listen for bookmark changes and sync with homepage results
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      if (!unifiedResult) return;
+
+      // Get current bookmarks to sync status
+      const bookmarks = getAllBookmarks();
+      const bookmarkMap = new Map();
+      bookmarks.forEach(bookmark => {
+        const key = `${bookmark.domain}${bookmark.tld}`;
+        bookmarkMap.set(key, bookmark.lastKnownStatus);
+      });
+
+      // Update unifiedResult with latest bookmark statuses
+      let hasChanges = false;
+      const updatedResultsByDomain = new Map();
+
+      Array.from(unifiedResult.resultsByDomain.entries()).forEach(
+        ([domain, domainResult]) => {
+          const updatedResults = domainResult.results.map(result => {
+            const key = `${result.domain}${result.tld}`;
+            const bookmarkStatus = bookmarkMap.get(key);
+
+            // If this domain is bookmarked and status is different, update it
+            if (bookmarkStatus && bookmarkStatus !== result.status) {
+              hasChanges = true;
+              return { ...result, status: bookmarkStatus };
+            }
+            return result;
+          });
+
+          updatedResultsByDomain.set(domain, {
+            ...domainResult,
+            results: updatedResults,
+          });
+        }
+      );
+
+      // Update state if there were changes
+      if (hasChanges) {
+        setUnifiedResult({
+          ...unifiedResult,
+          resultsByDomain: updatedResultsByDomain,
+        });
+      }
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    };
+  }, [unifiedResult, setUnifiedResult]);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
