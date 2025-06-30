@@ -29,14 +29,21 @@ interface HomepageState {
 // Helper functions for state persistence
 const saveHomepageState = (state: Omit<HomepageState, 'savedAt'>) => {
   if (typeof window !== 'undefined') {
-    const stateWithTimestamp: HomepageState = {
+    // Convert Map to serializable format
+    const serializableState = {
       ...state,
+      unifiedResult: state.unifiedResult
+        ? {
+            ...state.unifiedResult,
+            // Convert Map to array of [key, value] pairs for serialization
+            resultsByDomain: Array.from(
+              state.unifiedResult.resultsByDomain.entries()
+            ),
+          }
+        : null,
       savedAt: Date.now(),
     };
-    localStorage.setItem(
-      HOMEPAGE_STATE_KEY,
-      JSON.stringify(stateWithTimestamp)
-    );
+    localStorage.setItem(HOMEPAGE_STATE_KEY, JSON.stringify(serializableState));
   }
 };
 
@@ -47,14 +54,28 @@ const loadHomepageState = (): Partial<HomepageState> | null => {
     const saved = localStorage.getItem(HOMEPAGE_STATE_KEY);
     if (!saved) return null;
 
-    const state: HomepageState = JSON.parse(saved);
+    const rawState = JSON.parse(saved);
 
     // Check if state is expired
-    const hoursElapsed = (Date.now() - state.savedAt) / (1000 * 60 * 60);
+    const hoursElapsed = (Date.now() - rawState.savedAt) / (1000 * 60 * 60);
     if (hoursElapsed > STATE_EXPIRY_HOURS) {
       localStorage.removeItem(HOMEPAGE_STATE_KEY);
       return null;
     }
+
+    // Convert serialized state back to proper format
+    const state: Partial<HomepageState> = {
+      domains: rawState.domains,
+      selectedTlds: rawState.selectedTlds,
+      unifiedResult: rawState.unifiedResult
+        ? {
+            ...rawState.unifiedResult,
+            // Convert array back to Map
+            resultsByDomain: new Map(rawState.unifiedResult.resultsByDomain),
+          }
+        : null,
+      savedAt: rawState.savedAt,
+    };
 
     return state;
   } catch (error) {
