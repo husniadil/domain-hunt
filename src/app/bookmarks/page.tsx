@@ -175,7 +175,7 @@ export default function BookmarksPage() {
               aria-label="Search bookmarks"
               value={searchTerm}
               onChange={e => setSearchTerm(e.target.value)}
-              className="w-full pl-10 pr-4 py-2 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="w-full h-10 pl-10 pr-4 border rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             />
           </div>
 
@@ -190,7 +190,7 @@ export default function BookmarksPage() {
                     : undefined,
                 })
               }
-              className="px-3 py-2 border rounded-lg"
+              className="h-10 px-3 border rounded-lg"
             >
               <option value="">All Status</option>
               <option value="available">Available</option>
@@ -202,7 +202,7 @@ export default function BookmarksPage() {
               onClick={handleRecheckAll}
               disabled={isChecking || bookmarks.length === 0}
               variant="outline"
-              size="sm"
+              className="h-10 px-3"
             >
               {isChecking ? (
                 <RefreshCw className="w-4 h-4 mr-2 animate-spin" />
