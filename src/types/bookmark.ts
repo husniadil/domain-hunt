@@ -45,5 +45,5 @@ export interface BookmarkStats {
   total: number;
   available: number;
   taken: number;
-  unknown: number; // Never checked or error
+  errors: number; // Never checked or error
 }

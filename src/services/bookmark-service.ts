@@ -335,7 +335,7 @@ export const getBookmarkStats = (): BookmarkStats => {
     total: bookmarks.length,
     available: bookmarks.filter(b => b.lastKnownStatus === 'available').length,
     taken: bookmarks.filter(b => b.lastKnownStatus === 'taken').length,
-    unknown: bookmarks.filter(
+    errors: bookmarks.filter(
       b => !b.lastKnownStatus || b.lastKnownStatus === 'error'
     ).length,
   };

@@ -31,7 +31,7 @@ export default function BookmarksPage() {
     total: 0,
     available: 0,
     taken: 0,
-    unknown: 0,
+    errors: 0,
   });
 
   // Load bookmarks on mount
@@ -159,7 +159,7 @@ export default function BookmarksPage() {
           </div>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
             <div className="text-2xl font-bold text-gray-600">
-              {stats.unknown}
+              {stats.errors}
             </div>
             <div className="text-sm text-gray-600">Errors</div>
           </div>
