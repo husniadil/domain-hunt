@@ -61,12 +61,10 @@ export function TldSelector({
 }: TldSelectorProps) {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
 
-  // Set initial TLDs on mount
+  // Sync with initialTlds changes (including when cleared)
   useEffect(() => {
-    if (initialTlds.length > 0) {
-      setSelectedTlds(initialTlds);
-      onTldsChange?.(initialTlds);
-    }
+    setSelectedTlds(initialTlds);
+    onTldsChange?.(initialTlds);
   }, [initialTlds, onTldsChange]);
 
   const handleTldToggle = (tld: string, checked: boolean) => {

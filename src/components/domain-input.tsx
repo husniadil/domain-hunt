@@ -25,12 +25,10 @@ export function DomainInput({
   const [isValid, setIsValid] = useState(true);
   const [domains, setDomains] = useState<string[]>([]);
 
-  // Set initial domains on mount
+  // Sync with initialDomains changes (including when cleared)
   useEffect(() => {
-    if (initialDomains.length > 0) {
-      setDomains(initialDomains);
-      onDomainsChange?.(initialDomains);
-    }
+    setDomains(initialDomains);
+    onDomainsChange?.(initialDomains);
   }, [initialDomains, onDomainsChange]);
 
   // Domain validation: only letters, numbers, and hyphens
