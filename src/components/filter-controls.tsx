@@ -2,7 +2,6 @@
 
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { X } from 'lucide-react';
 
 export type FilterType = 'all' | 'available' | 'taken' | 'error' | 'bookmarked';
 
@@ -18,7 +17,6 @@ interface FilterControlsProps {
   activeFilter: FilterType;
   counts: FilterCounts;
   onFilterChange: (filter: FilterType) => void;
-  onClearFilters: () => void;
   showBookmarked?: boolean;
 }
 
@@ -42,7 +40,6 @@ export function FilterControls({
   activeFilter,
   counts,
   onFilterChange,
-  onClearFilters,
   showBookmarked = true,
 }: FilterControlsProps) {
   const filters: FilterType[] = showBookmarked
@@ -50,48 +47,34 @@ export function FilterControls({
     : ['all', 'available', 'taken', 'error'];
 
   return (
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg border">
-      <div className="flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
-        {filters.map(filter => {
-          const isActive = activeFilter === filter;
-          const count = counts[filter];
+    <div className="flex items-center gap-2 p-4 bg-gray-50 rounded-lg border">
+      <span className="text-sm font-medium text-gray-700 mr-2">Filter:</span>
+      {filters.map(filter => {
+        const isActive = activeFilter === filter;
+        const count = counts[filter];
 
-          return (
-            <Button
-              key={filter}
-              variant={isActive ? 'default' : 'ghost'}
-              size="sm"
-              onClick={() => onFilterChange(filter)}
-              className="flex items-center justify-center gap-1.5 h-8 min-w-fit"
+        return (
+          <Button
+            key={filter}
+            variant={isActive ? 'default' : 'ghost'}
+            size="sm"
+            onClick={() => onFilterChange(filter)}
+            className="flex items-center justify-center gap-1.5 h-8 min-w-fit"
+          >
+            <span className="whitespace-nowrap">{filterLabels[filter]}</span>
+            <Badge
+              variant="outline"
+              className={`text-xs px-1.5 py-0.5 min-w-[1.75rem] text-center ${
+                isActive
+                  ? 'bg-white/20 text-white border-white/30'
+                  : filterColors[filter]
+              }`}
             >
-              <span className="whitespace-nowrap">{filterLabels[filter]}</span>
-              <Badge
-                variant="outline"
-                className={`text-xs px-1.5 py-0.5 min-w-[1.75rem] text-center ${
-                  isActive
-                    ? 'bg-white/20 text-white border-white/30'
-                    : filterColors[filter]
-                }`}
-              >
-                {count}
-              </Badge>
-            </Button>
-          );
-        })}
-      </div>
-
-      {activeFilter !== 'all' && (
-        <Button
-          variant="outline"
-          size="sm"
-          onClick={onClearFilters}
-          className="flex items-center gap-1.5"
-        >
-          <X className="w-3 h-3" />
-          Clear Filters
-        </Button>
-      )}
+              {count}
+            </Badge>
+          </Button>
+        );
+      })}
     </div>
   );
 }

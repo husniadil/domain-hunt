@@ -115,16 +115,11 @@ export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
     setActiveFilter(filter);
   };
 
-  const handleClearFilters = () => {
-    setActiveFilter('all');
-  };
-
   return {
     filteredResults,
     activeFilter,
     counts,
     isEmpty,
     onFilterChange: handleFilterChange,
-    onClearFilters: handleClearFilters,
   };
 }

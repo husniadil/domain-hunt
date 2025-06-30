@@ -34,14 +34,8 @@ export default function Home() {
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
 
-  const {
-    filteredResults,
-    activeFilter,
-    counts,
-    isEmpty,
-    onFilterChange,
-    onClearFilters,
-  } = useResultFilters(unifiedResult);
+  const { filteredResults, activeFilter, counts, isEmpty, onFilterChange } =
+    useResultFilters(unifiedResult);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -254,7 +248,6 @@ export default function Home() {
                 activeFilter={activeFilter}
                 counts={counts}
                 onFilterChange={onFilterChange}
-                onClearFilters={onClearFilters}
                 showBookmarked={true}
               />
 
