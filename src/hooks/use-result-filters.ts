@@ -23,9 +23,17 @@ export interface FilterCounts {
 export type ToggleStates = FilterToggleStates;
 
 export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
-  const [toggleStates, setToggleStates] = useState<ToggleStates>(() =>
-    loadFilterStates()
-  );
+  const [toggleStates, setToggleStates] = useState<ToggleStates>({
+    available: true,
+    taken: true,
+    error: true,
+  });
+
+  // Load initial state from localStorage after mount
+  useEffect(() => {
+    const storedStates = loadFilterStates();
+    setToggleStates(storedStates);
+  }, []);
 
   // Save toggle states to localStorage whenever they change
   useEffect(() => {
