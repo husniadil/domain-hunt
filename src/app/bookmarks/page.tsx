@@ -137,20 +137,22 @@ export default function BookmarksPage() {
             <div className="text-sm text-muted-foreground">Total</div>
           </div>
           <div className="bg-status-available-bg border border-status-available-border rounded-lg p-4">
-            <div className="text-2xl font-bold text-green-600">
+            <div className="text-2xl font-bold text-status-available">
               {stats.available}
             </div>
-            <div className="text-sm text-green-600">Available</div>
+            <div className="text-sm text-status-available">Available</div>
           </div>
           <div className="bg-status-taken-bg border border-status-taken-border rounded-lg p-4">
-            <div className="text-2xl font-bold text-red-600">{stats.taken}</div>
-            <div className="text-sm text-red-600">Taken</div>
+            <div className="text-2xl font-bold text-status-taken">
+              {stats.taken}
+            </div>
+            <div className="text-sm text-status-taken">Taken</div>
           </div>
           <div className="bg-status-error-bg border border-status-error-border rounded-lg p-4">
-            <div className="text-2xl font-bold text-gray-600">
+            <div className="text-2xl font-bold text-status-error">
               {stats.errors}
             </div>
-            <div className="text-sm text-gray-600">Errors</div>
+            <div className="text-sm text-status-error">Errors</div>
           </div>
         </div>
 
