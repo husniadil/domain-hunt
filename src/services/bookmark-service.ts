@@ -138,8 +138,6 @@ export const isBookmarked = (domain: string, tld: string): boolean => {
 // Dispatch custom event when bookmarks change
 const dispatchBookmarkChangeEvent = () => {
   if (typeof window !== 'undefined') {
-    console.log('🚀 BookmarkService: dispatching bookmarkStatsChanged event');
-
     // Dispatch custom event for same-page components
     window.dispatchEvent(new CustomEvent('bookmarkStatsChanged'));
 

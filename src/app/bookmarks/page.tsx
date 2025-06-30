@@ -93,23 +93,15 @@ export default function BookmarksPage() {
       const result = await checkDomainsUnified(domainsToCheck, tldsToCheck);
 
       // Update bookmark statuses
-      let updatedCount = 0;
       for (const [, domainResult] of result.resultsByDomain.entries()) {
         for (const domainCheck of domainResult.results) {
-          console.log(
-            `📝 Bookmarks: updating ${domainCheck.domain}${domainCheck.tld} to ${domainCheck.status}`
-          );
-          const updateResult = updateBookmarkStatus(
+          updateBookmarkStatus(
             domainCheck.domain,
             domainCheck.tld,
             domainCheck.status
           );
-          if (updateResult.success) {
-            updatedCount++;
-          }
         }
       }
-      console.log(`✅ Bookmarks: updated ${updatedCount} bookmark statuses`);
 
       // Reload bookmarks to reflect updates
       loadBookmarks();
