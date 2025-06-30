@@ -23,18 +23,30 @@ export function Header() {
       setStats(getBookmarkStats());
     };
 
-    if (pathname === '/bookmarks') {
-      loadStats();
+    // Load stats initially
+    loadStats();
 
+    // Listen for bookmark changes to update stats immediately
+    const handleBookmarkChange = () => {
+      loadStats();
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+
+    // Set up periodic refresh only on bookmarks page
+    let interval: NodeJS.Timeout | null = null;
+    if (pathname === '/bookmarks') {
       // Update stats every 5 seconds when on bookmarks page
       // This helps keep the count fresh when bookmarks are added/removed
-      const interval = setInterval(loadStats, 5000);
-
-      return () => clearInterval(interval);
-    } else {
-      // Load stats once for other pages
-      loadStats();
+      interval = setInterval(loadStats, 5000);
     }
+
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+      if (interval) {
+        clearInterval(interval);
+      }
+    };
   }, [pathname]);
 
   const isBookmarksPage = pathname === '/bookmarks';

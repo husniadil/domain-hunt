@@ -133,6 +133,13 @@ export const isBookmarked = (domain: string, tld: string): boolean => {
   return getBookmark(id) !== null;
 };
 
+// Dispatch custom event when bookmarks change
+const dispatchBookmarkChangeEvent = () => {
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('bookmarkStatsChanged'));
+  }
+};
+
 // Add a bookmark
 export const addBookmark = (
   domain: string,
@@ -162,6 +169,7 @@ export const addBookmark = (
 
     storage.bookmarks.push(bookmark);
     saveBookmarks(storage);
+    dispatchBookmarkChangeEvent();
 
     return {
       success: true,
@@ -195,6 +203,7 @@ export const removeBookmark = (
     const removedBookmark = storage.bookmarks[index];
     storage.bookmarks.splice(index, 1);
     saveBookmarks(storage);
+    dispatchBookmarkChangeEvent();
 
     return {
       success: true,
@@ -242,6 +251,7 @@ export const updateBookmarkStatus = (
     bookmark.lastKnownStatus = status;
     bookmark.lastCheckedAt = new Date();
     saveBookmarks(storage);
+    dispatchBookmarkChangeEvent();
 
     return {
       success: true,
