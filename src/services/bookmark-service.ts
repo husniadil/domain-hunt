@@ -15,7 +15,8 @@ const CURRENT_VERSION = 1;
 
 // Helper function to create bookmark ID from domain and TLD
 export const createBookmarkId = (domain: string, tld: string): BookmarkId => {
-  return `${domain}${tld}`;
+  const normalizedTld = tld.startsWith('.') ? tld : `.${tld}`;
+  return `${domain}${normalizedTld}`;
 };
 
 // Helper function to parse domain and TLD from bookmark ID
