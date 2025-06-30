@@ -105,9 +105,20 @@ export default function Home() {
       }
     };
 
+    // Listen for both custom events and storage events for cross-tab sync
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'bookmarkChangeSignal') {
+        console.log('🔄 Homepage: received storage event for bookmark change');
+        handleBookmarkChange();
+      }
+    };
+
     window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    window.addEventListener('storage', handleStorageChange);
+
     return () => {
       window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, [unifiedResult, setUnifiedResult]);
 

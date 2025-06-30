@@ -139,7 +139,18 @@ export const isBookmarked = (domain: string, tld: string): boolean => {
 const dispatchBookmarkChangeEvent = () => {
   if (typeof window !== 'undefined') {
     console.log('🚀 BookmarkService: dispatching bookmarkStatsChanged event');
+
+    // Dispatch custom event for same-page components
     window.dispatchEvent(new CustomEvent('bookmarkStatsChanged'));
+
+    // Trigger storage event for cross-tab communication
+    // We temporarily set and remove a flag to trigger storage event
+    const timestamp = Date.now().toString();
+    localStorage.setItem('bookmarkChangeSignal', timestamp);
+    // Remove immediately to avoid storage bloat
+    setTimeout(() => {
+      localStorage.removeItem('bookmarkChangeSignal');
+    }, 100);
   }
 };
 
