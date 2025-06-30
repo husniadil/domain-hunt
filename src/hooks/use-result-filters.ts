@@ -3,28 +3,40 @@
 import { useState, useMemo } from 'react';
 import { DomainResult, UnifiedDomainResult } from '@/types/domain';
 import { isBookmarked } from '@/services/bookmark-service';
-import { FilterType, FilterCounts } from '@/components/filter-controls';
 
-export interface FilteredResults {
-  filteredResults: UnifiedDomainResult | null;
-  activeFilter: FilterType;
-  counts: FilterCounts;
-  isEmpty: boolean;
+export type StatusToggle = 'available' | 'taken' | 'error';
+
+export interface FilterCounts {
+  available: number;
+  taken: number;
+  error: number;
+  bookmarked: number;
+  showing: number;
+}
+
+export interface ToggleStates {
+  available: boolean;
+  taken: boolean;
+  error: boolean;
 }
 
 export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
-  const [activeFilter, setActiveFilter] = useState<FilterType>('all');
+  const [toggleStates, setToggleStates] = useState<ToggleStates>({
+    available: true,
+    taken: true,
+    error: true,
+  });
 
   const { filteredResults, counts, isEmpty } = useMemo(() => {
     if (!unifiedResult) {
       return {
         filteredResults: null,
         counts: {
-          all: 0,
           available: 0,
           taken: 0,
           error: 0,
           bookmarked: 0,
+          showing: 0,
         },
         isEmpty: true,
       };
@@ -36,38 +48,18 @@ export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
       allResults.push(...domainResult.results);
     });
 
-    // Calculate counts for each filter type
+    // Calculate counts for each status type
     const counts: FilterCounts = {
-      all: allResults.length,
       available: allResults.filter(r => r.status === 'available').length,
       taken: allResults.filter(r => r.status === 'taken').length,
       error: allResults.filter(r => r.status === 'error').length,
       bookmarked: allResults.filter(r => isBookmarked(r.domain, r.tld)).length,
+      showing: 0, // Will be calculated after filtering
     };
 
-    // Apply filter if not 'all'
-    if (activeFilter === 'all') {
-      return {
-        filteredResults: unifiedResult,
-        counts,
-        isEmpty: allResults.length === 0,
-      };
-    }
-
-    // Filter results based on active filter
+    // Filter results based on toggle states
     const filterFunction = (result: DomainResult): boolean => {
-      switch (activeFilter) {
-        case 'available':
-          return result.status === 'available';
-        case 'taken':
-          return result.status === 'taken';
-        case 'error':
-          return result.status === 'error';
-        case 'bookmarked':
-          return isBookmarked(result.domain, result.tld);
-        default:
-          return true;
-      }
+      return toggleStates[result.status as StatusToggle] === true;
     };
 
     // Create filtered version of unified result
@@ -91,6 +83,9 @@ export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
       }
     );
 
+    // Update showing count
+    counts.showing = totalFilteredResults;
+
     // Update overall progress to reflect filtered results
     const filteredOverallProgress = {
       ...unifiedResult.overallProgress,
@@ -109,17 +104,20 @@ export function useResultFilters(unifiedResult: UnifiedDomainResult | null) {
       counts,
       isEmpty: totalFilteredResults === 0,
     };
-  }, [unifiedResult, activeFilter]);
+  }, [unifiedResult, toggleStates]);
 
-  const handleFilterChange = (filter: FilterType) => {
-    setActiveFilter(filter);
+  const handleToggle = (status: StatusToggle) => {
+    setToggleStates(prev => ({
+      ...prev,
+      [status]: !prev[status],
+    }));
   };
 
   return {
     filteredResults,
-    activeFilter,
+    toggleStates,
     counts,
     isEmpty,
-    onFilterChange: handleFilterChange,
+    onToggle: handleToggle,
   };
 }

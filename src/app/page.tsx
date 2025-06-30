@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
-import { FilterControls } from '@/components/filter-controls';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { checkDomainsUnified } from '@/services/domain-checker';
@@ -34,7 +33,7 @@ export default function Home() {
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
 
-  const { filteredResults, activeFilter, counts, isEmpty, onFilterChange } =
+  const { filteredResults, toggleStates, counts, isEmpty, onToggle } =
     useResultFilters(unifiedResult);
 
   const handleCheckDomains = async () => {
@@ -243,32 +242,89 @@ export default function Home() {
                 </div>
               </div>
 
-              {/* Filter Controls */}
-              <FilterControls
-                activeFilter={activeFilter}
-                counts={counts}
-                onFilterChange={onFilterChange}
-                showBookmarked={true}
-              />
-
-              {/* Summary Stats */}
+              {/* Toggleable Filter Stats */}
               <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
                 <div className="flex justify-between p-2 bg-gray-50 rounded">
                   <span>Showing:</span>
-                  <span>{filteredResults?.overallProgress.total || 0}</span>
+                  <span>{counts.showing}</span>
                 </div>
-                <div className="flex justify-between p-2 bg-green-50 rounded">
-                  <span>Available:</span>
-                  <span className="text-green-600">{counts.available}</span>
-                </div>
-                <div className="flex justify-between p-2 bg-red-50 rounded">
-                  <span>Taken:</span>
-                  <span className="text-red-600">{counts.taken}</span>
-                </div>
-                <div className="flex justify-between p-2 bg-yellow-50 rounded">
-                  <span>Errors:</span>
-                  <span className="text-yellow-600">{counts.error}</span>
-                </div>
+                <button
+                  onClick={() => onToggle('available')}
+                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
+                    toggleStates.available
+                      ? 'bg-green-100 border-2 border-green-300'
+                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
+                  }`}
+                >
+                  <span
+                    className={
+                      toggleStates.available
+                        ? 'text-green-800'
+                        : 'text-gray-600'
+                    }
+                  >
+                    Available:
+                  </span>
+                  <span
+                    className={
+                      toggleStates.available
+                        ? 'text-green-600 font-medium'
+                        : 'text-gray-500'
+                    }
+                  >
+                    {counts.available}
+                  </span>
+                </button>
+                <button
+                  onClick={() => onToggle('taken')}
+                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
+                    toggleStates.taken
+                      ? 'bg-red-100 border-2 border-red-300'
+                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
+                  }`}
+                >
+                  <span
+                    className={
+                      toggleStates.taken ? 'text-red-800' : 'text-gray-600'
+                    }
+                  >
+                    Taken:
+                  </span>
+                  <span
+                    className={
+                      toggleStates.taken
+                        ? 'text-red-600 font-medium'
+                        : 'text-gray-500'
+                    }
+                  >
+                    {counts.taken}
+                  </span>
+                </button>
+                <button
+                  onClick={() => onToggle('error')}
+                  className={`flex justify-between p-2 rounded transition-all hover:scale-105 ${
+                    toggleStates.error
+                      ? 'bg-yellow-100 border-2 border-yellow-300'
+                      : 'bg-gray-100 border-2 border-gray-300 opacity-50'
+                  }`}
+                >
+                  <span
+                    className={
+                      toggleStates.error ? 'text-yellow-800' : 'text-gray-600'
+                    }
+                  >
+                    Errors:
+                  </span>
+                  <span
+                    className={
+                      toggleStates.error
+                        ? 'text-yellow-600 font-medium'
+                        : 'text-gray-500'
+                    }
+                  >
+                    {counts.error}
+                  </span>
+                </button>
               </div>
 
               {/* Results by Domain */}
