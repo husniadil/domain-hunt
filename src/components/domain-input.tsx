@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Input } from '@/components/ui/input';
 import { Badge } from '@/components/ui/badge';
 import { X } from 'lucide-react';
@@ -11,6 +11,7 @@ interface DomainInputProps {
   onValueChange?: (value: string) => void;
   placeholder?: string;
   className?: string;
+  initialDomains?: string[];
 }
 
 export function DomainInput({
@@ -18,10 +19,19 @@ export function DomainInput({
   onValueChange,
   placeholder = 'Enter domain name...',
   className,
+  initialDomains = [],
 }: DomainInputProps) {
   const [value, setValue] = useState('');
   const [isValid, setIsValid] = useState(true);
   const [domains, setDomains] = useState<string[]>([]);
+
+  // Set initial domains on mount
+  useEffect(() => {
+    if (initialDomains.length > 0) {
+      setDomains(initialDomains);
+      onDomainsChange?.(initialDomains);
+    }
+  }, [initialDomains, onDomainsChange]);
 
   // Domain validation: only letters, numbers, and hyphens
   const validateDomain = (input: string): boolean => {

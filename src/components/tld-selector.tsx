@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
@@ -10,6 +10,7 @@ import tldData from '../../data/tlds.json';
 interface TldSelectorProps {
   onTldsChange?: (tlds: string[]) => void;
   className?: string;
+  initialTlds?: string[];
 }
 
 // Default TLD list used as fallback when JSON data is invalid
@@ -53,8 +54,20 @@ const validateTldData = (data: unknown): TLD[] => {
 const TLDS: TLD[] = validateTldData(tldData as TLDConfig);
 const TLD_EXTENSIONS = TLDS.map(tld => tld.extension);
 
-export function TldSelector({ onTldsChange, className }: TldSelectorProps) {
+export function TldSelector({
+  onTldsChange,
+  className,
+  initialTlds = [],
+}: TldSelectorProps) {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
+
+  // Set initial TLDs on mount
+  useEffect(() => {
+    if (initialTlds.length > 0) {
+      setSelectedTlds(initialTlds);
+      onTldsChange?.(initialTlds);
+    }
+  }, [initialTlds, onTldsChange]);
 
   const handleTldToggle = (tld: string, checked: boolean) => {
     const newSelectedTlds = checked

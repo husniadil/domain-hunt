@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
@@ -14,6 +14,62 @@ import {
 } from '@/types/domain';
 import { Loader2, CheckCircle2, XCircle, AlertCircle } from 'lucide-react';
 
+// Constants for localStorage keys
+const HOMEPAGE_STATE_KEY = 'domain-hunt-homepage-state';
+const STATE_EXPIRY_HOURS = 24; // State expires after 24 hours
+
+// Types for persisted state
+interface HomepageState {
+  domains: string[];
+  selectedTlds: string[];
+  unifiedResult: UnifiedDomainResult | null;
+  savedAt: number;
+}
+
+// Helper functions for state persistence
+const saveHomepageState = (state: Omit<HomepageState, 'savedAt'>) => {
+  if (typeof window !== 'undefined') {
+    const stateWithTimestamp: HomepageState = {
+      ...state,
+      savedAt: Date.now(),
+    };
+    localStorage.setItem(
+      HOMEPAGE_STATE_KEY,
+      JSON.stringify(stateWithTimestamp)
+    );
+  }
+};
+
+const loadHomepageState = (): Partial<HomepageState> | null => {
+  if (typeof window === 'undefined') return null;
+
+  try {
+    const saved = localStorage.getItem(HOMEPAGE_STATE_KEY);
+    if (!saved) return null;
+
+    const state: HomepageState = JSON.parse(saved);
+
+    // Check if state is expired
+    const hoursElapsed = (Date.now() - state.savedAt) / (1000 * 60 * 60);
+    if (hoursElapsed > STATE_EXPIRY_HOURS) {
+      localStorage.removeItem(HOMEPAGE_STATE_KEY);
+      return null;
+    }
+
+    return state;
+  } catch (error) {
+    console.error('Failed to load homepage state:', error);
+    localStorage.removeItem(HOMEPAGE_STATE_KEY);
+    return null;
+  }
+};
+
+const clearHomepageState = () => {
+  if (typeof window !== 'undefined') {
+    localStorage.removeItem(HOMEPAGE_STATE_KEY);
+  }
+};
+
 export default function Home() {
   const [domains, setDomains] = useState<string[]>([]);
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
@@ -23,6 +79,34 @@ export default function Home() {
   const [isChecking, setIsChecking] = useState(false);
   const [abortController, setAbortController] =
     useState<AbortController | null>(null);
+
+  // Load saved state on component mount
+  useEffect(() => {
+    const savedState = loadHomepageState();
+    if (savedState) {
+      if (savedState.domains && savedState.domains.length > 0) {
+        setDomains(savedState.domains);
+      }
+      if (savedState.selectedTlds && savedState.selectedTlds.length > 0) {
+        setSelectedTlds(savedState.selectedTlds);
+      }
+      if (savedState.unifiedResult) {
+        setUnifiedResult(savedState.unifiedResult);
+      }
+    }
+  }, []);
+
+  // Save state whenever relevant data changes
+  useEffect(() => {
+    // Only save if we have meaningful data
+    if (domains.length > 0 || selectedTlds.length > 0 || unifiedResult) {
+      saveHomepageState({
+        domains,
+        selectedTlds,
+        unifiedResult,
+      });
+    }
+  }, [domains, selectedTlds, unifiedResult]);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -61,6 +145,14 @@ export default function Home() {
       setIsChecking(false);
       setAbortController(null);
     }
+  };
+
+  const handleClearResults = () => {
+    setDomains([]);
+    setSelectedTlds([]);
+    setUnifiedResult(null);
+    setProgress(null);
+    clearHomepageState();
   };
 
   const getStatusIcon = (status: DomainResult['status']) => {
@@ -104,9 +196,16 @@ export default function Home() {
         </div>
 
         <div className="w-full max-w-md space-y-6">
-          <DomainInput onDomainsChange={setDomains} className="text-center" />
+          <DomainInput
+            onDomainsChange={setDomains}
+            className="text-center"
+            initialDomains={domains}
+          />
 
-          <TldSelector onTldsChange={setSelectedTlds} />
+          <TldSelector
+            onTldsChange={setSelectedTlds}
+            initialTlds={selectedTlds}
+          />
 
           <div className="space-y-2">
             <Button
@@ -134,6 +233,19 @@ export default function Home() {
                 Cancel Check
               </Button>
             )}
+
+            {/* Clear Results Button - show when we have results or saved state */}
+            {(unifiedResult || domains.length > 0 || selectedTlds.length > 0) &&
+              !isChecking && (
+                <Button
+                  onClick={handleClearResults}
+                  variant="outline"
+                  size="sm"
+                  className="w-full"
+                >
+                  Clear Results
+                </Button>
+              )}
           </div>
 
           {/* Progress Display */}
