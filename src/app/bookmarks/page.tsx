@@ -10,14 +10,18 @@ import {
   getBookmarkStats,
   updateBookmarkStatus,
 } from '@/services/bookmark-service';
-import { checkDomainsUnified } from '@/services/domain-checker';
+import { checkDomain } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
 import { getStatusColor } from '@/lib/utils';
-import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
+import { DEFAULT_ERROR_STATUS, DOMAIN_STATUS } from '@/constants/domain-status';
 import { RefreshCw, Search, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
+import pLimit from 'p-limit';
+
+// Configuration constants
+const BOOKMARK_RECHECK_CONCURRENCY_LIMIT = 5; // Max concurrent domain checks
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -86,42 +90,66 @@ export default function BookmarksPage() {
 
     setIsChecking(true);
     try {
-      // Prepare domains and TLDs for checking
-      const domainsToCheck = Array.from(new Set(bookmarks.map(b => b.domain)));
-      const tldsToCheck = Array.from(new Set(bookmarks.map(b => b.tld)));
+      // Check only the actual bookmarked domain+TLD pairs
+      // Process all bookmarks with controlled concurrency to optimize performance
+      // while preventing client/server overload
+      const limit = pLimit(BOOKMARK_RECHECK_CONCURRENCY_LIMIT);
 
-      const result = await checkDomainsUnified(domainsToCheck, tldsToCheck);
+      const domainCheckResults = await Promise.all(
+        bookmarks.map(bookmark =>
+          limit(async () => {
+            try {
+              const domainCheckResult = await checkDomain(
+                bookmark.domain,
+                bookmark.tld
+              );
+              return {
+                domain: domainCheckResult.domain,
+                tld: domainCheckResult.tld,
+                status: domainCheckResult.status,
+              };
+            } catch (error) {
+              console.error(
+                `Error checking ${bookmark.domain}${bookmark.tld}:`,
+                error
+              );
+              return {
+                domain: bookmark.domain,
+                tld: bookmark.tld,
+                status: DOMAIN_STATUS.ERROR as DomainResult['status'],
+              };
+            }
+          })
+        )
+      );
 
       // Update bookmark statuses
-      for (const [, domainResult] of result.resultsByDomain.entries()) {
-        for (const domainCheck of domainResult.results) {
-          updateBookmarkStatus(
-            domainCheck.domain,
-            domainCheck.tld,
-            domainCheck.status
-          );
-        }
+      for (const result of domainCheckResults) {
+        updateBookmarkStatus(result.domain, result.tld, result.status);
       }
 
       // Reload bookmarks to reflect updates
       loadBookmarks();
 
       // Show success toast with summary
-      const totalChecked = result.overallProgress.completed;
-      const failed = result.overallProgress.failed;
+      const totalChecked = domainCheckResults.length;
+      const failed = domainCheckResults.filter(
+        r => r.status === DOMAIN_STATUS.ERROR
+      ).length;
+      const successful = totalChecked - failed;
 
-      if (failed === 0) {
+      // Guard against edge case of zero results
+      if (totalChecked === 0) {
+        toast.info('No domains were checked');
+      } else if (failed === 0) {
         toast.success(
           `Successfully rechecked ${totalChecked} bookmarked domains`
         );
-      } else if (failed < totalChecked) {
-        toast.warning(
-          `Rechecked ${totalChecked} domains with ${failed} errors`,
-          {
-            description:
-              'Some domains could not be checked. See individual results for details.',
-          }
-        );
+      } else if (successful > 0) {
+        toast.warning(`Rechecked ${successful} domains with ${failed} errors`, {
+          description:
+            'Some domains could not be checked. See individual results for details.',
+        });
       } else {
         toast.error('Bookmark recheck failed', {
           description:
