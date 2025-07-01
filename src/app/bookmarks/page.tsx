@@ -87,33 +87,32 @@ export default function BookmarksPage() {
     setIsChecking(true);
     try {
       // Check only the actual bookmarked domain+TLD pairs
-      const results: {
-        domain: string;
-        tld: string;
-        status: DomainResult['status'];
-      }[] = [];
-
-      // Process each bookmark individually to avoid checking unwanted combinations
-      for (const bookmark of bookmarks) {
-        try {
-          const result = await checkDomain(bookmark.domain, bookmark.tld);
-          results.push({
-            domain: result.domain,
-            tld: result.tld,
-            status: result.status,
-          });
-        } catch (error) {
-          console.error(
-            `Error checking ${bookmark.domain}${bookmark.tld}:`,
-            error
-          );
-          results.push({
-            domain: bookmark.domain,
-            tld: bookmark.tld,
-            status: 'error' as DomainResult['status'],
-          });
-        }
-      }
+      // Process all bookmarks in parallel to reduce waiting time
+      const results = await Promise.all(
+        bookmarks.map(async bookmark => {
+          try {
+            const domainCheckResult = await checkDomain(
+              bookmark.domain,
+              bookmark.tld
+            );
+            return {
+              domain: domainCheckResult.domain,
+              tld: domainCheckResult.tld,
+              status: domainCheckResult.status,
+            };
+          } catch (error) {
+            console.error(
+              `Error checking ${bookmark.domain}${bookmark.tld}:`,
+              error
+            );
+            return {
+              domain: bookmark.domain,
+              tld: bookmark.tld,
+              status: 'error' as DomainResult['status'],
+            };
+          }
+        })
+      );
 
       // Update bookmark statuses
       for (const result of results) {
