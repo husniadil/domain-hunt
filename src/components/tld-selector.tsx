@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import {
   TLD,
@@ -23,6 +24,9 @@ interface TldSelectorProps {
   showAllCategories?: boolean;
   onCollapsedCategoriesChange?: (categories: string[]) => void;
   onShowAllCategoriesChange?: (show: boolean) => void;
+  // Search state props
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 // Enhanced default TLD list used as fallback when JSON data is invalid
@@ -117,14 +121,47 @@ export function TldSelector({
   showAllCategories = false,
   onCollapsedCategoriesChange,
   onShowAllCategoriesChange,
+  searchQuery = '',
+  onSearchChange,
 }: TldSelectorProps) {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
+  const [internalSearchQuery, setInternalSearchQuery] = useState(searchQuery);
 
   // Sync with initialTlds changes (including when cleared)
   useEffect(() => {
     setSelectedTlds(initialTlds);
     onTldsChange?.(initialTlds);
   }, [initialTlds, onTldsChange]);
+
+  // Sync with external search query changes
+  useEffect(() => {
+    setInternalSearchQuery(searchQuery);
+  }, [searchQuery]);
+
+  // Debounced search handler
+  const debouncedSearchChange = useCallback(
+    (query: string) => {
+      const timeoutId = setTimeout(() => {
+        onSearchChange?.(query);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    },
+    [onSearchChange]
+  );
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const query = e.target.value;
+      setInternalSearchQuery(query);
+      debouncedSearchChange(query);
+    },
+    [debouncedSearchChange]
+  );
+
+  const clearSearch = useCallback(() => {
+    setInternalSearchQuery('');
+    onSearchChange?.('');
+  }, [onSearchChange]);
 
   const handleTldToggle = (tld: string, checked: boolean) => {
     const newSelectedTlds = checked
@@ -145,6 +182,36 @@ export function TldSelector({
     onTldsChange?.([]);
   };
 
+  // Filter TLDs based on search query
+  const filteredData = useMemo(() => {
+    if (!internalSearchQuery.trim()) {
+      return { tlds: TLDS, categories: CATEGORIES };
+    }
+
+    const query = internalSearchQuery.toLowerCase().trim();
+
+    // Filter TLDs that match extension, name, or category
+    const matchingTlds = TLDS.filter(
+      tld =>
+        tld.extension.toLowerCase().includes(query) ||
+        tld.name.toLowerCase().includes(query) ||
+        tld.category.toLowerCase().includes(query)
+    );
+
+    // If no categories, return filtered flat list
+    if (!CATEGORIES) {
+      return { tlds: matchingTlds, categories: null };
+    }
+
+    // Create filtered categories containing only matching TLDs
+    const filteredCategories = CATEGORIES.map(category => ({
+      ...category,
+      tlds: category.tlds.filter(tld => matchingTlds.includes(tld)),
+    })).filter(category => category.tlds.length > 0);
+
+    return { tlds: matchingTlds, categories: filteredCategories };
+  }, [internalSearchQuery]);
+
   // Category management functions
   const handleCategoryToggle = (categoryId: string) => {
     const isCollapsed = collapsedCategories.includes(categoryId);
@@ -162,37 +229,56 @@ export function TldSelector({
   const allSelected = selectedTlds.length === TLD_EXTENSIONS.length;
   const noneSelected = selectedTlds.length === 0;
 
-  // Cache popular category lookup to avoid duplicate searches
-  const popularCategory = CATEGORIES?.find(cat => cat.id === 'popular');
+  // Cache popular category lookup from filtered data
+  const popularCategory = filteredData.categories?.find(
+    cat => cat.id === 'popular'
+  );
 
-  // Render TLD grid for a category or flat list
+  // Check if search is active and has no results
+  const isSearching = internalSearchQuery.trim().length > 0;
+  const hasNoResults = isSearching && filteredData.tlds.length === 0;
+
+  // Render TLD grid for a category or flat list with optional search highlighting
   const renderTldGrid = (tlds: TLD[]) => (
     <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:grid-cols-3">
-      {tlds.map(tld => (
-        <div key={tld.extension} className="flex items-center space-x-2">
-          <Checkbox
-            id={`tld-${tld.extension.replace('.', '-')}`}
-            checked={selectedTlds.includes(tld.extension)}
-            onCheckedChange={checked =>
-              handleTldToggle(tld.extension, !!checked)
-            }
-          />
-          <label
-            htmlFor={`tld-${tld.extension.replace('.', '-')}`}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-            title={tld.name}
-          >
-            {tld.extension}
-          </label>
-        </div>
-      ))}
+      {tlds.map(tld => {
+        const query = internalSearchQuery.toLowerCase().trim();
+        const isHighlighted =
+          query &&
+          (tld.extension.toLowerCase().includes(query) ||
+            tld.name.toLowerCase().includes(query));
+
+        return (
+          <div key={tld.extension} className="flex items-center space-x-2">
+            <Checkbox
+              id={`tld-${tld.extension.replace('.', '-')}`}
+              checked={selectedTlds.includes(tld.extension)}
+              onCheckedChange={checked =>
+                handleTldToggle(tld.extension, !!checked)
+              }
+            />
+            <label
+              htmlFor={`tld-${tld.extension.replace('.', '-')}`}
+              className={cn(
+                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer',
+                isHighlighted &&
+                  'bg-yellow-100 dark:bg-yellow-900/30 px-1 rounded'
+              )}
+              title={tld.name}
+            >
+              {tld.extension}
+            </label>
+          </div>
+        );
+      })}
     </div>
   );
 
-  // Render category section
+  // Render category section with search awareness
   const renderCategorySection = (category: TLDCategory) => {
     const isCollapsed = collapsedCategories.includes(category.id);
     const isPopular = category.id === 'popular';
+    const shouldExpand = isSearching || !isCollapsed || isPopular;
 
     return (
       <div key={category.id} className="space-y-3">
@@ -200,25 +286,59 @@ export function TldSelector({
           <button
             onClick={() => handleCategoryToggle(category.id)}
             className="flex items-center gap-2 text-sm font-medium hover:text-primary"
-            disabled={isPopular} // Popular section always expanded
+            disabled={isPopular || isSearching} // Popular section always expanded, search auto-expands
           >
-            {!isPopular && (
+            {!isPopular && !isSearching && (
               <span className="text-xs">{isCollapsed ? '▶' : '▼'}</span>
             )}
             {category.name}
             <span className="text-xs text-muted-foreground">
               ({category.tlds.length})
             </span>
+            {isSearching && (
+              <span className="text-xs text-blue-600 dark:text-blue-400">
+                (matches)
+              </span>
+            )}
           </button>
         </div>
 
-        {(!isCollapsed || isPopular) && renderTldGrid(category.tlds)}
+        {shouldExpand && renderTldGrid(category.tlds)}
       </div>
     );
   };
 
   return (
     <div className={cn('space-y-4', className)}>
+      {/* Search Input */}
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search TLDs by extension (.com), name (Commercial), or category..."
+          value={internalSearchQuery}
+          onChange={handleSearchChange}
+          className="pr-8"
+        />
+        {internalSearchQuery && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            title="Clear search"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Search Results Info */}
+      {isSearching && (
+        <div className="text-sm text-muted-foreground">
+          {hasNoResults
+            ? 'No TLDs found matching your search.'
+            : `Found ${filteredData.tlds.length} TLD${filteredData.tlds.length === 1 ? '' : 's'} matching "${internalSearchQuery}"`}
+        </div>
+      )}
+
       {/* TLD Summary Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -250,14 +370,25 @@ export function TldSelector({
         </div>
       </div>
 
-      {/* Categorized or Flat Layout */}
-      {CATEGORIES ? (
+      {/* No Results State */}
+      {hasNoResults ? (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>No TLDs found matching &quot;{internalSearchQuery}&quot;</p>
+          <button
+            onClick={clearSearch}
+            className="mt-2 text-sm text-primary hover:underline"
+          >
+            Clear search to see all TLDs
+          </button>
+        </div>
+      ) : /* Categorized or Flat Layout */
+      filteredData.categories ? (
         <div className="space-y-4">
           {/* Popular Section (always visible) */}
           {popularCategory && renderCategorySection(popularCategory)}
 
-          {/* Show More Toggle */}
-          {CATEGORIES.length > 1 && (
+          {/* Show More Toggle - hidden during search */}
+          {!isSearching && filteredData.categories.length > 1 && (
             <div className="flex justify-center">
               <Button
                 variant="ghost"
@@ -271,18 +402,18 @@ export function TldSelector({
             </div>
           )}
 
-          {/* Collapsible Categories */}
-          {showAllCategories && (
+          {/* Collapsible Categories - auto-expanded during search */}
+          {(showAllCategories || isSearching) && (
             <div className="space-y-4">
-              {CATEGORIES.filter(cat => cat.id !== 'popular').map(
-                renderCategorySection
-              )}
+              {filteredData.categories
+                .filter(cat => cat.id !== 'popular')
+                .map(renderCategorySection)}
             </div>
           )}
         </div>
       ) : (
         /* Fallback: Flat Grid Layout */
-        renderTldGrid(TLDS)
+        renderTldGrid(filteredData.tlds)
       )}
 
       {/* Selected Extensions Summary */}
