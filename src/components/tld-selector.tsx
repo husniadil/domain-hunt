@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
-import { TLD, TLDConfig } from '@/types/tld';
+import { TLD, TLDConfig, isValidTLDConfig, isValidTLD } from '@/types/tld';
 import tldData from '../../data/tlds.json';
 
 interface TldSelectorProps {
@@ -13,11 +13,38 @@ interface TldSelectorProps {
   initialTlds?: string[];
 }
 
-// Default TLD list used as fallback when JSON data is invalid
+// Enhanced default TLD list used as fallback when JSON data is invalid
 const DEFAULT_TLDS: TLD[] = [
-  { extension: '.com', name: 'Commercial', popular: true },
-  { extension: '.net', name: 'Network', popular: true },
-  { extension: '.org', name: 'Organization', popular: true },
+  { extension: '.com', name: 'Commercial', popular: true, category: 'Popular' },
+  { extension: '.co', name: 'Company', popular: true, category: 'Popular' },
+  { extension: '.net', name: 'Network', popular: true, category: 'Popular' },
+  {
+    extension: '.org',
+    name: 'Organization',
+    popular: true,
+    category: 'Popular',
+  },
+  {
+    extension: '.io',
+    name: 'Input/Output',
+    popular: true,
+    category: 'Popular',
+  },
+  { extension: '.xyz', name: 'Generic', popular: true, category: 'Popular' },
+  { extension: '.online', name: 'Online', popular: true, category: 'Popular' },
+  {
+    extension: '.tech',
+    name: 'Technology',
+    popular: true,
+    category: 'Popular',
+  },
+  {
+    extension: '.app',
+    name: 'Application',
+    popular: true,
+    category: 'Popular',
+  },
+  { extension: '.dev', name: 'Developer', popular: true, category: 'Popular' },
 ];
 
 /**
@@ -27,28 +54,37 @@ const DEFAULT_TLDS: TLD[] = [
  * @returns Array of valid TLD objects. Returns DEFAULT_TLDS if input is invalid.
  *
  * This function performs runtime validation to ensure the data matches the expected
- * TLDConfig structure with valid TLD entries. If validation fails at any level,
- * it falls back to a predefined set of default TLDs to ensure the component
- * always has usable data.
+ * TLDConfig structure with valid TLD entries. It supports both legacy flat structure
+ * and new categorized structure. If validation fails at any level, it falls back
+ * to a predefined set of default TLDs to ensure the component always has usable data.
  */
 const validateTldData = (data: unknown): TLD[] => {
-  if (
-    !data ||
-    typeof data !== 'object' ||
-    !Array.isArray((data as TLDConfig).tlds)
-  ) {
+  // Use new type guard for comprehensive validation
+  if (!isValidTLDConfig(data)) {
     console.warn('Invalid TLD data structure, falling back to default TLDs');
     return DEFAULT_TLDS;
   }
 
-  return (data as TLDConfig).tlds.filter(
-    (tld: unknown): tld is TLD =>
-      typeof tld === 'object' &&
-      tld !== null &&
-      typeof (tld as TLD).extension === 'string' &&
-      typeof (tld as TLD).name === 'string' &&
-      typeof (tld as TLD).popular === 'boolean'
-  );
+  const config = data as TLDConfig;
+
+  // Filter TLDs using the type guard for additional safety
+  const validTlds = config.tlds.filter(isValidTLD);
+
+  if (validTlds.length === 0) {
+    console.warn('No valid TLDs found in data, falling back to default TLDs');
+    return DEFAULT_TLDS;
+  }
+
+  // Log successful data loading with categorization info
+  if (config.categories) {
+    console.info(
+      `Loaded ${validTlds.length} TLDs across ${config.categories.length} categories`
+    );
+  } else {
+    console.info(`Loaded ${validTlds.length} TLDs (legacy flat structure)`);
+  }
+
+  return validTlds;
 };
 
 const TLDS: TLD[] = validateTldData(tldData as TLDConfig);
