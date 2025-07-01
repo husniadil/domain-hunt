@@ -475,29 +475,67 @@ export function TldSelector({
           {/* Popular Section (always visible) */}
           {popularCategory && renderCategorySection(popularCategory)}
 
-          {/* Show More Toggle - hidden during search */}
-          {!isSearching && filteredData.categories.length > 1 && (
-            <div className="flex justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleShowMoreToggle}
-                className="text-xs"
-              >
-                {showAllCategories ? 'Show Less' : 'Show More Categories'}
-                <span className="ml-1">{showAllCategories ? '▲' : '▼'}</span>
-              </Button>
-            </div>
-          )}
+          {/* Enhanced Show More Toggle - hidden during search */}
+          {!isSearching &&
+            filteredData.categories.length > 1 &&
+            (() => {
+              const hiddenCategories = filteredData.categories.filter(
+                cat => cat.id !== 'popular'
+              );
+              const hiddenCategoriesCount = hiddenCategories.length;
+              const hiddenTldsCount = hiddenCategories.reduce(
+                (sum, cat) => sum + cat.tlds.length,
+                0
+              );
 
-          {/* Collapsible Categories - auto-expanded during search */}
-          {(showAllCategories || isSearching) && (
-            <div className="space-y-4">
+              return (
+                <div className="flex justify-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleShowMoreToggle}
+                    className="text-xs hover:bg-muted transition-colors duration-200 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      {showAllCategories ? (
+                        <>
+                          Show Less
+                          <span className="text-xs opacity-75">
+                            (Hide {hiddenCategoriesCount} categories)
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          Show More Categories
+                          <span className="text-xs opacity-75">
+                            ({hiddenCategoriesCount} more with {hiddenTldsCount}{' '}
+                            TLDs)
+                          </span>
+                        </>
+                      )}
+                      <span className="ml-1 transition-transform duration-200 group-hover:scale-110">
+                        {showAllCategories ? '▲' : '▼'}
+                      </span>
+                    </span>
+                  </Button>
+                </div>
+              );
+            })()}
+
+          {/* Collapsible Categories - auto-expanded during search with smooth transitions */}
+          <div
+            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+              showAllCategories || isSearching
+                ? 'max-h-[2000px] opacity-100'
+                : 'max-h-0 opacity-0'
+            }`}
+          >
+            <div className="space-y-4 pt-4">
               {filteredData.categories
                 .filter(cat => cat.id !== 'popular')
                 .map(renderCategorySection)}
             </div>
-          )}
+          </div>
         </div>
       ) : (
         /* Fallback: Flat Grid Layout */
