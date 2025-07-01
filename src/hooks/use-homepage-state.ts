@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import { UnifiedDomainResult } from '@/types/domain';
 import {
   loadHomepageState,
@@ -6,6 +6,11 @@ import {
   clearHomepageState,
 } from '@/services/homepage-state-service';
 
+/**
+ * Custom hook for managing homepage state with persistence
+ * Loads saved state on mount and automatically saves changes
+ * @returns Object containing state variables, setters, and clearState function
+ */
 export function useHomepageState() {
   const [domains, setDomains] = useState<string[]>([]);
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
@@ -47,13 +52,16 @@ export function useHomepageState() {
     clearHomepageState();
   };
 
-  return {
-    domains,
-    selectedTlds,
-    unifiedResult,
-    setDomains,
-    setSelectedTlds,
-    setUnifiedResult,
-    clearState,
-  };
+  return useMemo(
+    () => ({
+      domains,
+      selectedTlds,
+      unifiedResult,
+      setDomains,
+      setSelectedTlds,
+      setUnifiedResult,
+      clearState,
+    }),
+    [domains, selectedTlds, unifiedResult]
+  );
 }

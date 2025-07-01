@@ -34,7 +34,14 @@ export function ProgressDisplay({ progress }: ProgressDisplayProps) {
         </div>
       </div>
 
-      <div className="w-full bg-gray-200 rounded-full h-2">
+      <div
+        className="w-full bg-gray-200 rounded-full h-2"
+        role="progressbar"
+        aria-valuenow={progress.percentage}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label="Overall progress"
+      >
         <div
           className="bg-blue-500 h-2 rounded-full transition-all"
           style={{ width: `${progress.percentage}%` }}
@@ -42,7 +49,14 @@ export function ProgressDisplay({ progress }: ProgressDisplayProps) {
       </div>
 
       {progress.totalDomains && progress.totalDomains > 1 && (
-        <div className="w-full bg-gray-100 rounded-full h-1">
+        <div
+          className="w-full bg-gray-100 rounded-full h-1"
+          role="progressbar"
+          aria-valuenow={progress.overallPercentage}
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-label="Domain progress"
+        >
           <div
             className="bg-green-500 h-1 rounded-full transition-all"
             style={{ width: `${progress.overallPercentage}%` }}
