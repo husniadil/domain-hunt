@@ -1,8 +1,9 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
 import {
   TLD,
@@ -23,6 +24,9 @@ interface TldSelectorProps {
   showAllCategories?: boolean;
   onCollapsedCategoriesChange?: (categories: string[]) => void;
   onShowAllCategoriesChange?: (show: boolean) => void;
+  // Search state props
+  searchQuery?: string;
+  onSearchChange?: (query: string) => void;
 }
 
 // Enhanced default TLD list used as fallback when JSON data is invalid
@@ -117,14 +121,47 @@ export function TldSelector({
   showAllCategories = false,
   onCollapsedCategoriesChange,
   onShowAllCategoriesChange,
+  searchQuery = '',
+  onSearchChange,
 }: TldSelectorProps) {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
+  const [internalSearchQuery, setInternalSearchQuery] = useState(searchQuery);
 
   // Sync with initialTlds changes (including when cleared)
   useEffect(() => {
     setSelectedTlds(initialTlds);
     onTldsChange?.(initialTlds);
   }, [initialTlds, onTldsChange]);
+
+  // Sync with external search query changes
+  useEffect(() => {
+    setInternalSearchQuery(searchQuery);
+  }, [searchQuery]);
+
+  // Debounced search handler
+  const debouncedSearchChange = useCallback(
+    (query: string) => {
+      const timeoutId = setTimeout(() => {
+        onSearchChange?.(query);
+      }, 300);
+      return () => clearTimeout(timeoutId);
+    },
+    [onSearchChange]
+  );
+
+  const handleSearchChange = useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      const query = e.target.value;
+      setInternalSearchQuery(query);
+      debouncedSearchChange(query);
+    },
+    [debouncedSearchChange]
+  );
+
+  const clearSearch = useCallback(() => {
+    setInternalSearchQuery('');
+    onSearchChange?.('');
+  }, [onSearchChange]);
 
   const handleTldToggle = (tld: string, checked: boolean) => {
     const newSelectedTlds = checked
@@ -145,6 +182,83 @@ export function TldSelector({
     onTldsChange?.([]);
   };
 
+  // Filter TLDs based on search query
+  const filteredData = useMemo(() => {
+    if (!internalSearchQuery.trim()) {
+      return { tlds: TLDS, categories: CATEGORIES };
+    }
+
+    const query = internalSearchQuery.toLowerCase().trim();
+
+    // Filter TLDs that match extension, name, or category
+    const matchingTlds = TLDS.filter(
+      tld =>
+        tld.extension.toLowerCase().includes(query) ||
+        tld.name.toLowerCase().includes(query) ||
+        (tld.category && tld.category.toLowerCase().includes(query))
+    );
+
+    // If no categories, return filtered flat list
+    if (!CATEGORIES) {
+      return { tlds: matchingTlds, categories: null };
+    }
+
+    // Create filtered categories containing only matching TLDs
+    const matchingExtensions = matchingTlds.map(tld => tld.extension);
+    const filteredCategories = CATEGORIES.map(category => ({
+      ...category,
+      tlds: category.tlds.filter(tld =>
+        matchingExtensions.includes(tld.extension)
+      ),
+    })).filter(category => category.tlds.length > 0);
+
+    return { tlds: matchingTlds, categories: filteredCategories };
+  }, [internalSearchQuery]);
+
+  // Category selection state calculations
+  const getCategorySelectionState = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const selectedInCategory = selectedTlds.filter(tld =>
+        categoryTlds.includes(tld)
+      );
+
+      return {
+        selectedCount: selectedInCategory.length,
+        totalCount: categoryTlds.length,
+        isAllSelected: selectedInCategory.length === categoryTlds.length,
+        isNoneSelected: selectedInCategory.length === 0,
+        isPartiallySelected:
+          selectedInCategory.length > 0 &&
+          selectedInCategory.length < categoryTlds.length,
+      };
+    },
+    [selectedTlds]
+  );
+
+  // Category bulk selection handlers
+  const handleCategorySelectAll = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const newSelectedTlds = [...new Set([...selectedTlds, ...categoryTlds])];
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
+
+  const handleCategoryDeselectAll = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const newSelectedTlds = selectedTlds.filter(
+        tld => !categoryTlds.includes(tld)
+      );
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
+
   // Category management functions
   const handleCategoryToggle = (categoryId: string) => {
     const isCollapsed = collapsedCategories.includes(categoryId);
@@ -162,63 +276,203 @@ export function TldSelector({
   const allSelected = selectedTlds.length === TLD_EXTENSIONS.length;
   const noneSelected = selectedTlds.length === 0;
 
-  // Cache popular category lookup to avoid duplicate searches
-  const popularCategory = CATEGORIES?.find(cat => cat.id === 'popular');
+  // Cache popular category lookup from filtered data
+  const popularCategory = filteredData.categories?.find(
+    cat => cat.id === 'popular'
+  );
 
-  // Render TLD grid for a category or flat list
+  // Check if search is active and has no results
+  const isSearching = internalSearchQuery.trim().length > 0;
+  const hasNoResults = isSearching && filteredData.tlds.length === 0;
+
+  // Render TLD grid for a category or flat list with optional search highlighting
   const renderTldGrid = (tlds: TLD[]) => (
     <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:grid-cols-3">
-      {tlds.map(tld => (
-        <div key={tld.extension} className="flex items-center space-x-2">
-          <Checkbox
-            id={`tld-${tld.extension.replace('.', '-')}`}
-            checked={selectedTlds.includes(tld.extension)}
-            onCheckedChange={checked =>
-              handleTldToggle(tld.extension, !!checked)
-            }
-          />
-          <label
-            htmlFor={`tld-${tld.extension.replace('.', '-')}`}
-            className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer"
-            title={tld.name}
-          >
-            {tld.extension}
-          </label>
-        </div>
-      ))}
+      {tlds.map(tld => {
+        const query = internalSearchQuery.toLowerCase().trim();
+        const isHighlighted =
+          query &&
+          (tld.extension.toLowerCase().includes(query) ||
+            tld.name.toLowerCase().includes(query));
+
+        return (
+          <div key={tld.extension} className="flex items-center space-x-3">
+            <Checkbox
+              id={`tld-${tld.extension.replace('.', '-')}`}
+              checked={selectedTlds.includes(tld.extension)}
+              onCheckedChange={checked =>
+                handleTldToggle(tld.extension, !!checked)
+              }
+            />
+            <label
+              htmlFor={`tld-${tld.extension.replace('.', '-')}`}
+              className={cn(
+                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer py-1 text-left',
+                isHighlighted &&
+                  'bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded'
+              )}
+              title={tld.name}
+            >
+              {tld.extension}
+            </label>
+          </div>
+        );
+      })}
     </div>
   );
 
-  // Render category section
+  // Enhanced keyboard handler for category toggle
+  const handleCategoryKeyDown = (
+    e: React.KeyboardEvent,
+    categoryId: string
+  ) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCategoryToggle(categoryId);
+    }
+  };
+
+  // Render category section with smooth animations and enhanced interactions
   const renderCategorySection = (category: TLDCategory) => {
     const isCollapsed = collapsedCategories.includes(category.id);
     const isPopular = category.id === 'popular';
+    const shouldExpand = isSearching || !isCollapsed || isPopular;
+    const selectionState = getCategorySelectionState(category);
+    const isToggleDisabled = isPopular || isSearching;
+
+    // Visual indicator for selection state
+    const getSelectionIcon = () => {
+      if (selectionState.isAllSelected) {
+        return '✓'; // checkmark for all selected
+      } else if (selectionState.isPartiallySelected) {
+        return '−'; // dash for partial selection
+      } else {
+        return '☐'; // empty box for none selected
+      }
+    };
 
     return (
       <div key={category.id} className="space-y-3">
         <div className="flex items-center justify-between">
           <button
             onClick={() => handleCategoryToggle(category.id)}
-            className="flex items-center gap-2 text-sm font-medium hover:text-primary"
-            disabled={isPopular} // Popular section always expanded
-          >
-            {!isPopular && (
-              <span className="text-xs">{isCollapsed ? '▶' : '▼'}</span>
+            onKeyDown={e => handleCategoryKeyDown(e, category.id)}
+            className={cn(
+              'flex items-center gap-2 text-sm font-medium transition-all duration-200',
+              !isToggleDisabled &&
+                'hover:text-primary hover:bg-muted/50 rounded-md px-2 py-1 -mx-2',
+              isToggleDisabled && 'cursor-default'
             )}
+            disabled={isToggleDisabled}
+            aria-expanded={shouldExpand}
+            aria-controls={`category-content-${category.id}`}
+            aria-label={`${shouldExpand ? 'Collapse' : 'Expand'} ${category.name} category`}
+            title={
+              isToggleDisabled
+                ? undefined
+                : `${shouldExpand ? 'Collapse' : 'Expand'} ${category.name} category`
+            }
+          >
+            {!isPopular && !isSearching && (
+              <span
+                className={cn(
+                  'text-xs transition-transform duration-200 ease-in-out',
+                  !isCollapsed && 'rotate-90'
+                )}
+              >
+                ▶
+              </span>
+            )}
+            <span className="text-xs mr-1">{getSelectionIcon()}</span>
             {category.name}
             <span className="text-xs text-muted-foreground">
-              ({category.tlds.length})
+              ({selectionState.selectedCount}/{selectionState.totalCount}{' '}
+              selected)
             </span>
+            {isSearching && (
+              <span className="text-xs text-blue-600 dark:text-blue-400">
+                (matches)
+              </span>
+            )}
           </button>
+
+          {/* Bulk Selection Controls */}
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                handleCategorySelectAll(category);
+              }}
+              disabled={selectionState.isAllSelected}
+              className="text-xs h-6 px-2 transition-all duration-200 hover:scale-105"
+              title={`Select all ${category.name} TLDs`}
+            >
+              All
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                handleCategoryDeselectAll(category);
+              }}
+              disabled={selectionState.isNoneSelected}
+              className="text-xs h-6 px-2 transition-all duration-200 hover:scale-105"
+              title={`Deselect all ${category.name} TLDs`}
+            >
+              None
+            </Button>
+          </div>
         </div>
 
-        {(!isCollapsed || isPopular) && renderTldGrid(category.tlds)}
+        {/* Category Content with smooth animations */}
+        <div
+          id={`category-content-${category.id}`}
+          className={cn(
+            'transition-all duration-300 ease-in-out',
+            shouldExpand ? 'opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
+          )}
+          aria-hidden={!shouldExpand}
+        >
+          <div className="pt-1">{renderTldGrid(category.tlds)}</div>
+        </div>
       </div>
     );
   };
 
   return (
     <div className={cn('space-y-4', className)}>
+      {/* Search Input */}
+      <div className="relative">
+        <Input
+          type="text"
+          placeholder="Search TLDs by extension (.com), name (Commercial), or category..."
+          value={internalSearchQuery}
+          onChange={handleSearchChange}
+          className="pr-8"
+        />
+        {internalSearchQuery && (
+          <button
+            onClick={clearSearch}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            title="Clear search"
+          >
+            ✕
+          </button>
+        )}
+      </div>
+
+      {/* Search Results Info */}
+      {isSearching && (
+        <div className="text-sm text-muted-foreground">
+          {hasNoResults
+            ? 'No TLDs found matching your search.'
+            : `Found ${filteredData.tlds.length} TLD${filteredData.tlds.length === 1 ? '' : 's'} matching "${internalSearchQuery}"`}
+        </div>
+      )}
+
       {/* TLD Summary Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
@@ -250,39 +504,88 @@ export function TldSelector({
         </div>
       </div>
 
-      {/* Categorized or Flat Layout */}
-      {CATEGORIES ? (
+      {/* No Results State */}
+      {hasNoResults ? (
+        <div className="text-center py-8 text-muted-foreground">
+          <p>No TLDs found matching &quot;{internalSearchQuery}&quot;</p>
+          <button
+            onClick={clearSearch}
+            className="mt-2 text-sm text-primary hover:underline"
+          >
+            Clear search to see all TLDs
+          </button>
+        </div>
+      ) : /* Categorized or Flat Layout */
+      filteredData.categories ? (
         <div className="space-y-4">
           {/* Popular Section (always visible) */}
           {popularCategory && renderCategorySection(popularCategory)}
 
-          {/* Show More Toggle */}
-          {CATEGORIES.length > 1 && (
-            <div className="flex justify-center">
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={handleShowMoreToggle}
-                className="text-xs"
-              >
-                {showAllCategories ? 'Show Less' : 'Show More Categories'}
-                <span className="ml-1">{showAllCategories ? '▲' : '▼'}</span>
-              </Button>
-            </div>
-          )}
+          {/* Enhanced Show More Toggle - hidden during search */}
+          {!isSearching &&
+            filteredData.categories.length > 1 &&
+            (() => {
+              const hiddenCategories = filteredData.categories.filter(
+                cat => cat.id !== 'popular'
+              );
+              const hiddenCategoriesCount = hiddenCategories.length;
+              const hiddenTldsCount = hiddenCategories.reduce(
+                (sum, cat) => sum + cat.tlds.length,
+                0
+              );
 
-          {/* Collapsible Categories */}
-          {showAllCategories && (
-            <div className="space-y-4">
-              {CATEGORIES.filter(cat => cat.id !== 'popular').map(
-                renderCategorySection
-              )}
+              return (
+                <div className="flex justify-center">
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    onClick={handleShowMoreToggle}
+                    className="text-xs hover:bg-muted transition-colors duration-200 group"
+                  >
+                    <span className="flex items-center gap-2">
+                      {showAllCategories ? (
+                        <>
+                          Show Less
+                          <span className="text-xs opacity-75">
+                            (Hide {hiddenCategoriesCount} categories)
+                          </span>
+                        </>
+                      ) : (
+                        <>
+                          Show More Categories
+                          <span className="text-xs opacity-75">
+                            ({hiddenCategoriesCount} more with {hiddenTldsCount}{' '}
+                            TLDs)
+                          </span>
+                        </>
+                      )}
+                      <span className="ml-1 transition-transform duration-200 group-hover:scale-110">
+                        {showAllCategories ? '▲' : '▼'}
+                      </span>
+                    </span>
+                  </Button>
+                </div>
+              );
+            })()}
+
+          {/* Collapsible Categories - auto-expanded during search with smooth transitions */}
+          <div
+            className={`transition-all duration-300 ease-in-out ${
+              showAllCategories || isSearching
+                ? 'opacity-100'
+                : 'max-h-0 opacity-0 overflow-hidden'
+            }`}
+          >
+            <div className="space-y-4 pt-4">
+              {filteredData.categories
+                .filter(cat => cat.id !== 'popular')
+                .map(renderCategorySection)}
             </div>
-          )}
+          </div>
         </div>
       ) : (
         /* Fallback: Flat Grid Layout */
-        renderTldGrid(TLDS)
+        renderTldGrid(filteredData.tlds)
       )}
 
       {/* Selected Extensions Summary */}
