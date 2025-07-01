@@ -14,10 +14,29 @@ import { checkDomain } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
 import { getStatusColor } from '@/lib/utils';
-import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
+import { DEFAULT_ERROR_STATUS, DOMAIN_STATUS } from '@/constants/domain-status';
 import { RefreshCw, Search, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
+
+// Configuration constants
+const BOOKMARK_RECHECK_CONCURRENCY_LIMIT = 5; // Max concurrent domain checks
+
+// Simple concurrency limiter to control parallel execution
+async function limitConcurrency<T>(
+  tasks: (() => Promise<T>)[],
+  limit: number
+): Promise<T[]> {
+  const results: T[] = [];
+
+  for (let i = 0; i < tasks.length; i += limit) {
+    const batch = tasks.slice(i, i + limit);
+    const batchResults = await Promise.all(batch.map(task => task()));
+    results.push(...batchResults);
+  }
+
+  return results;
+}
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -87,30 +106,17 @@ export default function BookmarksPage() {
     setIsChecking(true);
     try {
       // Check only the actual bookmarked domain+TLD pairs
-      // Process bookmarks with concurrency limit to avoid overloading client/server
-      const CONCURRENCY_LIMIT = 5; // Process max 5 domains simultaneously
-      const results: {
-        domain: string;
-        tld: string;
-        status: DomainResult['status'];
-      }[] = [];
-
-      // Process bookmarks in batches with concurrency control
-      for (let i = 0; i < bookmarks.length; i += CONCURRENCY_LIMIT) {
-        const batch = bookmarks.slice(i, i + CONCURRENCY_LIMIT);
-        const batchResults = await Promise.all(
-          batch.map(async bookmark => {
-            try {
-              const domainCheckResult = await checkDomain(
-                bookmark.domain,
-                bookmark.tld
-              );
-              return {
-                domain: domainCheckResult.domain,
-                tld: domainCheckResult.tld,
-                status: domainCheckResult.status,
-              };
-            } catch (error) {
+      // Process all bookmarks with controlled concurrency to optimize performance
+      // while preventing client/server overload
+      const checkTasks = bookmarks.map(
+        bookmark => () =>
+          checkDomain(bookmark.domain, bookmark.tld)
+            .then(domainCheckResult => ({
+              domain: domainCheckResult.domain,
+              tld: domainCheckResult.tld,
+              status: domainCheckResult.status,
+            }))
+            .catch(error => {
               console.error(
                 `Error checking ${bookmark.domain}${bookmark.tld}:`,
                 error
@@ -118,16 +124,18 @@ export default function BookmarksPage() {
               return {
                 domain: bookmark.domain,
                 tld: bookmark.tld,
-                status: 'error' as DomainResult['status'],
+                status: DOMAIN_STATUS.ERROR as DomainResult['status'],
               };
-            }
-          })
-        );
-        results.push(...batchResults);
-      }
+            })
+      );
+
+      const domainCheckResults = await limitConcurrency(
+        checkTasks,
+        BOOKMARK_RECHECK_CONCURRENCY_LIMIT
+      );
 
       // Update bookmark statuses
-      for (const result of results) {
+      for (const result of domainCheckResults) {
         updateBookmarkStatus(result.domain, result.tld, result.status);
       }
 
@@ -135,8 +143,10 @@ export default function BookmarksPage() {
       loadBookmarks();
 
       // Show success toast with summary
-      const totalChecked = results.length;
-      const failed = results.filter(r => r.status === 'error').length;
+      const totalChecked = domainCheckResults.length;
+      const failed = domainCheckResults.filter(
+        r => r.status === DOMAIN_STATUS.ERROR
+      ).length;
       const successful = totalChecked - failed;
 
       if (failed === 0) {
