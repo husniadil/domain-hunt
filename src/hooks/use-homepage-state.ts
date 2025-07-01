@@ -46,8 +46,15 @@ export function useHomepageState() {
 
   // Save state whenever relevant data changes
   useEffect(() => {
-    // Only save if we have meaningful data
-    if (domains.length > 0 || selectedTlds.length > 0 || unifiedResult) {
+    // Save state if we have meaningful data OR if UI state has changed
+    // This ensures UI preferences persist even when main data is empty
+    if (
+      domains.length > 0 ||
+      selectedTlds.length > 0 ||
+      unifiedResult ||
+      collapsedCategories.length > 0 ||
+      showAllCategories
+    ) {
       saveHomepageState({
         domains,
         selectedTlds,

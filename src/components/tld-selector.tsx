@@ -162,6 +162,9 @@ export function TldSelector({
   const allSelected = selectedTlds.length === TLD_EXTENSIONS.length;
   const noneSelected = selectedTlds.length === 0;
 
+  // Cache popular category lookup to avoid duplicate searches
+  const popularCategory = CATEGORIES?.find(cat => cat.id === 'popular');
+
   // Render TLD grid for a category or flat list
   const renderTldGrid = (tlds: TLD[]) => (
     <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:grid-cols-3">
@@ -251,10 +254,7 @@ export function TldSelector({
       {CATEGORIES ? (
         <div className="space-y-4">
           {/* Popular Section (always visible) */}
-          {CATEGORIES.find(cat => cat.id === 'popular') &&
-            renderCategorySection(
-              CATEGORIES.find(cat => cat.id === 'popular')!
-            )}
+          {popularCategory && renderCategorySection(popularCategory)}
 
           {/* Show More Toggle */}
           {CATEGORIES.length > 1 && (
