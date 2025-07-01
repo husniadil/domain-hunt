@@ -212,6 +212,50 @@ export function TldSelector({
     return { tlds: matchingTlds, categories: filteredCategories };
   }, [internalSearchQuery]);
 
+  // Category selection state calculations
+  const getCategorySelectionState = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const selectedInCategory = selectedTlds.filter(tld =>
+        categoryTlds.includes(tld)
+      );
+
+      return {
+        selectedCount: selectedInCategory.length,
+        totalCount: categoryTlds.length,
+        isAllSelected: selectedInCategory.length === categoryTlds.length,
+        isNoneSelected: selectedInCategory.length === 0,
+        isPartiallySelected:
+          selectedInCategory.length > 0 &&
+          selectedInCategory.length < categoryTlds.length,
+      };
+    },
+    [selectedTlds]
+  );
+
+  // Category bulk selection handlers
+  const handleCategorySelectAll = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const newSelectedTlds = [...new Set([...selectedTlds, ...categoryTlds])];
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
+
+  const handleCategoryDeselectAll = useCallback(
+    (category: TLDCategory) => {
+      const categoryTlds = category.tlds.map(tld => tld.extension);
+      const newSelectedTlds = selectedTlds.filter(
+        tld => !categoryTlds.includes(tld)
+      );
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
+
   // Category management functions
   const handleCategoryToggle = (categoryId: string) => {
     const isCollapsed = collapsedCategories.includes(categoryId);
@@ -274,11 +318,23 @@ export function TldSelector({
     </div>
   );
 
-  // Render category section with search awareness
+  // Render category section with search awareness and bulk selection controls
   const renderCategorySection = (category: TLDCategory) => {
     const isCollapsed = collapsedCategories.includes(category.id);
     const isPopular = category.id === 'popular';
     const shouldExpand = isSearching || !isCollapsed || isPopular;
+    const selectionState = getCategorySelectionState(category);
+
+    // Visual indicator for selection state
+    const getSelectionIcon = () => {
+      if (selectionState.isAllSelected) {
+        return '✓'; // checkmark for all selected
+      } else if (selectionState.isPartiallySelected) {
+        return '−'; // dash for partial selection
+      } else {
+        return '☐'; // empty box for none selected
+      }
+    };
 
     return (
       <div key={category.id} className="space-y-3">
@@ -291,9 +347,11 @@ export function TldSelector({
             {!isPopular && !isSearching && (
               <span className="text-xs">{isCollapsed ? '▶' : '▼'}</span>
             )}
+            <span className="text-xs mr-1">{getSelectionIcon()}</span>
             {category.name}
             <span className="text-xs text-muted-foreground">
-              ({category.tlds.length})
+              ({selectionState.selectedCount}/{selectionState.totalCount}{' '}
+              selected)
             </span>
             {isSearching && (
               <span className="text-xs text-blue-600 dark:text-blue-400">
@@ -301,6 +359,36 @@ export function TldSelector({
               </span>
             )}
           </button>
+
+          {/* Bulk Selection Controls */}
+          <div className="flex gap-1">
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                handleCategorySelectAll(category);
+              }}
+              disabled={selectionState.isAllSelected}
+              className="text-xs h-6 px-2"
+              title={`Select all ${category.name} TLDs`}
+            >
+              All
+            </Button>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={e => {
+                e.stopPropagation();
+                handleCategoryDeselectAll(category);
+              }}
+              disabled={selectionState.isNoneSelected}
+              className="text-xs h-6 px-2"
+              title={`Deselect all ${category.name} TLDs`}
+            >
+              None
+            </Button>
+          </div>
         </div>
 
         {shouldExpand && renderTldGrid(category.tlds)}
