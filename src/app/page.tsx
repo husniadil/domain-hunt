@@ -15,8 +15,10 @@ import { UnifiedLookupProgress, UnifiedDomainResult } from '@/types/domain';
 import { Loader2, Filter, RefreshCw } from 'lucide-react';
 import { useHomepageState } from '@/hooks/use-homepage-state';
 import { useResultFilters } from '@/hooks/use-result-filters';
-import { FilterToggleButton } from '@/components/filter-toggle-button';
 import { ErrorBoundary } from '@/components/error-boundary';
+import { HomepageHeader } from '@/components/homepage-header';
+import { ProgressDisplay } from '@/components/progress-display';
+import { FilterStats } from '@/components/filter-stats';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
@@ -317,14 +319,7 @@ export default function Home() {
     <ErrorBoundary>
       <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center space-y-8 text-center min-h-[calc(100vh-8rem)]">
-          <div className="text-center">
-            <h1 className="text-4xl font-bold tracking-tight text-foreground mb-4">
-              Domain Hunt
-            </h1>
-            <p className="text-lg text-muted-foreground mb-8">
-              Find and hunt for the perfect domain names for your next project
-            </p>
-          </div>
+          <HomepageHeader />
 
           <div className="w-full max-w-md space-y-6">
             <DomainInput
@@ -382,53 +377,7 @@ export default function Home() {
             </div>
 
             {/* Progress Display */}
-            {progress && (
-              <div className="space-y-3">
-                <div className="text-center">
-                  <div className="text-sm text-muted-foreground">
-                    {progress.currentDomain && (
-                      <div className="mb-1">
-                        Checking:{' '}
-                        <span className="font-medium">
-                          {progress.currentDomain}
-                        </span>
-                      </div>
-                    )}
-                    <div className="flex justify-between">
-                      <span>
-                        Overall Progress: {progress.completed}/{progress.total}
-                      </span>
-                      <span>{progress.percentage}%</span>
-                    </div>
-                    {progress.totalDomains && progress.totalDomains > 1 && (
-                      <div className="flex justify-between text-xs mt-1">
-                        <span>
-                          Domains: {progress.domainsCompleted}/
-                          {progress.totalDomains}
-                        </span>
-                        <span>{progress.overallPercentage}%</span>
-                      </div>
-                    )}
-                  </div>
-                </div>
-
-                <div className="w-full bg-gray-200 rounded-full h-2">
-                  <div
-                    className="bg-blue-500 h-2 rounded-full transition-all"
-                    style={{ width: `${progress.percentage}%` }}
-                  />
-                </div>
-
-                {progress.totalDomains && progress.totalDomains > 1 && (
-                  <div className="w-full bg-gray-100 rounded-full h-1">
-                    <div
-                      className="bg-green-500 h-1 rounded-full transition-all"
-                      style={{ width: `${progress.overallPercentage}%` }}
-                    />
-                  </div>
-                )}
-              </div>
-            )}
+            <ProgressDisplay progress={progress} />
 
             {/* Unified Results Section */}
             {unifiedResult && (
@@ -453,33 +402,11 @@ export default function Home() {
                 </div>
 
                 {/* Toggleable Filter Stats */}
-                <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                  <div className="flex justify-between p-2 bg-container-bg border border-container-border rounded">
-                    <span>Showing:</span>
-                    <span>{counts.showing}</span>
-                  </div>
-                  <FilterToggleButton
-                    type="available"
-                    label="Available"
-                    count={counts.available}
-                    isActive={toggleStates.available}
-                    onClick={() => onToggle('available')}
-                  />
-                  <FilterToggleButton
-                    type="taken"
-                    label="Taken"
-                    count={counts.taken}
-                    isActive={toggleStates.taken}
-                    onClick={() => onToggle('taken')}
-                  />
-                  <FilterToggleButton
-                    type="error"
-                    label="Errors"
-                    count={counts.error}
-                    isActive={toggleStates.error}
-                    onClick={() => onToggle('error')}
-                  />
-                </div>
+                <FilterStats
+                  counts={counts}
+                  toggleStates={toggleStates}
+                  onToggle={onToggle}
+                />
 
                 {/* Results by Domain */}
                 {isEmpty ? (
