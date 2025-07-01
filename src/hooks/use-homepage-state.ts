@@ -17,6 +17,10 @@ export function useHomepageState() {
   const [unifiedResult, setUnifiedResult] =
     useState<UnifiedDomainResult | null>(null);
 
+  // New category UI state
+  const [collapsedCategories, setCollapsedCategories] = useState<string[]>([]);
+  const [showAllCategories, setShowAllCategories] = useState<boolean>(false);
+
   // Load saved state on mount
   useEffect(() => {
     const savedState = loadHomepageState();
@@ -30,25 +34,49 @@ export function useHomepageState() {
       if (savedState.unifiedResult) {
         setUnifiedResult(savedState.unifiedResult);
       }
+      // Load category UI state with defaults
+      if (savedState.collapsedCategories) {
+        setCollapsedCategories(savedState.collapsedCategories);
+      }
+      if (savedState.showAllCategories !== undefined) {
+        setShowAllCategories(savedState.showAllCategories);
+      }
     }
   }, []);
 
   // Save state whenever relevant data changes
   useEffect(() => {
-    // Only save if we have meaningful data
-    if (domains.length > 0 || selectedTlds.length > 0 || unifiedResult) {
+    // Save state if we have meaningful data OR if UI state has changed
+    // This ensures UI preferences persist even when main data is empty
+    if (
+      domains.length > 0 ||
+      selectedTlds.length > 0 ||
+      unifiedResult ||
+      collapsedCategories.length > 0 ||
+      showAllCategories
+    ) {
       saveHomepageState({
         domains,
         selectedTlds,
         unifiedResult,
+        collapsedCategories,
+        showAllCategories,
       });
     }
-  }, [domains, selectedTlds, unifiedResult]);
+  }, [
+    domains,
+    selectedTlds,
+    unifiedResult,
+    collapsedCategories,
+    showAllCategories,
+  ]);
 
   const clearState = () => {
     setDomains([]);
     setSelectedTlds([]);
     setUnifiedResult(null);
+    setCollapsedCategories([]);
+    setShowAllCategories(false);
     clearHomepageState();
   };
 
@@ -57,11 +85,21 @@ export function useHomepageState() {
       domains,
       selectedTlds,
       unifiedResult,
+      collapsedCategories,
+      showAllCategories,
       setDomains,
       setSelectedTlds,
       setUnifiedResult,
+      setCollapsedCategories,
+      setShowAllCategories,
       clearState,
     }),
-    [domains, selectedTlds, unifiedResult]
+    [
+      domains,
+      selectedTlds,
+      unifiedResult,
+      collapsedCategories,
+      showAllCategories,
+    ]
   );
 }

@@ -30,9 +30,13 @@ export default function Home() {
     domains,
     selectedTlds,
     unifiedResult,
+    collapsedCategories,
+    showAllCategories,
     setDomains,
     setSelectedTlds,
     setUnifiedResult,
+    setCollapsedCategories,
+    setShowAllCategories,
     clearState,
   } = useHomepageState();
   const [progress, setProgress] = useState<UnifiedLookupProgress | null>(null);
@@ -229,6 +233,10 @@ export default function Home() {
             <TldSelector
               onTldsChange={setSelectedTlds}
               initialTlds={selectedTlds}
+              collapsedCategories={collapsedCategories}
+              showAllCategories={showAllCategories}
+              onCollapsedCategoriesChange={setCollapsedCategories}
+              onShowAllCategoriesChange={setShowAllCategories}
             />
 
             <ActionButtons

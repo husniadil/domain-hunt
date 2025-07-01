@@ -6,10 +6,16 @@ const STATE_EXPIRY_HOURS = 24; // State expires after 24 hours
 
 // Types for persisted state
 export interface HomepageState {
+  // Existing fields (maintain compatibility)
   domains: string[];
   selectedTlds: string[];
   unifiedResult: UnifiedDomainResult | null;
   savedAt: number;
+
+  // New fields for categorized TLD UI
+  collapsedCategories: string[]; // IDs of collapsed categories
+  showAllCategories: boolean; // "Show More" toggle state
+  searchQuery?: string; // Search state persistence (optional)
 }
 
 // Helper functions for state persistence
@@ -65,6 +71,10 @@ export const loadHomepageState = (): Partial<HomepageState> | null => {
           }
         : null,
       savedAt: rawState.savedAt,
+      // New fields with defaults for backward compatibility
+      collapsedCategories: rawState.collapsedCategories || [],
+      showAllCategories: rawState.showAllCategories ?? false,
+      searchQuery: rawState.searchQuery,
     };
 
     return state;
