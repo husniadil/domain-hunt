@@ -30,7 +30,7 @@ export function useBookmarkSync(
       const bookmarks = getAllBookmarks();
       const bookmarkMap = new Map();
       bookmarks.forEach(bookmark => {
-        const key = `${bookmark.domain}.${bookmark.tld}`;
+        const key = `${bookmark.domain}${bookmark.tld}`;
         bookmarkMap.set(key, bookmark.lastKnownStatus);
       });
 
@@ -44,7 +44,7 @@ export function useBookmarkSync(
           const [domain, domainResult] = entry;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const updatedResults = domainResult.results.map((result: any) => {
-            const key = `${result.domain}.${result.tld}`;
+            const key = `${result.domain}${result.tld}`;
             const bookmarkStatus = bookmarkMap.get(key);
 
             // If this domain is bookmarked and status is different, update it

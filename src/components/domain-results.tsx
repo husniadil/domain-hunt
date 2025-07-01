@@ -52,10 +52,10 @@ export function DomainResults({
             <div className="grid gap-1">
               {domainResult.results.map(result => (
                 <DomainResultCard
-                  key={`${result.domain}.${result.tld}`}
+                  key={`${result.domain}${result.tld}`}
                   result={result}
                   isRetrying={retryingDomains.has(
-                    `${result.domain}.${result.tld}`
+                    `${result.domain}${result.tld}`
                   )}
                   onRetry={onRetryDomain}
                 />

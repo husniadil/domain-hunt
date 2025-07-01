@@ -131,7 +131,7 @@ export default function Home() {
   };
 
   const handleRetryDomain = async (domain: string, tld: string) => {
-    const domainKey = `${domain}.${tld}`;
+    const domainKey = `${domain}${tld}`;
 
     // Check if already retrying
     if (retryingDomains.has(domainKey)) {
@@ -188,11 +188,11 @@ export default function Home() {
       // Show success/error toast
       if (result.status === 'error') {
         const errorFormat = formatErrorForToast(result.error || 'Retry failed');
-        toast.error(`Retry failed for ${domain}.${tld}`, {
+        toast.error(`Retry failed for ${domain}${tld}`, {
           description: errorFormat.description,
         });
       } else {
-        toast.success(`Successfully retried ${domain}.${tld}`, {
+        toast.success(`Successfully retried ${domain}${tld}`, {
           description: `Domain is ${result.status}`,
         });
       }
@@ -201,7 +201,7 @@ export default function Home() {
       const errorFormat = formatErrorForToast(
         error instanceof Error ? error : 'Unknown error occurred'
       );
-      toast.error(`Failed to retry ${domain}.${tld}`, {
+      toast.error(`Failed to retry ${domain}${tld}`, {
         description: errorFormat.description,
       });
     } finally {
