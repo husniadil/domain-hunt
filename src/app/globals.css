@@ -75,6 +75,17 @@
   --shadow-opacity: 0.1;
   --color-shadow-color: oklch(0 0 0);
   --color-destructive-foreground: var(--destructive-foreground);
+  --color-status-available: var(--status-available);
+  --color-status-available-bg: var(--status-available-bg);
+  --color-status-available-border: var(--status-available-border);
+  --color-status-taken: var(--status-taken);
+  --color-status-taken-bg: var(--status-taken-bg);
+  --color-status-taken-border: var(--status-taken-border);
+  --color-status-error: var(--status-error);
+  --color-status-error-bg: var(--status-error-bg);
+  --color-status-error-border: var(--status-error-border);
+  --color-container-bg: var(--container-bg);
+  --color-container-border: var(--container-border);
 }
 
 body {
@@ -115,6 +126,17 @@ body {
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
   --destructive-foreground: oklch(1 0 0);
+  --status-available: oklch(0.52 0.08 150);
+  --status-available-bg: oklch(0.975 0.02 150);
+  --status-available-border: oklch(0.91 0.04 150);
+  --status-taken: oklch(0.48 0.08 35);
+  --status-taken-bg: oklch(0.97 0.02 35);
+  --status-taken-border: oklch(0.89 0.04 35);
+  --status-error: oklch(0.44 0.08 20);
+  --status-error-bg: oklch(0.965 0.02 20);
+  --status-error-border: oklch(0.87 0.04 20);
+  --container-bg: oklch(0.988 0.008 98);
+  --container-border: oklch(0.93 0.015 98);
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',
     Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif,
@@ -179,6 +201,17 @@ body {
   --sidebar-border: oklch(0.9401 0 0);
   --sidebar-ring: oklch(0.7731 0 0);
   --destructive-foreground: oklch(1 0 0);
+  --status-available: oklch(0.68 0.08 155);
+  --status-available-bg: oklch(0.235 0.025 155);
+  --status-available-border: oklch(0.36 0.05 155);
+  --status-taken: oklch(0.64 0.08 38);
+  --status-taken-bg: oklch(0.22 0.025 38);
+  --status-taken-border: oklch(0.34 0.05 38);
+  --status-error: oklch(0.6 0.08 25);
+  --status-error-bg: oklch(0.205 0.025 25);
+  --status-error-border: oklch(0.32 0.05 25);
+  --container-bg: oklch(0.248 0.008 106);
+  --container-border: oklch(0.375 0.015 106);
   --radius: 0.5rem;
   --font-sans:
     ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI',

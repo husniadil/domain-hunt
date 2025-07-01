@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
@@ -10,21 +10,20 @@ import {
   checkDomainsUnified,
   retryDomainCheck,
 } from '@/services/domain-checker';
-import { DomainResult, UnifiedLookupProgress } from '@/types/domain';
-import {
-  Loader2,
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  Filter,
-  RefreshCw,
-} from 'lucide-react';
+import { getStatusColor } from '@/lib/utils';
+import { UnifiedLookupProgress, UnifiedDomainResult } from '@/types/domain';
+import { Loader2, Filter, RefreshCw } from 'lucide-react';
 import { useHomepageState } from '@/hooks/useHomepageState';
 import { useResultFilters } from '@/hooks/use-result-filters';
 import { FilterToggleButton } from '@/components/filter-toggle-button';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
+import {
+  updateBookmarkStatus,
+  isBookmarked,
+  getAllBookmarks,
+} from '@/services/bookmark-service';
 
 export default function Home() {
   const {
@@ -46,6 +45,107 @@ export default function Home() {
 
   const { filteredResults, toggleStates, counts, isEmpty, onToggle } =
     useResultFilters(unifiedResult);
+
+  // Track if we've already synced this unifiedResult to avoid infinite loops
+  const syncedResultRef = useRef<string | null>(null);
+
+  // Helper function to sync bookmarks with unified result
+  const syncBookmarksWithUnifiedResult = useCallback(
+    (
+      unifiedResult: UnifiedDomainResult,
+      setUnifiedResult: (result: UnifiedDomainResult) => void,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      syncedResultRef?: React.MutableRefObject<string | null>
+    ) => {
+      if (!unifiedResult) return;
+
+      // Get current bookmarks to sync status
+      const bookmarks = getAllBookmarks();
+      const bookmarkMap = new Map();
+      bookmarks.forEach(bookmark => {
+        const key = `${bookmark.domain}${bookmark.tld}`;
+        bookmarkMap.set(key, bookmark.lastKnownStatus);
+      });
+
+      // Update unifiedResult with latest bookmark statuses
+      let hasChanges = false;
+      const updatedResultsByDomain = new Map();
+
+      Array.from(unifiedResult.resultsByDomain.entries()).forEach(
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (entry: any) => {
+          const [domain, domainResult] = entry;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const updatedResults = domainResult.results.map((result: any) => {
+            const key = `${result.domain}${result.tld}`;
+            const bookmarkStatus = bookmarkMap.get(key);
+
+            // If this domain is bookmarked and status is different, update it
+            if (bookmarkStatus && bookmarkStatus !== result.status) {
+              hasChanges = true;
+              return { ...result, status: bookmarkStatus };
+            }
+            return result;
+          });
+
+          updatedResultsByDomain.set(domain, {
+            ...domainResult,
+            results: updatedResults,
+          });
+        }
+      );
+
+      // Update state if there were changes
+      if (hasChanges) {
+        setUnifiedResult({
+          ...unifiedResult,
+          resultsByDomain: updatedResultsByDomain,
+        });
+      }
+    },
+    []
+  );
+
+  // Sync homepage results with bookmark changes when unifiedResult loads
+  useEffect(() => {
+    if (!unifiedResult) return;
+
+    // Create a simple hash of the result to track if we've already synced it
+    const resultHash = `${unifiedResult.overallProgress?.total}-${unifiedResult.overallProgress?.completed}`;
+    if (syncedResultRef.current === resultHash) return;
+
+    syncBookmarksWithUnifiedResult(
+      unifiedResult,
+      setUnifiedResult,
+      syncedResultRef
+    );
+
+    // Mark this result as synced
+    syncedResultRef.current = resultHash;
+  }, [unifiedResult, setUnifiedResult, syncBookmarksWithUnifiedResult]);
+
+  // Listen for bookmark changes and sync with homepage results
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      if (!unifiedResult) return;
+      syncBookmarksWithUnifiedResult(unifiedResult, setUnifiedResult);
+    };
+
+    // Listen for both custom events and storage events for cross-tab sync
+    const handleStorageChange = (e: StorageEvent) => {
+      if (e.key === 'bookmarkChangeSignal') {
+        handleBookmarkChange();
+      }
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    window.addEventListener('storage', handleStorageChange);
+
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+      window.removeEventListener('storage', handleStorageChange);
+    };
+  }, [unifiedResult, setUnifiedResult, syncBookmarksWithUnifiedResult]);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -178,6 +278,11 @@ export default function Home() {
         }
       }
 
+      // Update bookmark status if domain is bookmarked
+      if (result.status !== 'error' && isBookmarked(domain, tld)) {
+        updateBookmarkStatus(domain, tld, result.status);
+      }
+
       // Show success/error toast
       if (result.status === 'error') {
         const errorFormat = formatErrorForToast(result.error || 'Retry failed');
@@ -203,32 +308,6 @@ export default function Home() {
         newSet.delete(domainKey);
         return newSet;
       });
-    }
-  };
-
-  const getStatusIcon = (status: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-      case 'taken':
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      default:
-        return null;
-    }
-  };
-
-  const getStatusColor = (status: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'taken':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'error':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -375,7 +454,7 @@ export default function Home() {
 
                 {/* Toggleable Filter Stats */}
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-2 text-sm">
-                  <div className="flex justify-between p-2 bg-gray-50 rounded">
+                  <div className="flex justify-between p-2 bg-container-bg border border-container-border rounded">
                     <span>Showing:</span>
                     <span>{counts.showing}</span>
                   </div>
@@ -414,7 +493,7 @@ export default function Home() {
                     </p>
                   </div>
                 ) : (
-                  <div className="space-y-4 max-h-96 overflow-y-auto">
+                  <div className="space-y-4">
                     {filteredResults &&
                       Array.from(filteredResults.resultsByDomain.entries()).map(
                         ([domain, domainResult]) => (
@@ -434,18 +513,17 @@ export default function Home() {
                               </div>
                             </div>
 
-                            <div className="grid gap-1 max-h-32 overflow-y-auto">
-                              {domainResult.results.slice(0, 12).map(result => (
+                            <div className="grid gap-1">
+                              {domainResult.results.map(result => (
                                 <div
                                   key={`${result.domain}${result.tld}`}
-                                  className="flex items-center justify-between text-xs p-2 bg-gray-50 rounded"
+                                  className="flex items-center justify-between text-xs p-2 bg-container-bg border border-container-border rounded"
                                 >
                                   <span className="font-mono">
                                     {result.domain}
                                     {result.tld}
                                   </span>
                                   <div className="flex items-center space-x-2">
-                                    {getStatusIcon(result.status)}
                                     <Badge
                                       variant="outline"
                                       className={`text-xs ${getStatusColor(result.status)}`}

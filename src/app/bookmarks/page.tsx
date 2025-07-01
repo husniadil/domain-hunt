@@ -13,14 +13,11 @@ import {
 import { checkDomainsUnified } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
+import { getStatusColor } from '@/lib/utils';
 import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
-import {
-  CheckCircle2,
-  XCircle,
-  AlertCircle,
-  RefreshCw,
-  Search,
-} from 'lucide-react';
+import { RefreshCw, Search, ChevronDown } from 'lucide-react';
+import { toast } from 'sonner';
+import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -38,6 +35,18 @@ export default function BookmarksPage() {
   // Load bookmarks on mount
   useEffect(() => {
     loadBookmarks();
+  }, []);
+
+  // Listen for bookmark changes from other components/pages
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      loadBookmarks();
+    };
+
+    window.addEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    return () => {
+      window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
+    };
   }, []);
 
   // Apply filters when bookmarks or filter changes
@@ -63,7 +72,17 @@ export default function BookmarksPage() {
   };
 
   const handleRecheckAll = async () => {
-    if (bookmarks.length === 0) return;
+    if (bookmarks.length === 0) {
+      toast.warning('No bookmarks to recheck');
+      return;
+    }
+
+    if (isOffline()) {
+      toast.error('You appear to be offline', {
+        description: 'Please check your internet connection and try again.',
+      });
+      return;
+    }
 
     setIsChecking(true);
     try {
@@ -86,36 +105,39 @@ export default function BookmarksPage() {
 
       // Reload bookmarks to reflect updates
       loadBookmarks();
+
+      // Show success toast with summary
+      const totalChecked = result.overallProgress.completed;
+      const failed = result.overallProgress.failed;
+
+      if (failed === 0) {
+        toast.success(
+          `Successfully rechecked ${totalChecked} bookmarked domains`
+        );
+      } else if (failed < totalChecked) {
+        toast.warning(
+          `Rechecked ${totalChecked} domains with ${failed} errors`,
+          {
+            description:
+              'Some domains could not be checked. See individual results for details.',
+          }
+        );
+      } else {
+        toast.error('Bookmark recheck failed', {
+          description:
+            'Could not check any domains. Please check your connection and try again.',
+        });
+      }
     } catch (error) {
       console.error('Error rechecking bookmarks:', error);
+      const errorFormat = formatErrorForToast(
+        error instanceof Error ? error : 'Unknown error occurred'
+      );
+      toast.error(errorFormat.title, {
+        description: errorFormat.description,
+      });
     } finally {
       setIsChecking(false);
-    }
-  };
-
-  const getStatusIcon = (status?: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return <CheckCircle2 className="w-4 h-4 text-green-500" />;
-      case 'taken':
-        return <XCircle className="w-4 h-4 text-red-500" />;
-      case 'error':
-        return <AlertCircle className="w-4 h-4 text-yellow-500" />;
-      default:
-        return <AlertCircle className="w-4 h-4 text-gray-400" />;
-    }
-  };
-
-  const getStatusColor = (status?: DomainResult['status']) => {
-    switch (status) {
-      case 'available':
-        return 'bg-green-100 text-green-800 border-green-200';
-      case 'taken':
-        return 'bg-red-100 text-red-800 border-red-200';
-      case 'error':
-        return 'bg-yellow-100 text-yellow-800 border-yellow-200';
-      default:
-        return 'bg-gray-100 text-gray-800 border-gray-200';
     }
   };
 
@@ -144,25 +166,27 @@ export default function BookmarksPage() {
 
         {/* Stats */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-6">
-          <div className="bg-white border rounded-lg p-4">
+          <div className="bg-container-bg border border-container-border rounded-lg p-4">
             <div className="text-2xl font-bold">{stats.total}</div>
             <div className="text-sm text-muted-foreground">Total</div>
           </div>
-          <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-            <div className="text-2xl font-bold text-green-600">
+          <div className="bg-status-available-bg border border-status-available-border rounded-lg p-4">
+            <div className="text-2xl font-bold text-status-available">
               {stats.available}
             </div>
-            <div className="text-sm text-green-600">Available</div>
+            <div className="text-sm text-status-available">Available</div>
           </div>
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-            <div className="text-2xl font-bold text-red-600">{stats.taken}</div>
-            <div className="text-sm text-red-600">Taken</div>
+          <div className="bg-status-taken-bg border border-status-taken-border rounded-lg p-4">
+            <div className="text-2xl font-bold text-status-taken">
+              {stats.taken}
+            </div>
+            <div className="text-sm text-status-taken">Taken</div>
           </div>
-          <div className="bg-gray-50 border border-gray-200 rounded-lg p-4">
-            <div className="text-2xl font-bold text-gray-600">
+          <div className="bg-status-error-bg border border-status-error-border rounded-lg p-4">
+            <div className="text-2xl font-bold text-status-error">
               {stats.errors}
             </div>
-            <div className="text-sm text-gray-600">Errors</div>
+            <div className="text-sm text-status-error">Errors</div>
           </div>
         </div>
 
@@ -181,23 +205,26 @@ export default function BookmarksPage() {
           </div>
 
           <div className="flex gap-2">
-            <select
-              value={filter.status || ''}
-              onChange={e =>
-                setFilter({
-                  ...filter,
-                  status: e.target.value
-                    ? (e.target.value as DomainResult['status'])
-                    : undefined,
-                })
-              }
-              className="h-10 px-3 border rounded-lg"
-            >
-              <option value="">All Status</option>
-              <option value="available">Available</option>
-              <option value="taken">Taken</option>
-              <option value="error">Error</option>
-            </select>
+            <div className="relative">
+              <select
+                value={filter.status || ''}
+                onChange={e =>
+                  setFilter({
+                    ...filter,
+                    status: e.target.value
+                      ? (e.target.value as DomainResult['status'])
+                      : undefined,
+                  })
+                }
+                className="h-10 pl-3 pr-8 border rounded-lg appearance-none bg-background w-full"
+              >
+                <option value="">All Status</option>
+                <option value="available">Available</option>
+                <option value="taken">Taken</option>
+                <option value="error">Error</option>
+              </select>
+              <ChevronDown className="absolute right-2 top-1/2 transform -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+            </div>
 
             <Button
               onClick={handleRecheckAll}
@@ -246,7 +273,7 @@ export default function BookmarksPage() {
             {filteredBookmarks.map(bookmark => (
               <div
                 key={bookmark.id}
-                className="border rounded-lg p-4 bg-white hover:bg-gray-50 transition-colors"
+                className="border border-container-border rounded-lg p-4 bg-container-bg hover:bg-muted transition-colors"
               >
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
@@ -256,7 +283,6 @@ export default function BookmarksPage() {
                         {bookmark.tld}
                       </span>
                       <div className="flex items-center space-x-2">
-                        {getStatusIcon(bookmark.lastKnownStatus)}
                         <Badge
                           variant="outline"
                           className={`text-xs ${getStatusColor(bookmark.lastKnownStatus)}`}
