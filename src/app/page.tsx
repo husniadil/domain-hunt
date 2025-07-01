@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef, useCallback } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
 import { BookmarkButton } from '@/components/bookmark-button';
@@ -11,7 +11,7 @@ import {
   retryDomainCheck,
 } from '@/services/domain-checker';
 import { getStatusColor } from '@/lib/utils';
-import { UnifiedLookupProgress } from '@/types/domain';
+import { UnifiedLookupProgress, UnifiedDomainResult } from '@/types/domain';
 import { Loader2, Filter, RefreshCw } from 'lucide-react';
 import { useHomepageState } from '@/hooks/useHomepageState';
 import { useResultFilters } from '@/hooks/use-result-filters';
@@ -49,67 +49,18 @@ export default function Home() {
   // Track if we've already synced this unifiedResult to avoid infinite loops
   const syncedResultRef = useRef<string | null>(null);
 
-  // Sync homepage results with bookmark changes when unifiedResult loads
-  useEffect(() => {
-    if (!unifiedResult) return;
-
-    // Create a simple hash of the result to track if we've already synced it
-    const resultHash = `${unifiedResult.overallProgress?.total}-${unifiedResult.overallProgress?.completed}`;
-    if (syncedResultRef.current === resultHash) return;
-
-    // Get current bookmarks to sync status
-    const bookmarks = getAllBookmarks();
-    const bookmarkMap = new Map();
-    bookmarks.forEach(bookmark => {
-      const key = `${bookmark.domain}${bookmark.tld}`;
-      bookmarkMap.set(key, bookmark.lastKnownStatus);
-    });
-
-    // Update unifiedResult with latest bookmark statuses
-    let hasChanges = false;
-    const updatedResultsByDomain = new Map();
-
-    Array.from(unifiedResult.resultsByDomain.entries()).forEach(
-      ([domain, domainResult]) => {
-        const updatedResults = domainResult.results.map(result => {
-          const key = `${result.domain}${result.tld}`;
-          const bookmarkStatus = bookmarkMap.get(key);
-
-          // If this domain is bookmarked and status is different, update it
-          if (bookmarkStatus && bookmarkStatus !== result.status) {
-            hasChanges = true;
-            return { ...result, status: bookmarkStatus };
-          }
-          return result;
-        });
-
-        updatedResultsByDomain.set(domain, {
-          ...domainResult,
-          results: updatedResults,
-        });
-      }
-    );
-
-    // Update state if there were changes
-    if (hasChanges) {
-      setUnifiedResult({
-        ...unifiedResult,
-        resultsByDomain: updatedResultsByDomain,
-      });
-    }
-
-    // Mark this result as synced
-    syncedResultRef.current = resultHash;
-  }, [unifiedResult, setUnifiedResult]); // Run when unifiedResult changes or loads
-
-  // Listen for bookmark changes and sync with homepage results
-  useEffect(() => {
-    const handleBookmarkChange = () => {
+  // Helper function to sync bookmarks with unified result
+  const syncBookmarksWithUnifiedResult = useCallback(
+    (
+      unifiedResult: UnifiedDomainResult,
+      setUnifiedResult: (result: UnifiedDomainResult) => void,
+      // eslint-disable-next-line @typescript-eslint/no-unused-vars
+      syncedResultRef?: React.MutableRefObject<string | null>
+    ) => {
       if (!unifiedResult) return;
 
       // Get current bookmarks to sync status
       const bookmarks = getAllBookmarks();
-
       const bookmarkMap = new Map();
       bookmarks.forEach(bookmark => {
         const key = `${bookmark.domain}${bookmark.tld}`;
@@ -121,8 +72,11 @@ export default function Home() {
       const updatedResultsByDomain = new Map();
 
       Array.from(unifiedResult.resultsByDomain.entries()).forEach(
-        ([domain, domainResult]) => {
-          const updatedResults = domainResult.results.map(result => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        (entry: any) => {
+          const [domain, domainResult] = entry;
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          const updatedResults = domainResult.results.map((result: any) => {
             const key = `${result.domain}${result.tld}`;
             const bookmarkStatus = bookmarkMap.get(key);
 
@@ -148,6 +102,33 @@ export default function Home() {
           resultsByDomain: updatedResultsByDomain,
         });
       }
+    },
+    []
+  );
+
+  // Sync homepage results with bookmark changes when unifiedResult loads
+  useEffect(() => {
+    if (!unifiedResult) return;
+
+    // Create a simple hash of the result to track if we've already synced it
+    const resultHash = `${unifiedResult.overallProgress?.total}-${unifiedResult.overallProgress?.completed}`;
+    if (syncedResultRef.current === resultHash) return;
+
+    syncBookmarksWithUnifiedResult(
+      unifiedResult,
+      setUnifiedResult,
+      syncedResultRef
+    );
+
+    // Mark this result as synced
+    syncedResultRef.current = resultHash;
+  }, [unifiedResult, setUnifiedResult, syncBookmarksWithUnifiedResult]);
+
+  // Listen for bookmark changes and sync with homepage results
+  useEffect(() => {
+    const handleBookmarkChange = () => {
+      if (!unifiedResult) return;
+      syncBookmarksWithUnifiedResult(unifiedResult, setUnifiedResult);
     };
 
     // Listen for both custom events and storage events for cross-tab sync
@@ -164,7 +145,7 @@ export default function Home() {
       window.removeEventListener('bookmarkStatsChanged', handleBookmarkChange);
       window.removeEventListener('storage', handleStorageChange);
     };
-  }, [unifiedResult, setUnifiedResult]);
+  }, [unifiedResult, setUnifiedResult, syncBookmarksWithUnifiedResult]);
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
