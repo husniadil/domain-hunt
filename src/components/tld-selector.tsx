@@ -204,9 +204,12 @@ export function TldSelector({
     }
 
     // Create filtered categories containing only matching TLDs
+    const matchingExtensions = matchingTlds.map(tld => tld.extension);
     const filteredCategories = CATEGORIES.map(category => ({
       ...category,
-      tlds: category.tlds.filter(tld => matchingTlds.includes(tld)),
+      tlds: category.tlds.filter(tld =>
+        matchingExtensions.includes(tld.extension)
+      ),
     })).filter(category => category.tlds.length > 0);
 
     return { tlds: matchingTlds, categories: filteredCategories };
@@ -293,7 +296,7 @@ export function TldSelector({
             tld.name.toLowerCase().includes(query));
 
         return (
-          <div key={tld.extension} className="flex items-center space-x-2">
+          <div key={tld.extension} className="flex items-center space-x-3">
             <Checkbox
               id={`tld-${tld.extension.replace('.', '-')}`}
               checked={selectedTlds.includes(tld.extension)}
@@ -304,9 +307,9 @@ export function TldSelector({
             <label
               htmlFor={`tld-${tld.extension.replace('.', '-')}`}
               className={cn(
-                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer',
+                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer py-1 text-left',
                 isHighlighted &&
-                  'bg-yellow-100 dark:bg-yellow-900/30 px-1 rounded'
+                  'bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded'
               )}
               title={tld.name}
             >
@@ -428,8 +431,8 @@ export function TldSelector({
         <div
           id={`category-content-${category.id}`}
           className={cn(
-            'overflow-hidden transition-all duration-300 ease-in-out',
-            shouldExpand ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+            'transition-all duration-300 ease-in-out',
+            shouldExpand ? 'opacity-100' : 'max-h-0 opacity-0 overflow-hidden'
           )}
           aria-hidden={!shouldExpand}
         >
@@ -567,10 +570,10 @@ export function TldSelector({
 
           {/* Collapsible Categories - auto-expanded during search with smooth transitions */}
           <div
-            className={`overflow-hidden transition-all duration-300 ease-in-out ${
+            className={`transition-all duration-300 ease-in-out ${
               showAllCategories || isSearching
-                ? 'max-h-[2000px] opacity-100'
-                : 'max-h-0 opacity-0'
+                ? 'opacity-100'
+                : 'max-h-0 opacity-0 overflow-hidden'
             }`}
           >
             <div className="space-y-4 pt-4">
