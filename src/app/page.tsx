@@ -3,22 +3,20 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
-import { BookmarkButton } from '@/components/bookmark-button';
-import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import {
   checkDomainsUnified,
   retryDomainCheck,
 } from '@/services/domain-checker';
-import { getStatusColor } from '@/lib/utils';
 import { UnifiedLookupProgress, UnifiedDomainResult } from '@/types/domain';
-import { Loader2, Filter, RefreshCw } from 'lucide-react';
 import { useHomepageState } from '@/hooks/use-homepage-state';
 import { useResultFilters } from '@/hooks/use-result-filters';
 import { ErrorBoundary } from '@/components/error-boundary';
 import { HomepageHeader } from '@/components/homepage-header';
 import { ProgressDisplay } from '@/components/progress-display';
 import { FilterStats } from '@/components/filter-stats';
+import { ActionButtons } from '@/components/action-buttons';
+import { DomainResults } from '@/components/domain-results';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
@@ -65,7 +63,7 @@ export default function Home() {
       const bookmarks = getAllBookmarks();
       const bookmarkMap = new Map();
       bookmarks.forEach(bookmark => {
-        const key = `${bookmark.domain}${bookmark.tld}`;
+        const key = `${bookmark.domain}.${bookmark.tld}`;
         bookmarkMap.set(key, bookmark.lastKnownStatus);
       });
 
@@ -79,7 +77,7 @@ export default function Home() {
           const [domain, domainResult] = entry;
           // eslint-disable-next-line @typescript-eslint/no-explicit-any
           const updatedResults = domainResult.results.map((result: any) => {
-            const key = `${result.domain}${result.tld}`;
+            const key = `${result.domain}.${result.tld}`;
             const bookmarkStatus = bookmarkMap.get(key);
 
             // If this domain is bookmarked and status is different, update it
@@ -231,7 +229,7 @@ export default function Home() {
   };
 
   const handleRetryDomain = async (domain: string, tld: string) => {
-    const domainKey = `${domain}${tld}`;
+    const domainKey = `${domain}.${tld}`;
 
     // Check if already retrying
     if (retryingDomains.has(domainKey)) {
@@ -288,11 +286,11 @@ export default function Home() {
       // Show success/error toast
       if (result.status === 'error') {
         const errorFormat = formatErrorForToast(result.error || 'Retry failed');
-        toast.error(`Retry failed for ${domain}${tld}`, {
+        toast.error(`Retry failed for ${domain}.${tld}`, {
           description: errorFormat.description,
         });
       } else {
-        toast.success(`Successfully retried ${domain}${tld}`, {
+        toast.success(`Successfully retried ${domain}.${tld}`, {
           description: `Domain is ${result.status}`,
         });
       }
@@ -301,7 +299,7 @@ export default function Home() {
       const errorFormat = formatErrorForToast(
         error instanceof Error ? error : 'Unknown error occurred'
       );
-      toast.error(`Failed to retry ${domain}${tld}`, {
+      toast.error(`Failed to retry ${domain}.${tld}`, {
         description: errorFormat.description,
       });
     } finally {
@@ -312,8 +310,6 @@ export default function Home() {
       });
     }
   };
-
-  const canCheck = domains.length > 0 && selectedTlds.length > 0 && !isChecking;
 
   return (
     <ErrorBoundary>
@@ -333,48 +329,15 @@ export default function Home() {
               initialTlds={selectedTlds}
             />
 
-            <div className="space-y-2">
-              <Button
-                onClick={handleCheckDomains}
-                disabled={!canCheck}
-                className="w-full"
-              >
-                {isChecking ? (
-                  <>
-                    <Loader2 className="w-4 h-4 mr-2 animate-spin" />
-                    Checking Domains...
-                  </>
-                ) : (
-                  `Check ${domains.length} Domain${domains.length !== 1 ? 's' : ''} × ${selectedTlds.length} TLD${selectedTlds.length !== 1 ? 's' : ''}`
-                )}
-              </Button>
-
-              {isChecking && (
-                <Button
-                  onClick={handleCancelCheck}
-                  variant="outline"
-                  size="sm"
-                  className="w-full"
-                >
-                  Cancel Check
-                </Button>
-              )}
-
-              {/* Clear Results Button - show when we have results or saved state */}
-              {(unifiedResult ||
-                domains.length > 0 ||
-                selectedTlds.length > 0) &&
-                !isChecking && (
-                  <Button
-                    onClick={handleClearResults}
-                    variant="outline"
-                    size="sm"
-                    className="w-full"
-                  >
-                    Clear Results
-                  </Button>
-                )}
-            </div>
+            <ActionButtons
+              domains={domains}
+              selectedTlds={selectedTlds}
+              unifiedResult={unifiedResult}
+              isChecking={isChecking}
+              onCheckDomains={handleCheckDomains}
+              onCancelCheck={handleCancelCheck}
+              onClearResults={handleClearResults}
+            />
 
             {/* Progress Display */}
             <ProgressDisplay progress={progress} />
@@ -409,99 +372,12 @@ export default function Home() {
                 />
 
                 {/* Results by Domain */}
-                {isEmpty ? (
-                  <div className="text-center py-8 text-muted-foreground">
-                    <Filter className="w-8 h-8 mx-auto mb-3 opacity-50" />
-                    <p className="text-lg font-medium mb-1">
-                      No results match the current filter
-                    </p>
-                    <p className="text-sm">
-                      Try selecting a different filter or clear all filters
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    {filteredResults &&
-                      Array.from(filteredResults.resultsByDomain.entries()).map(
-                        ([domain, domainResult]) => (
-                          <div
-                            key={domain}
-                            className="border rounded-lg p-3 space-y-2"
-                          >
-                            <div className="flex justify-between items-center">
-                              <h4 className="font-medium">{domain}</h4>
-                              <div className="flex items-center space-x-2 text-xs text-muted-foreground">
-                                <span>{domainResult.totalDuration}ms</span>
-                                <span>
-                                  {domainResult.successful.length +
-                                    domainResult.failed.length}{' '}
-                                  checked
-                                </span>
-                              </div>
-                            </div>
-
-                            <div className="grid gap-1">
-                              {domainResult.results.map(result => (
-                                <div
-                                  key={`${result.domain}${result.tld}`}
-                                  className="flex items-center justify-between text-xs p-2 bg-container-bg border border-container-border rounded"
-                                >
-                                  <span className="font-mono">
-                                    {result.domain}
-                                    {result.tld}
-                                  </span>
-                                  <div className="flex items-center space-x-2">
-                                    <Badge
-                                      variant="outline"
-                                      className={`text-xs ${getStatusColor(result.status)}`}
-                                    >
-                                      {result.status}
-                                    </Badge>
-                                    <BookmarkButton
-                                      domain={result.domain}
-                                      tld={result.tld}
-                                      status={result.status}
-                                      size="sm"
-                                    />
-                                    {result.status === 'error' && (
-                                      <Button
-                                        size="sm"
-                                        variant="ghost"
-                                        onClick={() =>
-                                          handleRetryDomain(
-                                            result.domain,
-                                            result.tld
-                                          )
-                                        }
-                                        disabled={retryingDomains.has(
-                                          `${result.domain}${result.tld}`
-                                        )}
-                                        className="h-6 w-6 p-0"
-                                      >
-                                        {retryingDomains.has(
-                                          `${result.domain}${result.tld}`
-                                        ) ? (
-                                          <Loader2 className="w-3 h-3 animate-spin" />
-                                        ) : (
-                                          <RefreshCw className="w-3 h-3" />
-                                        )}
-                                      </Button>
-                                    )}
-                                  </div>
-                                </div>
-                              ))}
-                              {domainResult.results.length > 12 && (
-                                <div className="text-xs text-muted-foreground text-center p-1">
-                                  ... and {domainResult.results.length - 12}{' '}
-                                  more
-                                </div>
-                              )}
-                            </div>
-                          </div>
-                        )
-                      )}
-                  </div>
-                )}
+                <DomainResults
+                  filteredResults={filteredResults}
+                  isEmpty={isEmpty}
+                  retryingDomains={retryingDomains}
+                  onRetryDomain={handleRetryDomain}
+                />
               </div>
             )}
           </div>
