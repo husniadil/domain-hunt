@@ -195,7 +195,7 @@ export function TldSelector({
       tld =>
         tld.extension.toLowerCase().includes(query) ||
         tld.name.toLowerCase().includes(query) ||
-        tld.category.toLowerCase().includes(query)
+        (tld.category && tld.category.toLowerCase().includes(query))
     );
 
     // If no categories, return filtered flat list
