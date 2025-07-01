@@ -10,7 +10,7 @@ import {
   getBookmarkStats,
   updateBookmarkStatus,
 } from '@/services/bookmark-service';
-import { checkDomainsUnified } from '@/services/domain-checker';
+import { checkDomain } from '@/services/domain-checker';
 import { Bookmark, BookmarkFilter } from '@/types/bookmark';
 import { DomainResult } from '@/types/domain';
 import { getStatusColor } from '@/lib/utils';
@@ -86,42 +86,57 @@ export default function BookmarksPage() {
 
     setIsChecking(true);
     try {
-      // Prepare domains and TLDs for checking
-      const domainsToCheck = Array.from(new Set(bookmarks.map(b => b.domain)));
-      const tldsToCheck = Array.from(new Set(bookmarks.map(b => b.tld)));
+      // Check only the actual bookmarked domain+TLD pairs
+      const results: {
+        domain: string;
+        tld: string;
+        status: DomainResult['status'];
+      }[] = [];
 
-      const result = await checkDomainsUnified(domainsToCheck, tldsToCheck);
+      // Process each bookmark individually to avoid checking unwanted combinations
+      for (const bookmark of bookmarks) {
+        try {
+          const result = await checkDomain(bookmark.domain, bookmark.tld);
+          results.push({
+            domain: result.domain,
+            tld: result.tld,
+            status: result.status,
+          });
+        } catch (error) {
+          console.error(
+            `Error checking ${bookmark.domain}${bookmark.tld}:`,
+            error
+          );
+          results.push({
+            domain: bookmark.domain,
+            tld: bookmark.tld,
+            status: 'error' as DomainResult['status'],
+          });
+        }
+      }
 
       // Update bookmark statuses
-      for (const [, domainResult] of result.resultsByDomain.entries()) {
-        for (const domainCheck of domainResult.results) {
-          updateBookmarkStatus(
-            domainCheck.domain,
-            domainCheck.tld,
-            domainCheck.status
-          );
-        }
+      for (const result of results) {
+        updateBookmarkStatus(result.domain, result.tld, result.status);
       }
 
       // Reload bookmarks to reflect updates
       loadBookmarks();
 
       // Show success toast with summary
-      const totalChecked = result.overallProgress.completed;
-      const failed = result.overallProgress.failed;
+      const totalChecked = results.length;
+      const failed = results.filter(r => r.status === 'error').length;
+      const successful = totalChecked - failed;
 
       if (failed === 0) {
         toast.success(
           `Successfully rechecked ${totalChecked} bookmarked domains`
         );
-      } else if (failed < totalChecked) {
-        toast.warning(
-          `Rechecked ${totalChecked} domains with ${failed} errors`,
-          {
-            description:
-              'Some domains could not be checked. See individual results for details.',
-          }
-        );
+      } else if (successful > 0) {
+        toast.warning(`Rechecked ${successful} domains with ${failed} errors`, {
+          description:
+            'Some domains could not be checked. See individual results for details.',
+        });
       } else {
         toast.error('Bookmark recheck failed', {
           description:
