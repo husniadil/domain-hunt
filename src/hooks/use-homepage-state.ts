@@ -17,6 +17,10 @@ export function useHomepageState() {
   const [unifiedResult, setUnifiedResult] =
     useState<UnifiedDomainResult | null>(null);
 
+  // New category UI state
+  const [collapsedCategories, setCollapsedCategories] = useState<string[]>([]);
+  const [showAllCategories, setShowAllCategories] = useState<boolean>(false);
+
   // Load saved state on mount
   useEffect(() => {
     const savedState = loadHomepageState();
@@ -30,6 +34,13 @@ export function useHomepageState() {
       if (savedState.unifiedResult) {
         setUnifiedResult(savedState.unifiedResult);
       }
+      // Load category UI state with defaults
+      if (savedState.collapsedCategories) {
+        setCollapsedCategories(savedState.collapsedCategories);
+      }
+      if (savedState.showAllCategories !== undefined) {
+        setShowAllCategories(savedState.showAllCategories);
+      }
     }
   }, []);
 
@@ -41,14 +52,24 @@ export function useHomepageState() {
         domains,
         selectedTlds,
         unifiedResult,
+        collapsedCategories,
+        showAllCategories,
       });
     }
-  }, [domains, selectedTlds, unifiedResult]);
+  }, [
+    domains,
+    selectedTlds,
+    unifiedResult,
+    collapsedCategories,
+    showAllCategories,
+  ]);
 
   const clearState = () => {
     setDomains([]);
     setSelectedTlds([]);
     setUnifiedResult(null);
+    setCollapsedCategories([]);
+    setShowAllCategories(false);
     clearHomepageState();
   };
 
@@ -57,11 +78,21 @@ export function useHomepageState() {
       domains,
       selectedTlds,
       unifiedResult,
+      collapsedCategories,
+      showAllCategories,
       setDomains,
       setSelectedTlds,
       setUnifiedResult,
+      setCollapsedCategories,
+      setShowAllCategories,
       clearState,
     }),
-    [domains, selectedTlds, unifiedResult]
+    [
+      domains,
+      selectedTlds,
+      unifiedResult,
+      collapsedCategories,
+      showAllCategories,
+    ]
   );
 }
