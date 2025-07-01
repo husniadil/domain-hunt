@@ -318,12 +318,24 @@ export function TldSelector({
     </div>
   );
 
-  // Render category section with search awareness and bulk selection controls
+  // Enhanced keyboard handler for category toggle
+  const handleCategoryKeyDown = (
+    e: React.KeyboardEvent,
+    categoryId: string
+  ) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      handleCategoryToggle(categoryId);
+    }
+  };
+
+  // Render category section with smooth animations and enhanced interactions
   const renderCategorySection = (category: TLDCategory) => {
     const isCollapsed = collapsedCategories.includes(category.id);
     const isPopular = category.id === 'popular';
     const shouldExpand = isSearching || !isCollapsed || isPopular;
     const selectionState = getCategorySelectionState(category);
+    const isToggleDisabled = isPopular || isSearching;
 
     // Visual indicator for selection state
     const getSelectionIcon = () => {
@@ -341,11 +353,32 @@ export function TldSelector({
         <div className="flex items-center justify-between">
           <button
             onClick={() => handleCategoryToggle(category.id)}
-            className="flex items-center gap-2 text-sm font-medium hover:text-primary"
-            disabled={isPopular || isSearching} // Popular section always expanded, search auto-expands
+            onKeyDown={e => handleCategoryKeyDown(e, category.id)}
+            className={cn(
+              'flex items-center gap-2 text-sm font-medium transition-all duration-200',
+              !isToggleDisabled &&
+                'hover:text-primary hover:bg-muted/50 rounded-md px-2 py-1 -mx-2',
+              isToggleDisabled && 'cursor-default'
+            )}
+            disabled={isToggleDisabled}
+            aria-expanded={shouldExpand}
+            aria-controls={`category-content-${category.id}`}
+            aria-label={`${shouldExpand ? 'Collapse' : 'Expand'} ${category.name} category`}
+            title={
+              isToggleDisabled
+                ? undefined
+                : `${shouldExpand ? 'Collapse' : 'Expand'} ${category.name} category`
+            }
           >
             {!isPopular && !isSearching && (
-              <span className="text-xs">{isCollapsed ? '▶' : '▼'}</span>
+              <span
+                className={cn(
+                  'text-xs transition-transform duration-200 ease-in-out',
+                  !isCollapsed && 'rotate-90'
+                )}
+              >
+                ▶
+              </span>
             )}
             <span className="text-xs mr-1">{getSelectionIcon()}</span>
             {category.name}
@@ -370,7 +403,7 @@ export function TldSelector({
                 handleCategorySelectAll(category);
               }}
               disabled={selectionState.isAllSelected}
-              className="text-xs h-6 px-2"
+              className="text-xs h-6 px-2 transition-all duration-200 hover:scale-105"
               title={`Select all ${category.name} TLDs`}
             >
               All
@@ -383,7 +416,7 @@ export function TldSelector({
                 handleCategoryDeselectAll(category);
               }}
               disabled={selectionState.isNoneSelected}
-              className="text-xs h-6 px-2"
+              className="text-xs h-6 px-2 transition-all duration-200 hover:scale-105"
               title={`Deselect all ${category.name} TLDs`}
             >
               None
@@ -391,7 +424,17 @@ export function TldSelector({
           </div>
         </div>
 
-        {shouldExpand && renderTldGrid(category.tlds)}
+        {/* Category Content with smooth animations */}
+        <div
+          id={`category-content-${category.id}`}
+          className={cn(
+            'overflow-hidden transition-all duration-300 ease-in-out',
+            shouldExpand ? 'max-h-[1000px] opacity-100' : 'max-h-0 opacity-0'
+          )}
+          aria-hidden={!shouldExpand}
+        >
+          <div className="pt-1">{renderTldGrid(category.tlds)}</div>
+        </div>
       </div>
     );
   };
