@@ -18,25 +18,10 @@ import { DEFAULT_ERROR_STATUS, DOMAIN_STATUS } from '@/constants/domain-status';
 import { RefreshCw, Search, ChevronDown } from 'lucide-react';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
+import pLimit from 'p-limit';
 
 // Configuration constants
 const BOOKMARK_RECHECK_CONCURRENCY_LIMIT = 5; // Max concurrent domain checks
-
-// Simple concurrency limiter to control parallel execution
-async function limitConcurrency<T>(
-  tasks: (() => Promise<T>)[],
-  limit: number
-): Promise<T[]> {
-  const results: T[] = [];
-
-  for (let i = 0; i < tasks.length; i += limit) {
-    const batch = tasks.slice(i, i + limit);
-    const batchResults = await Promise.all(batch.map(task => task()));
-    results.push(...batchResults);
-  }
-
-  return results;
-}
 
 export default function BookmarksPage() {
   const [bookmarks, setBookmarks] = useState<Bookmark[]>([]);
@@ -108,15 +93,22 @@ export default function BookmarksPage() {
       // Check only the actual bookmarked domain+TLD pairs
       // Process all bookmarks with controlled concurrency to optimize performance
       // while preventing client/server overload
-      const checkTasks = bookmarks.map(
-        bookmark => () =>
-          checkDomain(bookmark.domain, bookmark.tld)
-            .then(domainCheckResult => ({
-              domain: domainCheckResult.domain,
-              tld: domainCheckResult.tld,
-              status: domainCheckResult.status,
-            }))
-            .catch(error => {
+      const limit = pLimit(BOOKMARK_RECHECK_CONCURRENCY_LIMIT);
+
+      const domainCheckResults = await Promise.all(
+        bookmarks.map(bookmark =>
+          limit(async () => {
+            try {
+              const domainCheckResult = await checkDomain(
+                bookmark.domain,
+                bookmark.tld
+              );
+              return {
+                domain: domainCheckResult.domain,
+                tld: domainCheckResult.tld,
+                status: domainCheckResult.status,
+              };
+            } catch (error) {
               console.error(
                 `Error checking ${bookmark.domain}${bookmark.tld}:`,
                 error
@@ -126,12 +118,9 @@ export default function BookmarksPage() {
                 tld: bookmark.tld,
                 status: DOMAIN_STATUS.ERROR as DomainResult['status'],
               };
-            })
-      );
-
-      const domainCheckResults = await limitConcurrency(
-        checkTasks,
-        BOOKMARK_RECHECK_CONCURRENCY_LIMIT
+            }
+          })
+        )
       );
 
       // Update bookmark statuses
