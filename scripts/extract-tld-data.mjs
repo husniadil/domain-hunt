@@ -110,6 +110,7 @@ function extractTldData(htmlContent) {
   
   const categories = [];
   const allTlds = [];
+  const tldMap = new Map(); // Track unique TLDs and their primary category
   let tldCount = 0;
   
   // Find all div elements containing TLD categories
@@ -144,6 +145,21 @@ function extractTldData(htmlContent) {
         return;
       }
       
+      // Check if TLD already exists
+      if (tldMap.has(formattedExtension)) {
+        const existingTld = tldMap.get(formattedExtension);
+        
+        // If current category is Popular, update the existing TLD
+        if (categoryName === 'Popular') {
+          existingTld.popular = true;
+          existingTld.category = categoryName;
+        }
+        
+        // Add to current category but don't duplicate in allTlds
+        categoryTlds.push(existingTld);
+        return;
+      }
+      
       const tld = {
         extension: formattedExtension,
         name: generateTldName(extension, categoryName),
@@ -151,6 +167,8 @@ function extractTldData(htmlContent) {
         category: categoryName
       };
       
+      // Store in map and arrays
+      tldMap.set(formattedExtension, tld);
       categoryTlds.push(tld);
       allTlds.push(tld);
       tldCount++;
@@ -166,14 +184,17 @@ function extractTldData(htmlContent) {
     }
   });
   
-  console.log(`Extracted ${tldCount} TLDs across ${categories.length} categories`);
+  // Get unique TLD count
+  const uniqueTldCount = allTlds.length;
+  console.log(`Extracted ${uniqueTldCount} unique TLDs across ${categories.length} categories (${tldCount} total TLD references)`);
   
   return {
     categories,
     tlds: allTlds, // Flattened for backward compatibility
     metadata: {
-      totalTlds: tldCount,
+      totalTlds: uniqueTldCount,
       totalCategories: categories.length,
+      totalReferences: tldCount,
       extractedAt: new Date().toISOString(),
       version: '1.0.0'
     }

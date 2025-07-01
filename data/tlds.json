@@ -201,8 +201,8 @@
         {
           "extension": ".ai",
           "name": "Artificial Intelligence",
-          "popular": false,
-          "category": "International"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".asia",
@@ -249,8 +249,8 @@
         {
           "extension": ".co",
           "name": "Company",
-          "popular": false,
-          "category": "International"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".cx",
@@ -321,8 +321,8 @@
         {
           "extension": ".io",
           "name": "Input/Output",
-          "popular": false,
-          "category": "International"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".kiwi",
@@ -363,8 +363,8 @@
         {
           "extension": ".me",
           "name": "Personal",
-          "popular": false,
-          "category": "International"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".melbourne",
@@ -476,9 +476,9 @@
         },
         {
           "extension": ".to",
-          "name": "TO",
-          "popular": false,
-          "category": "International"
+          "name": "To",
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".tokyo",
@@ -850,8 +850,8 @@
         {
           "extension": ".ai",
           "name": "Artificial Intelligence",
-          "popular": false,
-          "category": "Academic & Education"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".college",
@@ -898,8 +898,8 @@
         {
           "extension": ".info",
           "name": "Information",
-          "popular": false,
-          "category": "Academic & Education"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".institute",
@@ -1192,9 +1192,9 @@
         },
         {
           "extension": ".vc",
-          "name": "Vc",
+          "name": "VC",
           "popular": false,
-          "category": "Finance"
+          "category": "International"
         },
         {
           "extension": ".ventures",
@@ -1205,8 +1205,8 @@
         {
           "extension": ".inc",
           "name": "Incorporated",
-          "popular": false,
-          "category": "Finance"
+          "popular": true,
+          "category": "Popular"
         }
       ]
     },
@@ -1219,7 +1219,7 @@
           "extension": ".accountants",
           "name": "Accountants",
           "popular": false,
-          "category": "Professional"
+          "category": "Finance"
         },
         {
           "extension": ".attorney",
@@ -1230,8 +1230,8 @@
         {
           "extension": ".beauty",
           "name": "Beauty",
-          "popular": false,
-          "category": "Professional"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".careers",
@@ -1362,14 +1362,14 @@
         {
           "extension": ".pro",
           "name": "Professional",
-          "popular": false,
-          "category": "Professional"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".tech",
           "name": "Technology",
-          "popular": false,
-          "category": "Professional"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".vet",
@@ -1387,7 +1387,7 @@
           "extension": ".work",
           "name": "Work",
           "popular": false,
-          "category": "Professional"
+          "category": "Academic & Education"
         },
         {
           "extension": ".doctor",
@@ -1398,8 +1398,8 @@
         {
           "extension": ".inc",
           "name": "Incorporated",
-          "popular": false,
-          "category": "Professional"
+          "popular": true,
+          "category": "Popular"
         }
       ]
     },
@@ -1412,7 +1412,7 @@
           "extension": ".accountants",
           "name": "Accountants",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".associates",
@@ -1424,13 +1424,13 @@
           "extension": ".bargains",
           "name": "Bargains",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".bid",
           "name": "Bid",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".biz",
@@ -1453,14 +1453,14 @@
         {
           "extension": ".co",
           "name": "Company",
-          "popular": false,
-          "category": "Businesses"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".com",
           "name": "Commercial",
-          "popular": false,
-          "category": "Businesses"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".company",
@@ -1478,7 +1478,7 @@
           "extension": ".dev",
           "name": "Developer",
           "popular": false,
-          "category": "Businesses"
+          "category": "Professional"
         },
         {
           "extension": ".enterprises",
@@ -1514,13 +1514,13 @@
           "extension": ".guru",
           "name": "Guru",
           "popular": false,
-          "category": "Businesses"
+          "category": "Professional"
         },
         {
           "extension": ".holdings",
           "name": "Holdings",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".industries",
@@ -1532,7 +1532,7 @@
           "extension": ".law",
           "name": "Law",
           "popular": false,
-          "category": "Businesses"
+          "category": "Professional"
         },
         {
           "extension": ".limited",
@@ -1574,13 +1574,13 @@
           "extension": ".property",
           "name": "Property",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".report",
           "name": "Report",
           "popular": false,
-          "category": "Businesses"
+          "category": "Academic & Education"
         },
         {
           "extension": ".sarl",
@@ -1591,26 +1591,26 @@
         {
           "extension": ".store",
           "name": "Store",
-          "popular": false,
-          "category": "Businesses"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".vc",
-          "name": "Vc",
+          "name": "VC",
           "popular": false,
-          "category": "Businesses"
+          "category": "International"
         },
         {
           "extension": ".ventures",
           "name": "Ventures",
           "popular": false,
-          "category": "Businesses"
+          "category": "Finance"
         },
         {
           "extension": ".work",
           "name": "Work",
           "popular": false,
-          "category": "Businesses"
+          "category": "Academic & Education"
         },
         {
           "extension": ".works",
@@ -1627,14 +1627,14 @@
         {
           "extension": ".inc",
           "name": "Incorporated",
-          "popular": false,
-          "category": "Businesses"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".com.co",
           "name": "COM.CO",
           "popular": false,
-          "category": "Businesses"
+          "category": "International"
         }
       ]
     },
@@ -1689,13 +1689,13 @@
           "extension": ".fm",
           "name": "Radio",
           "popular": false,
-          "category": "Audio & Video"
+          "category": "International"
         },
         {
           "extension": ".group",
           "name": "Group",
           "popular": false,
-          "category": "Audio & Video"
+          "category": "Businesses"
         },
         {
           "extension": ".guitars",
@@ -1712,8 +1712,8 @@
         {
           "extension": ".live",
           "name": "Live",
-          "popular": false,
-          "category": "Audio & Video"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".media",
@@ -1730,8 +1730,8 @@
         {
           "extension": ".online",
           "name": "Online",
-          "popular": false,
-          "category": "Audio & Video"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".productions",
@@ -1767,13 +1767,13 @@
           "extension": ".tv",
           "name": "Television",
           "popular": false,
-          "category": "Audio & Video"
+          "category": "International"
         },
         {
           "extension": ".vc",
-          "name": "Vc",
+          "name": "VC",
           "popular": false,
-          "category": "Audio & Video"
+          "category": "International"
         },
         {
           "extension": ".video",
@@ -1810,19 +1810,19 @@
           "extension": ".actor",
           "name": "Actor",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".art",
           "name": "Art",
-          "popular": false,
-          "category": "Arts & Culture"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".audio",
           "name": "Audio",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".center",
@@ -1852,7 +1852,7 @@
           "extension": ".design",
           "name": "Design",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Professional"
         },
         {
           "extension": ".fashion",
@@ -1864,13 +1864,13 @@
           "extension": ".film",
           "name": "Film",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".fm",
           "name": "Radio",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "International"
         },
         {
           "extension": ".gallery",
@@ -1888,7 +1888,7 @@
           "extension": ".hiphop",
           "name": "Hiphop",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".ink",
@@ -1906,7 +1906,7 @@
           "extension": ".movie",
           "name": "Movie",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".photo",
@@ -1948,7 +1948,7 @@
           "extension": ".studio",
           "name": "Studio",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".style",
@@ -1984,19 +1984,19 @@
           "extension": ".video",
           "name": "Video",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Audio & Video"
         },
         {
           "extension": ".work",
           "name": "Work",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Academic & Education"
         },
         {
           "extension": ".works",
           "name": "Works",
           "popular": false,
-          "category": "Arts & Culture"
+          "category": "Businesses"
         },
         {
           "extension": ".yoga",
@@ -2015,13 +2015,13 @@
           "extension": ".cam",
           "name": "Cam",
           "popular": false,
-          "category": "Adult"
+          "category": "Audio & Video"
         },
         {
           "extension": ".webcam",
           "name": "Webcam",
           "popular": false,
-          "category": "Adult"
+          "category": "Audio & Video"
         },
         {
           "extension": ".wtf",
@@ -2051,8 +2051,8 @@
         {
           "extension": ".click",
           "name": "Click",
-          "popular": false,
-          "category": "Marketing"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".coupons",
@@ -2064,13 +2064,13 @@
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Marketing"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".digital",
           "name": "Digital",
           "popular": false,
-          "category": "Marketing"
+          "category": "Audio & Video"
         },
         {
           "extension": ".direct",
@@ -2111,8 +2111,8 @@
         {
           "extension": ".online",
           "name": "Online",
-          "popular": false,
-          "category": "Marketing"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".social",
@@ -2123,8 +2123,8 @@
         {
           "extension": ".store",
           "name": "Store",
-          "popular": false,
-          "category": "Marketing"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".sucks",
@@ -2142,8 +2142,8 @@
         {
           "extension": ".ai",
           "name": "Artificial Intelligence",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".app",
@@ -2154,14 +2154,14 @@
         {
           "extension": ".cloud",
           "name": "Cloud Computing",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".codes",
           "name": "Codes",
           "popular": false,
-          "category": "Technology"
+          "category": "Professional"
         },
         {
           "extension": ".computer",
@@ -2173,13 +2173,13 @@
           "extension": ".dev",
           "name": "Developer",
           "popular": false,
-          "category": "Technology"
+          "category": "Professional"
         },
         {
           "extension": ".digital",
           "name": "Digital",
           "popular": false,
-          "category": "Technology"
+          "category": "Audio & Video"
         },
         {
           "extension": ".directory",
@@ -2203,7 +2203,7 @@
           "extension": ".email",
           "name": "Email",
           "popular": false,
-          "category": "Technology"
+          "category": "Marketing"
         },
         {
           "extension": ".garden",
@@ -2213,15 +2213,15 @@
         },
         {
           "extension": ".gg",
-          "name": "Gg",
+          "name": "GG",
           "popular": false,
-          "category": "Technology"
+          "category": "International"
         },
         {
           "extension": ".guru",
           "name": "Guru",
           "popular": false,
-          "category": "Technology"
+          "category": "Professional"
         },
         {
           "extension": ".host",
@@ -2233,13 +2233,13 @@
           "extension": ".hosting",
           "name": "Hosting",
           "popular": false,
-          "category": "Technology"
+          "category": "Professional"
         },
         {
           "extension": ".io",
           "name": "Input/Output",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".link",
@@ -2256,14 +2256,14 @@
         {
           "extension": ".net",
           "name": "Network",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".network",
           "name": "Network",
           "popular": false,
-          "category": "Technology"
+          "category": "Businesses"
         },
         {
           "extension": ".new",
@@ -2280,8 +2280,8 @@
         {
           "extension": ".online",
           "name": "Online",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".protection",
@@ -2335,7 +2335,7 @@
           "extension": ".stream",
           "name": "Stream",
           "popular": false,
-          "category": "Technology"
+          "category": "Audio & Video"
         },
         {
           "extension": ".surf",
@@ -2352,8 +2352,8 @@
         {
           "extension": ".tech",
           "name": "Technology",
-          "popular": false,
-          "category": "Technology"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".technology",
@@ -2383,13 +2383,13 @@
           "extension": ".wiki",
           "name": "Wiki",
           "popular": false,
-          "category": "Technology"
+          "category": "Academic & Education"
         },
         {
           "extension": ".xn--6frz82g",
           "name": "Xn--6frz82g",
           "popular": false,
-          "category": "Technology"
+          "category": "Audio & Video"
         }
       ]
     },
@@ -2408,7 +2408,7 @@
           "extension": ".bargains",
           "name": "Bargains",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".casa",
@@ -2438,13 +2438,13 @@
           "extension": ".credit",
           "name": "Credit",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".estate",
           "name": "Estate",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".farm",
@@ -2468,13 +2468,13 @@
           "extension": ".holdings",
           "name": "Holdings",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".homes",
           "name": "Homes",
-          "popular": false,
-          "category": "Real Estate"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".house",
@@ -2516,7 +2516,7 @@
           "extension": ".mortgage",
           "name": "Mortgage",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".place",
@@ -2534,7 +2534,7 @@
           "extension": ".property",
           "name": "Property",
           "popular": false,
-          "category": "Real Estate"
+          "category": "Finance"
         },
         {
           "extension": ".realty",
@@ -2571,7 +2571,7 @@
           "extension": ".app",
           "name": "Application",
           "popular": false,
-          "category": "Short"
+          "category": "Technology"
         },
         {
           "extension": ".best",
@@ -2583,31 +2583,31 @@
           "extension": ".biz",
           "name": "Business",
           "popular": false,
-          "category": "Short"
+          "category": "Businesses"
         },
         {
           "extension": ".cam",
           "name": "Cam",
           "popular": false,
-          "category": "Short"
+          "category": "Audio & Video"
         },
         {
           "extension": ".cfd",
           "name": "Cfd",
           "popular": false,
-          "category": "Short"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".co",
           "name": "Company",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".com",
           "name": "Commercial",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".cyou",
@@ -2619,13 +2619,13 @@
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Short"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".dev",
           "name": "Developer",
           "popular": false,
-          "category": "Short"
+          "category": "Professional"
         },
         {
           "extension": ".fit",
@@ -2655,43 +2655,43 @@
           "extension": ".immo",
           "name": "Immo",
           "popular": false,
-          "category": "Short"
+          "category": "Real Estate"
         },
         {
           "extension": ".info",
           "name": "Information",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".krd",
-          "name": "Krd",
+          "name": "KRD",
           "popular": false,
-          "category": "Short"
+          "category": "International"
         },
         {
           "extension": ".mba",
           "name": "Mba",
           "popular": false,
-          "category": "Short"
+          "category": "Academic & Education"
         },
         {
           "extension": ".mom",
           "name": "Mom",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".net",
           "name": "Network",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".new",
           "name": "New",
           "popular": false,
-          "category": "Short"
+          "category": "Technology"
         },
         {
           "extension": ".one",
@@ -2703,13 +2703,13 @@
           "extension": ".onl",
           "name": "Onl",
           "popular": false,
-          "category": "Short"
+          "category": "Technology"
         },
         {
           "extension": ".pro",
           "name": "Professional",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".rehab",
@@ -2721,25 +2721,25 @@
           "extension": ".sbs",
           "name": "Sbs",
           "popular": false,
-          "category": "Short"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".so",
-          "name": "So",
+          "name": "SO",
           "popular": false,
-          "category": "Short"
+          "category": "International"
         },
         {
           "extension": ".tel",
           "name": "Tel",
           "popular": false,
-          "category": "Short"
+          "category": "Technology"
         },
         {
           "extension": ".to",
           "name": "To",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".top",
@@ -2751,19 +2751,19 @@
           "extension": ".vip",
           "name": "Vip",
           "popular": false,
-          "category": "Short"
+          "category": "Professional"
         },
         {
           "extension": ".wtf",
           "name": "Wtf",
           "popular": false,
-          "category": "Short"
+          "category": "Adult"
         },
         {
           "extension": ".xyz",
           "name": "Generic",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".eco",
@@ -2773,15 +2773,15 @@
         },
         {
           "extension": ".is",
-          "name": "Is",
+          "name": "IS",
           "popular": false,
-          "category": "Short"
+          "category": "International"
         },
         {
           "extension": ".inc",
           "name": "Incorporated",
-          "popular": false,
-          "category": "Short"
+          "popular": true,
+          "category": "Popular"
         }
       ]
     },
@@ -2798,9 +2798,9 @@
         },
         {
           "extension": ".cymru",
-          "name": "Cymru",
+          "name": "CYMRU",
           "popular": false,
-          "category": "Politics"
+          "category": "International"
         },
         {
           "extension": ".democrat",
@@ -2818,7 +2818,7 @@
           "extension": ".law",
           "name": "Law",
           "popular": false,
-          "category": "Politics"
+          "category": "Professional"
         },
         {
           "extension": ".navy",
@@ -2861,7 +2861,7 @@
           "extension": ".associates",
           "name": "Associates",
           "popular": false,
-          "category": "Organizations"
+          "category": "Businesses"
         },
         {
           "extension": ".camp",
@@ -2885,7 +2885,7 @@
           "extension": ".college",
           "name": "College",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".community",
@@ -2897,55 +2897,55 @@
           "extension": ".company",
           "name": "Company",
           "popular": false,
-          "category": "Organizations"
+          "category": "Businesses"
         },
         {
           "extension": ".courses",
           "name": "Courses",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".farm",
           "name": "Farm",
           "popular": false,
-          "category": "Organizations"
+          "category": "Real Estate"
         },
         {
           "extension": ".foundation",
           "name": "Foundation",
           "popular": false,
-          "category": "Organizations"
+          "category": "Businesses"
         },
         {
           "extension": ".fund",
           "name": "Fund",
           "popular": false,
-          "category": "Organizations"
+          "category": "Finance"
         },
         {
           "extension": ".global",
           "name": "Global",
           "popular": false,
-          "category": "Organizations"
+          "category": "Businesses"
         },
         {
           "extension": ".group",
           "name": "Group",
           "popular": false,
-          "category": "Organizations"
+          "category": "Businesses"
         },
         {
           "extension": ".hosting",
           "name": "Hosting",
           "popular": false,
-          "category": "Organizations"
+          "category": "Professional"
         },
         {
           "extension": ".institute",
           "name": "Institute",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".international",
@@ -2956,44 +2956,44 @@
         {
           "extension": ".net",
           "name": "Network",
-          "popular": false,
-          "category": "Organizations"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".org",
           "name": "Organization",
-          "popular": false,
-          "category": "Organizations"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".page",
           "name": "Page",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".property",
           "name": "Property",
           "popular": false,
-          "category": "Organizations"
+          "category": "Finance"
         },
         {
           "extension": ".school",
           "name": "School",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".schule",
           "name": "Schule",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".support",
           "name": "Support",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".team",
@@ -3005,31 +3005,31 @@
           "extension": ".technology",
           "name": "Technology",
           "popular": false,
-          "category": "Organizations"
+          "category": "Technology"
         },
         {
           "extension": ".university",
           "name": "University",
           "popular": false,
-          "category": "Organizations"
+          "category": "Academic & Education"
         },
         {
           "extension": ".ventures",
           "name": "Ventures",
           "popular": false,
-          "category": "Organizations"
+          "category": "Finance"
         },
         {
           "extension": ".eco",
           "name": "Eco",
           "popular": false,
-          "category": "Organizations"
+          "category": "Short"
         },
         {
           "extension": ".inc",
           "name": "Incorporated",
-          "popular": false,
-          "category": "Organizations"
+          "popular": true,
+          "category": "Popular"
         }
       ]
     },
@@ -3042,19 +3042,19 @@
           "extension": ".auction",
           "name": "Auction",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".bargains",
           "name": "Bargains",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".bid",
           "name": "Bid",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".blackfriday",
@@ -3066,19 +3066,19 @@
           "extension": ".boutique",
           "name": "Boutique",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Businesses"
         },
         {
           "extension": ".cash",
           "name": "Cash",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".cheap",
           "name": "Cheap",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".clothing",
@@ -3090,61 +3090,61 @@
           "extension": ".codes",
           "name": "Codes",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Professional"
         },
         {
           "extension": ".coupons",
           "name": "Coupons",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Marketing"
         },
         {
           "extension": ".creditcard",
           "name": "Creditcard",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".deals",
           "name": "Deals",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Businesses"
         },
         {
           "extension": ".design",
           "name": "Design",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Professional"
         },
         {
           "extension": ".discount",
           "name": "Discount",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".exchange",
           "name": "Exchange",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Finance"
         },
         {
           "extension": ".fashion",
           "name": "Fashion",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".forsale",
           "name": "Forsale",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Real Estate"
         },
         {
           "extension": ".gift",
@@ -3168,7 +3168,7 @@
           "extension": ".gratis",
           "name": "Gratis",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Marketing"
         },
         {
           "extension": ".green",
@@ -3192,7 +3192,7 @@
           "extension": ".market",
           "name": "Market",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Marketing"
         },
         {
           "extension": ".moda",
@@ -3204,19 +3204,19 @@
           "extension": ".onl",
           "name": "Onl",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Technology"
         },
         {
           "extension": ".review",
           "name": "Review",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Academic & Education"
         },
         {
           "extension": ".reviews",
           "name": "Reviews",
           "popular": false,
-          "category": "Shopping and Sales"
+          "category": "Academic & Education"
         },
         {
           "extension": ".sale",
@@ -3227,8 +3227,8 @@
         {
           "extension": ".shop",
           "name": "Shop",
-          "popular": false,
-          "category": "Shopping and Sales"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".shopping",
@@ -3239,8 +3239,8 @@
         {
           "extension": ".store",
           "name": "Store",
-          "popular": false,
-          "category": "Shopping and Sales"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".tienda",
@@ -3259,7 +3259,7 @@
           "extension": ".audio",
           "name": "Audio",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".band",
@@ -3271,73 +3271,73 @@
           "extension": ".cam",
           "name": "Cam",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".design",
           "name": "Design",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Professional"
         },
         {
           "extension": ".digital",
           "name": "Digital",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".film",
           "name": "Film",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".fm",
           "name": "Radio",
           "popular": false,
-          "category": "Media and Music"
+          "category": "International"
         },
         {
           "extension": ".graphics",
           "name": "Graphics",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".group",
           "name": "Group",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Businesses"
         },
         {
           "extension": ".guitars",
           "name": "Guitars",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".hiphop",
           "name": "Hiphop",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".live",
           "name": "Live",
-          "popular": false,
-          "category": "Media and Music"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".media",
           "name": "Media",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".movie",
           "name": "Movie",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".news",
@@ -3349,31 +3349,31 @@
           "extension": ".photo",
           "name": "Photo",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".photography",
           "name": "Photography",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".photos",
           "name": "Photos",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".pics",
           "name": "Pics",
-          "popular": false,
-          "category": "Media and Music"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".pictures",
           "name": "Pictures",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".press",
@@ -3385,31 +3385,31 @@
           "extension": ".productions",
           "name": "Productions",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".rocks",
           "name": "Rocks",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".show",
           "name": "Show",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".studio",
           "name": "Studio",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".tickets",
           "name": "Tickets",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".today",
@@ -3421,13 +3421,13 @@
           "extension": ".video",
           "name": "Video",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Audio & Video"
         },
         {
           "extension": ".observer",
           "name": "Observer",
           "popular": false,
-          "category": "Media and Music"
+          "category": "Academic & Education"
         }
       ]
     },
@@ -3440,7 +3440,7 @@
           "extension": ".audio",
           "name": "Audio",
           "popular": false,
-          "category": "Fun"
+          "category": "Audio & Video"
         },
         {
           "extension": ".bingo",
@@ -3470,13 +3470,13 @@
           "extension": ".dance",
           "name": "Dance",
           "popular": false,
-          "category": "Fun"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Fun"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".fail",
@@ -3487,8 +3487,8 @@
         {
           "extension": ".game",
           "name": "Gaming",
-          "popular": false,
-          "category": "Fun"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".games",
@@ -3498,15 +3498,15 @@
         },
         {
           "extension": ".gg",
-          "name": "Gg",
+          "name": "GG",
           "popular": false,
-          "category": "Fun"
+          "category": "International"
         },
         {
           "extension": ".hiphop",
           "name": "Hiphop",
           "popular": false,
-          "category": "Fun"
+          "category": "Audio & Video"
         },
         {
           "extension": ".juegos",
@@ -3517,8 +3517,8 @@
         {
           "extension": ".lol",
           "name": "Lol",
-          "popular": false,
-          "category": "Fun"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".ninja",
@@ -3554,31 +3554,31 @@
           "extension": ".rocks",
           "name": "Rocks",
           "popular": false,
-          "category": "Fun"
+          "category": "Audio & Video"
         },
         {
           "extension": ".social",
           "name": "Social",
           "popular": false,
-          "category": "Fun"
+          "category": "Marketing"
         },
         {
           "extension": ".tickets",
           "name": "Tickets",
           "popular": false,
-          "category": "Fun"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".vip",
           "name": "Vip",
           "popular": false,
-          "category": "Fun"
+          "category": "Professional"
         },
         {
           "extension": ".wtf",
           "name": "Wtf",
           "popular": false,
-          "category": "Fun"
+          "category": "Adult"
         },
         {
           "extension": ".fun",
@@ -3621,7 +3621,7 @@
           "extension": ".bingo",
           "name": "Bingo",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".boats",
@@ -3639,7 +3639,7 @@
           "extension": ".cards",
           "name": "Cards",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".cars",
@@ -3651,31 +3651,31 @@
           "extension": ".casino",
           "name": "Casino",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Organizations"
         },
         {
           "extension": ".club",
           "name": "Club",
-          "popular": false,
-          "category": "Sports and Hobbies"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".coach",
           "name": "Coach",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Professional"
         },
         {
           "extension": ".computer",
           "name": "Computer",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Technology"
         },
         {
           "extension": ".cooking",
           "name": "Cooking",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Professional"
         },
         {
           "extension": ".cricket",
@@ -3687,13 +3687,13 @@
           "extension": ".dance",
           "name": "Dance",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".design",
           "name": "Design",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Professional"
         },
         {
           "extension": ".diet",
@@ -3711,7 +3711,7 @@
           "extension": ".fashion",
           "name": "Fashion",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".fishing",
@@ -3723,7 +3723,7 @@
           "extension": ".fit",
           "name": "Fit",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Short"
         },
         {
           "extension": ".fitness",
@@ -3758,20 +3758,20 @@
         {
           "extension": ".game",
           "name": "Gaming",
-          "popular": false,
-          "category": "Sports and Hobbies"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".games",
           "name": "Games",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".gg",
-          "name": "Gg",
+          "name": "GG",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "International"
         },
         {
           "extension": ".golf",
@@ -3783,13 +3783,13 @@
           "extension": ".guitars",
           "name": "Guitars",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Audio & Video"
         },
         {
           "extension": ".hiphop",
           "name": "Hiphop",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Audio & Video"
         },
         {
           "extension": ".hockey",
@@ -3807,13 +3807,13 @@
           "extension": ".juegos",
           "name": "Juegos",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".makeup",
           "name": "Makeup",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".motorcycles",
@@ -3825,13 +3825,13 @@
           "extension": ".poker",
           "name": "Poker",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".quest",
           "name": "Quest",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Fun"
         },
         {
           "extension": ".racing",
@@ -3867,13 +3867,13 @@
           "extension": ".surf",
           "name": "Surf",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Technology"
         },
         {
           "extension": ".team",
           "name": "Team",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Organizations"
         },
         {
           "extension": ".tennis",
@@ -3885,7 +3885,7 @@
           "extension": ".training",
           "name": "Training",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Academic & Education"
         },
         {
           "extension": ".yachts",
@@ -3897,7 +3897,7 @@
           "extension": ".yoga",
           "name": "Yoga",
           "popular": false,
-          "category": "Sports and Hobbies"
+          "category": "Arts & Culture"
         }
       ]
     },
@@ -3910,49 +3910,49 @@
           "extension": ".auto",
           "name": "Auto",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".autos",
           "name": "Autos",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".boats",
           "name": "Boats",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".camera",
           "name": "Camera",
           "popular": false,
-          "category": "Products"
+          "category": "Audio & Video"
         },
         {
           "extension": ".car",
           "name": "Car",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".cars",
           "name": "Cars",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".clothing",
           "name": "Clothing",
           "popular": false,
-          "category": "Products"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".coach",
           "name": "Coach",
           "popular": false,
-          "category": "Products"
+          "category": "Professional"
         },
         {
           "extension": ".diamonds",
@@ -3976,7 +3976,7 @@
           "extension": ".fit",
           "name": "Fit",
           "popular": false,
-          "category": "Products"
+          "category": "Short"
         },
         {
           "extension": ".furniture",
@@ -3994,19 +3994,19 @@
           "extension": ".gold",
           "name": "Gold",
           "popular": false,
-          "category": "Products"
+          "category": "Finance"
         },
         {
           "extension": ".homes",
           "name": "Homes",
-          "popular": false,
-          "category": "Products"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".horse",
           "name": "Horse",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".jewelry",
@@ -4024,13 +4024,13 @@
           "extension": ".makeup",
           "name": "Makeup",
           "popular": false,
-          "category": "Products"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".motorcycles",
           "name": "Motorcycles",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".parts",
@@ -4048,13 +4048,13 @@
           "extension": ".software",
           "name": "Software",
           "popular": false,
-          "category": "Products"
+          "category": "Technology"
         },
         {
           "extension": ".solar",
           "name": "Solar",
           "popular": false,
-          "category": "Products"
+          "category": "Technology"
         },
         {
           "extension": ".tires",
@@ -4072,19 +4072,19 @@
           "extension": ".watch",
           "name": "Watch",
           "popular": false,
-          "category": "Products"
+          "category": "Audio & Video"
         },
         {
           "extension": ".webcam",
           "name": "Webcam",
           "popular": false,
-          "category": "Products"
+          "category": "Audio & Video"
         },
         {
           "extension": ".yachts",
           "name": "Yachts",
           "popular": false,
-          "category": "Products"
+          "category": "Sports and Hobbies"
         }
       ]
     },
@@ -4097,31 +4097,31 @@
           "extension": ".auto",
           "name": "Auto",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".autos",
           "name": "Autos",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".boats",
           "name": "Boats",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".car",
           "name": "Car",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".cars",
           "name": "Cars",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".limo",
@@ -4133,25 +4133,25 @@
           "extension": ".motorcycles",
           "name": "Motorcycles",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".racing",
           "name": "Racing",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".rent",
           "name": "Rent",
           "popular": false,
-          "category": "Transport"
+          "category": "Real Estate"
         },
         {
           "extension": ".rentals",
           "name": "Rentals",
           "popular": false,
-          "category": "Transport"
+          "category": "Real Estate"
         },
         {
           "extension": ".taxi",
@@ -4163,7 +4163,7 @@
           "extension": ".yachts",
           "name": "Yachts",
           "popular": false,
-          "category": "Transport"
+          "category": "Sports and Hobbies"
         }
       ]
     },
@@ -4181,62 +4181,62 @@
         {
           "extension": ".beauty",
           "name": "Beauty",
-          "popular": false,
-          "category": "Personal"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".blog",
           "name": "Blog",
           "popular": false,
-          "category": "Personal"
+          "category": "Marketing"
         },
         {
           "extension": ".cyou",
           "name": "Cyou",
           "popular": false,
-          "category": "Personal"
+          "category": "Short"
         },
         {
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Personal"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".expert",
           "name": "Expert",
           "popular": false,
-          "category": "Personal"
+          "category": "Professional"
         },
         {
           "extension": ".fit",
           "name": "Fit",
           "popular": false,
-          "category": "Personal"
+          "category": "Short"
         },
         {
           "extension": ".forum",
           "name": "Forum",
           "popular": false,
-          "category": "Personal"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".guru",
           "name": "Guru",
           "popular": false,
-          "category": "Personal"
+          "category": "Professional"
         },
         {
           "extension": ".icu",
           "name": "Icu",
           "popular": false,
-          "category": "Personal"
+          "category": "Short"
         },
         {
           "extension": ".id",
-          "name": "Id",
+          "name": "ID",
           "popular": false,
-          "category": "Personal"
+          "category": "International"
         },
         {
           "extension": ".kim",
@@ -4247,8 +4247,8 @@
         {
           "extension": ".me",
           "name": "Personal",
-          "popular": false,
-          "category": "Personal"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".moe",
@@ -4259,8 +4259,8 @@
         {
           "extension": ".mom",
           "name": "Mom",
-          "popular": false,
-          "category": "Personal"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".name",
@@ -4272,7 +4272,7 @@
           "extension": ".property",
           "name": "Property",
           "popular": false,
-          "category": "Personal"
+          "category": "Finance"
         },
         {
           "extension": ".soy",
@@ -4284,7 +4284,7 @@
           "extension": ".space",
           "name": "Space",
           "popular": false,
-          "category": "Personal"
+          "category": "Academic & Education"
         }
       ]
     },
@@ -4297,7 +4297,7 @@
           "extension": ".baby",
           "name": "Baby",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Personal"
         },
         {
           "extension": ".bio",
@@ -4309,13 +4309,13 @@
           "extension": ".careers",
           "name": "Careers",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Professional"
         },
         {
           "extension": ".chat",
           "name": "Chat",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Audio & Video"
         },
         {
           "extension": ".christmas",
@@ -4327,7 +4327,7 @@
           "extension": ".community",
           "name": "Community",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Organizations"
         },
         {
           "extension": ".contact",
@@ -4339,7 +4339,7 @@
           "extension": ".cyou",
           "name": "Cyou",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Short"
         },
         {
           "extension": ".date",
@@ -4357,7 +4357,7 @@
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".dog",
@@ -4375,7 +4375,7 @@
           "extension": ".events",
           "name": "Events",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Marketing"
         },
         {
           "extension": ".exposed",
@@ -4399,37 +4399,37 @@
           "extension": ".fashion",
           "name": "Fashion",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".fit",
           "name": "Fit",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Short"
         },
         {
           "extension": ".forum",
           "name": "Forum",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".garden",
           "name": "Garden",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Technology"
         },
         {
           "extension": ".guru",
           "name": "Guru",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Professional"
         },
         {
           "extension": ".hiphop",
           "name": "Hiphop",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Audio & Video"
         },
         {
           "extension": ".holiday",
@@ -4441,7 +4441,7 @@
           "extension": ".juegos",
           "name": "Juegos",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Fun"
         },
         {
           "extension": ".lgbt",
@@ -4458,8 +4458,8 @@
         {
           "extension": ".love",
           "name": "Love",
-          "popular": false,
-          "category": "Social & Lifestyle"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".memorial",
@@ -4477,49 +4477,49 @@
           "extension": ".moda",
           "name": "Moda",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".moe",
           "name": "Moe",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Personal"
         },
         {
           "extension": ".name",
           "name": "Name",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Personal"
         },
         {
           "extension": ".network",
           "name": "Network",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Businesses"
         },
         {
           "extension": ".partners",
           "name": "Partners",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Businesses"
         },
         {
           "extension": ".party",
           "name": "Party",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Fun"
         },
         {
           "extension": ".place",
           "name": "Place",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Real Estate"
         },
         {
           "extension": ".rehab",
           "name": "Rehab",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Short"
         },
         {
           "extension": ".rest",
@@ -4537,7 +4537,7 @@
           "extension": ".sbs",
           "name": "Sbs",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".singles",
@@ -4549,55 +4549,55 @@
           "extension": ".social",
           "name": "Social",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Marketing"
         },
         {
           "extension": ".style",
           "name": "Style",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".sucks",
           "name": "Sucks",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Marketing"
         },
         {
           "extension": ".tattoo",
           "name": "Tattoo",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".to",
           "name": "To",
-          "popular": false,
-          "category": "Social & Lifestyle"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".vip",
           "name": "Vip",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Professional"
         },
         {
           "extension": ".vote",
           "name": "Vote",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Politics"
         },
         {
           "extension": ".voting",
           "name": "Voting",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Politics"
         },
         {
           "extension": ".voto",
           "name": "Voto",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Politics"
         },
         {
           "extension": ".wedding",
@@ -4615,19 +4615,19 @@
           "extension": ".yoga",
           "name": "Yoga",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".eco",
           "name": "Eco",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "Short"
         },
         {
           "extension": ".is",
-          "name": "Is",
+          "name": "IS",
           "popular": false,
-          "category": "Social & Lifestyle"
+          "category": "International"
         }
       ]
     },
@@ -4646,151 +4646,151 @@
           "extension": ".bond",
           "name": "Bond",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Finance"
         },
         {
           "extension": ".cam",
           "name": "Cam",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Audio & Video"
         },
         {
           "extension": ".cfd",
           "name": "Cfd",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".click",
           "name": "Click",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".cyou",
           "name": "Cyou",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Short"
         },
         {
           "extension": ".digital",
           "name": "Digital",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Audio & Video"
         },
         {
           "extension": ".guru",
           "name": "Guru",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Professional"
         },
         {
           "extension": ".icu",
           "name": "Icu",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Short"
         },
         {
           "extension": ".life",
           "name": "Life",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".live",
           "name": "Live",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".online",
           "name": "Online",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".quest",
           "name": "Quest",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Fun"
         },
         {
           "extension": ".rest",
           "name": "Rest",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".sbs",
           "name": "Sbs",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".shop",
           "name": "Shop",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".site",
           "name": "Site",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Technology"
         },
         {
           "extension": ".store",
           "name": "Store",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".today",
           "name": "Today",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Media and Music"
         },
         {
           "extension": ".top",
           "name": "Top",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Short"
         },
         {
           "extension": ".website",
           "name": "Website",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Technology"
         },
         {
           "extension": ".world",
           "name": "World",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".xyz",
           "name": "Generic",
-          "popular": false,
-          "category": "$2 or Less"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".space",
           "name": "Space",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Academic & Education"
         },
         {
           "extension": ".fun",
           "name": "Fun",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Fun"
         },
         {
           "extension": ".monster",
           "name": "Monster",
           "popular": false,
-          "category": "$2 or Less"
+          "category": "Fun"
         }
       ]
     },
@@ -4803,7 +4803,7 @@
           "extension": ".bar",
           "name": "Bar",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "$2 or Less"
         },
         {
           "extension": ".beer",
@@ -4833,19 +4833,19 @@
           "extension": ".cooking",
           "name": "Cooking",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Professional"
         },
         {
           "extension": ".diet",
           "name": "Diet",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".farm",
           "name": "Farm",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Real Estate"
         },
         {
           "extension": ".fish",
@@ -4887,7 +4887,7 @@
           "extension": ".rest",
           "name": "Rest",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".restaurant",
@@ -4899,7 +4899,7 @@
           "extension": ".tips",
           "name": "Tips",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Academic & Education"
         },
         {
           "extension": ".vin",
@@ -4923,7 +4923,7 @@
           "extension": ".eco",
           "name": "Eco",
           "popular": false,
-          "category": "Food & Drink"
+          "category": "Short"
         }
       ]
     },
@@ -4936,7 +4936,7 @@
           "extension": ".bar",
           "name": "Bar",
           "popular": false,
-          "category": "Services"
+          "category": "$2 or Less"
         },
         {
           "extension": ".cab",
@@ -4954,13 +4954,13 @@
           "extension": ".casino",
           "name": "Casino",
           "popular": false,
-          "category": "Services"
+          "category": "Organizations"
         },
         {
           "extension": ".catering",
           "name": "Catering",
           "popular": false,
-          "category": "Services"
+          "category": "Food & Drink"
         },
         {
           "extension": ".cleaning",
@@ -4972,19 +4972,19 @@
           "extension": ".consulting",
           "name": "Consulting",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".contact",
           "name": "Contact",
           "popular": false,
-          "category": "Services"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".contractors",
           "name": "Contractors",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".delivery",
@@ -4996,19 +4996,19 @@
           "extension": ".equipment",
           "name": "Equipment",
           "popular": false,
-          "category": "Services"
+          "category": "Products"
         },
         {
           "extension": ".events",
           "name": "Events",
           "popular": false,
-          "category": "Services"
+          "category": "Marketing"
         },
         {
           "extension": ".exchange",
           "name": "Exchange",
           "popular": false,
-          "category": "Services"
+          "category": "Finance"
         },
         {
           "extension": ".express",
@@ -5020,73 +5020,73 @@
           "extension": ".florist",
           "name": "Florist",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".garden",
           "name": "Garden",
           "popular": false,
-          "category": "Services"
+          "category": "Technology"
         },
         {
           "extension": ".help",
           "name": "Help",
           "popular": false,
-          "category": "Services"
+          "category": "Academic & Education"
         },
         {
           "extension": ".host",
           "name": "Host",
           "popular": false,
-          "category": "Services"
+          "category": "Technology"
         },
         {
           "extension": ".hosting",
           "name": "Hosting",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".ink",
           "name": "Ink",
           "popular": false,
-          "category": "Services"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".international",
           "name": "International",
           "popular": false,
-          "category": "Services"
+          "category": "Organizations"
         },
         {
           "extension": ".legal",
           "name": "Legal",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".limo",
           "name": "Limo",
           "popular": false,
-          "category": "Services"
+          "category": "Transport"
         },
         {
           "extension": ".makeup",
           "name": "Makeup",
           "popular": false,
-          "category": "Services"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".plumbing",
           "name": "Plumbing",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".realty",
           "name": "Realty",
           "popular": false,
-          "category": "Services"
+          "category": "Real Estate"
         },
         {
           "extension": ".repair",
@@ -5098,13 +5098,13 @@
           "extension": ".services",
           "name": "Services",
           "popular": false,
-          "category": "Services"
+          "category": "Technology"
         },
         {
           "extension": ".solutions",
           "name": "Solutions",
           "popular": false,
-          "category": "Services"
+          "category": "Technology"
         },
         {
           "extension": ".supplies",
@@ -5122,13 +5122,13 @@
           "extension": ".support",
           "name": "Support",
           "popular": false,
-          "category": "Services"
+          "category": "Academic & Education"
         },
         {
           "extension": ".taxi",
           "name": "Taxi",
           "popular": false,
-          "category": "Services"
+          "category": "Transport"
         },
         {
           "extension": ".trade",
@@ -5140,13 +5140,13 @@
           "extension": ".vip",
           "name": "Vip",
           "popular": false,
-          "category": "Services"
+          "category": "Professional"
         },
         {
           "extension": ".work",
           "name": "Work",
           "popular": false,
-          "category": "Services"
+          "category": "Academic & Education"
         },
         {
           "extension": ".hair",
@@ -5164,26 +5164,26 @@
         {
           "extension": ".beauty",
           "name": "Beauty",
-          "popular": false,
-          "category": "Beauty"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".cfd",
           "name": "Cfd",
           "popular": false,
-          "category": "Beauty"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".flowers",
           "name": "Flowers",
           "popular": false,
-          "category": "Beauty"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".makeup",
           "name": "Makeup",
           "popular": false,
-          "category": "Beauty"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".skin",
@@ -5195,13 +5195,13 @@
           "extension": ".tattoo",
           "name": "Tattoo",
           "popular": false,
-          "category": "Beauty"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".hair",
           "name": "Hair",
           "popular": false,
-          "category": "Beauty"
+          "category": "Services"
         }
       ]
     },
@@ -5214,13 +5214,13 @@
           "extension": ".berlin",
           "name": "BERLIN",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".capital",
-          "name": "CAPITAL",
+          "name": "Capital",
           "popular": false,
-          "category": "Cities"
+          "category": "Finance"
         },
         {
           "extension": ".city",
@@ -5232,19 +5232,19 @@
           "extension": ".de",
           "name": "DE",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".hamburg",
           "name": "HAMBURG",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".krd",
           "name": "KRD",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".kyoto",
@@ -5256,61 +5256,61 @@
           "extension": ".la",
           "name": "LA",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".london",
           "name": "LONDON",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".melbourne",
           "name": "MELBOURNE",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".miami",
           "name": "MIAMI",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".nagoya",
           "name": "NAGOYA",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".nyc",
           "name": "NYC",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".paris",
           "name": "PARIS",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".sg",
           "name": "SG",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".sydney",
           "name": "SYDNEY",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".tokyo",
           "name": "TOKYO",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".town",
@@ -5322,19 +5322,19 @@
           "extension": ".vegas",
           "name": "VEGAS",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".yokohama",
           "name": "YOKOHAMA",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         },
         {
           "extension": ".boston",
           "name": "BOSTON",
           "popular": false,
-          "category": "Cities"
+          "category": "International"
         }
       ]
     },
@@ -5347,31 +5347,31 @@
           "extension": ".bike",
           "name": "Bike",
           "popular": false,
-          "category": "Travel"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".camp",
           "name": "Camp",
           "popular": false,
-          "category": "Travel"
+          "category": "Organizations"
         },
         {
           "extension": ".christmas",
           "name": "Christmas",
           "popular": false,
-          "category": "Travel"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".city",
-          "name": "City",
+          "name": "CITY",
           "popular": false,
-          "category": "Travel"
+          "category": "Cities"
         },
         {
           "extension": ".country",
           "name": "Country",
           "popular": false,
-          "category": "Travel"
+          "category": "Real Estate"
         },
         {
           "extension": ".cruises",
@@ -5383,7 +5383,7 @@
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Travel"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".flights",
@@ -5395,43 +5395,43 @@
           "extension": ".flowers",
           "name": "Flowers",
           "popular": false,
-          "category": "Travel"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".global",
           "name": "Global",
           "popular": false,
-          "category": "Travel"
+          "category": "Businesses"
         },
         {
           "extension": ".guide",
           "name": "Guide",
           "popular": false,
-          "category": "Travel"
+          "category": "Academic & Education"
         },
         {
           "extension": ".holiday",
           "name": "Holiday",
           "popular": false,
-          "category": "Travel"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".limo",
           "name": "Limo",
           "popular": false,
-          "category": "Travel"
+          "category": "Transport"
         },
         {
           "extension": ".nl",
-          "name": "Nl",
+          "name": "NL",
           "popular": false,
-          "category": "Travel"
+          "category": "International"
         },
         {
           "extension": ".place",
           "name": "Place",
           "popular": false,
-          "category": "Travel"
+          "category": "Real Estate"
         },
         {
           "extension": ".reise",
@@ -5449,13 +5449,13 @@
           "extension": ".rest",
           "name": "Rest",
           "popular": false,
-          "category": "Travel"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".tickets",
           "name": "Tickets",
           "popular": false,
-          "category": "Travel"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".tours",
@@ -5465,9 +5465,9 @@
         },
         {
           "extension": ".town",
-          "name": "Town",
+          "name": "TOWN",
           "popular": false,
-          "category": "Travel"
+          "category": "Cities"
         },
         {
           "extension": ".travel",
@@ -5496,8 +5496,8 @@
         {
           "extension": ".world",
           "name": "World",
-          "popular": false,
-          "category": "Travel"
+          "popular": true,
+          "category": "Popular"
         }
       ]
     },
@@ -5510,13 +5510,13 @@
           "extension": ".bio",
           "name": "Bio",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".care",
           "name": "Care",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Services"
         },
         {
           "extension": ".clinic",
@@ -5528,55 +5528,55 @@
           "extension": ".coach",
           "name": "Coach",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Professional"
         },
         {
           "extension": ".dental",
           "name": "Dental",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Professional"
         },
         {
           "extension": ".dentist",
           "name": "Dentist",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Professional"
         },
         {
           "extension": ".diet",
           "name": "Diet",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".energy",
           "name": "Energy",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Products"
         },
         {
           "extension": ".fit",
           "name": "Fit",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Short"
         },
         {
           "extension": ".fitness",
           "name": "Fitness",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".green",
           "name": "Green",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".health",
           "name": "Health",
-          "popular": false,
-          "category": "Health and Fitness"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".healthcare",
@@ -5588,31 +5588,31 @@
           "extension": ".plus",
           "name": "Plus",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Fun"
         },
         {
           "extension": ".recipes",
           "name": "Recipes",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Food & Drink"
         },
         {
           "extension": ".rehab",
           "name": "Rehab",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Short"
         },
         {
           "extension": ".run",
           "name": "Run",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".surf",
           "name": "Surf",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Technology"
         },
         {
           "extension": ".surgery",
@@ -5624,7 +5624,7 @@
           "extension": ".vet",
           "name": "Vet",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Professional"
         },
         {
           "extension": ".vision",
@@ -5636,19 +5636,19 @@
           "extension": ".yoga",
           "name": "Yoga",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".eco",
           "name": "Eco",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Short"
         },
         {
           "extension": ".doctor",
           "name": "Doctor",
           "popular": false,
-          "category": "Health and Fitness"
+          "category": "Professional"
         }
       ]
     },
@@ -5673,7 +5673,7 @@
           "extension": ".green",
           "name": "Green",
           "popular": false,
-          "category": "Colors"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".pink",
@@ -5710,67 +5710,67 @@
           "extension": ".center",
           "name": "Center",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".condos",
           "name": "Condos",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Real Estate"
         },
         {
           "extension": ".construction",
           "name": "Construction",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Real Estate"
         },
         {
           "extension": ".contractors",
           "name": "Contractors",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Professional"
         },
         {
           "extension": ".homes",
           "name": "Homes",
-          "popular": false,
-          "category": "Trades & Construction"
+          "popular": true,
+          "category": "Popular"
         },
         {
           "extension": ".place",
           "name": "Place",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Real Estate"
         },
         {
           "extension": ".plumbing",
           "name": "Plumbing",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Professional"
         },
         {
           "extension": ".supply",
           "name": "Supply",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Services"
         },
         {
           "extension": ".tools",
           "name": "Tools",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Technology"
         },
         {
           "extension": ".trade",
           "name": "Trade",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Services"
         },
         {
           "extension": ".work",
           "name": "Work",
           "popular": false,
-          "category": "Trades & Construction"
+          "category": "Academic & Education"
         },
         {
           "extension": ".zone",
@@ -5789,7 +5789,7 @@
           "extension": ".casa",
           "name": "Casa",
           "popular": false,
-          "category": "Non-English"
+          "category": "Real Estate"
         },
         {
           "extension": ".desi",
@@ -5801,25 +5801,25 @@
           "extension": ".futbol",
           "name": "Futbol",
           "popular": false,
-          "category": "Non-English"
+          "category": "Sports and Hobbies"
         },
         {
           "extension": ".gmbh",
           "name": "Gmbh",
           "popular": false,
-          "category": "Non-English"
+          "category": "Businesses"
         },
         {
           "extension": ".immo",
           "name": "Immo",
           "popular": false,
-          "category": "Non-English"
+          "category": "Real Estate"
         },
         {
           "extension": ".immobilien",
           "name": "Immobilien",
           "popular": false,
-          "category": "Non-English"
+          "category": "Real Estate"
         },
         {
           "extension": ".jetzt",
@@ -5831,67 +5831,67 @@
           "extension": ".juegos",
           "name": "Juegos",
           "popular": false,
-          "category": "Non-English"
+          "category": "Fun"
         },
         {
           "extension": ".kaufen",
           "name": "Kaufen",
           "popular": false,
-          "category": "Non-English"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".kim",
           "name": "Kim",
           "popular": false,
-          "category": "Non-English"
+          "category": "Personal"
         },
         {
           "extension": ".moe",
           "name": "Moe",
           "popular": false,
-          "category": "Non-English"
+          "category": "Personal"
         },
         {
           "extension": ".reise",
           "name": "Reise",
           "popular": false,
-          "category": "Non-English"
+          "category": "Travel"
         },
         {
           "extension": ".reisen",
           "name": "Reisen",
           "popular": false,
-          "category": "Non-English"
+          "category": "Travel"
         },
         {
           "extension": ".sarl",
           "name": "Sarl",
           "popular": false,
-          "category": "Non-English"
+          "category": "Businesses"
         },
         {
           "extension": ".schule",
           "name": "Schule",
           "popular": false,
-          "category": "Non-English"
+          "category": "Academic & Education"
         },
         {
           "extension": ".shiksha",
           "name": "Shiksha",
           "popular": false,
-          "category": "Non-English"
+          "category": "Academic & Education"
         },
         {
           "extension": ".soy",
           "name": "Soy",
           "popular": false,
-          "category": "Non-English"
+          "category": "Personal"
         },
         {
           "extension": ".tienda",
           "name": "Tienda",
           "popular": false,
-          "category": "Non-English"
+          "category": "Shopping and Sales"
         },
         {
           "extension": ".uno",
@@ -5903,25 +5903,25 @@
           "extension": ".viajes",
           "name": "Viajes",
           "popular": false,
-          "category": "Non-English"
+          "category": "Travel"
         },
         {
           "extension": ".vin",
           "name": "Vin",
           "popular": false,
-          "category": "Non-English"
+          "category": "Food & Drink"
         },
         {
           "extension": ".voto",
           "name": "Voto",
           "popular": false,
-          "category": "Non-English"
+          "category": "Politics"
         },
         {
           "extension": ".xn--6frz82g",
           "name": "Xn--6frz82g",
           "popular": false,
-          "category": "Non-English"
+          "category": "Audio & Video"
         }
       ]
     },
@@ -5934,31 +5934,31 @@
           "extension": ".christmas",
           "name": "Christmas",
           "popular": false,
-          "category": "Religion"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".church",
           "name": "Church",
           "popular": false,
-          "category": "Religion"
+          "category": "Organizations"
         },
         {
           "extension": ".day",
           "name": "Day",
           "popular": false,
-          "category": "Religion"
+          "category": "Arts & Culture"
         },
         {
           "extension": ".faith",
           "name": "Faith",
           "popular": false,
-          "category": "Religion"
+          "category": "Social & Lifestyle"
         },
         {
           "extension": ".holiday",
           "name": "Holiday",
           "popular": false,
-          "category": "Religion"
+          "category": "Social & Lifestyle"
         }
       ]
     },
@@ -6224,12 +6224,6 @@
       "category": "International"
     },
     {
-      "extension": ".ai",
-      "name": "Artificial Intelligence",
-      "popular": false,
-      "category": "International"
-    },
-    {
       "extension": ".asia",
       "name": "ASIA",
       "popular": false,
@@ -6268,12 +6262,6 @@
     {
       "extension": ".cm",
       "name": "CM",
-      "popular": false,
-      "category": "International"
-    },
-    {
-      "extension": ".co",
-      "name": "Company",
       "popular": false,
       "category": "International"
     },
@@ -6344,12 +6332,6 @@
       "category": "International"
     },
     {
-      "extension": ".io",
-      "name": "Input/Output",
-      "popular": false,
-      "category": "International"
-    },
-    {
       "extension": ".kiwi",
       "name": "KIWI",
       "popular": false,
@@ -6382,12 +6364,6 @@
     {
       "extension": ".london",
       "name": "LONDON",
-      "popular": false,
-      "category": "International"
-    },
-    {
-      "extension": ".me",
-      "name": "Personal",
       "popular": false,
       "category": "International"
     },
@@ -6496,12 +6472,6 @@
     {
       "extension": ".sydney",
       "name": "SYDNEY",
-      "popular": false,
-      "category": "International"
-    },
-    {
-      "extension": ".to",
-      "name": "TO",
       "popular": false,
       "category": "International"
     },
@@ -6866,12 +6836,6 @@
       "category": "Academic & Education"
     },
     {
-      "extension": ".ai",
-      "name": "Artificial Intelligence",
-      "popular": false,
-      "category": "Academic & Education"
-    },
-    {
       "extension": ".college",
       "name": "College",
       "popular": false,
@@ -6910,12 +6874,6 @@
     {
       "extension": ".how",
       "name": "How",
-      "popular": false,
-      "category": "Academic & Education"
-    },
-    {
-      "extension": ".info",
-      "name": "Information",
       "popular": false,
       "category": "Academic & Education"
     },
@@ -7202,38 +7160,14 @@
       "category": "Finance"
     },
     {
-      "extension": ".vc",
-      "name": "Vc",
-      "popular": false,
-      "category": "Finance"
-    },
-    {
       "extension": ".ventures",
       "name": "Ventures",
       "popular": false,
       "category": "Finance"
     },
     {
-      "extension": ".inc",
-      "name": "Incorporated",
-      "popular": false,
-      "category": "Finance"
-    },
-    {
-      "extension": ".accountants",
-      "name": "Accountants",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
       "extension": ".attorney",
       "name": "Attorney",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
-      "extension": ".beauty",
-      "name": "Beauty",
       "popular": false,
       "category": "Professional"
     },
@@ -7364,18 +7298,6 @@
       "category": "Professional"
     },
     {
-      "extension": ".pro",
-      "name": "Professional",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
-      "extension": ".tech",
-      "name": "Technology",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
       "extension": ".vet",
       "name": "Vet",
       "popular": false,
@@ -7388,44 +7310,14 @@
       "category": "Professional"
     },
     {
-      "extension": ".work",
-      "name": "Work",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
       "extension": ".doctor",
       "name": "Doctor",
       "popular": false,
       "category": "Professional"
     },
     {
-      "extension": ".inc",
-      "name": "Incorporated",
-      "popular": false,
-      "category": "Professional"
-    },
-    {
-      "extension": ".accountants",
-      "name": "Accountants",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
       "extension": ".associates",
       "name": "Associates",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".bargains",
-      "name": "Bargains",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".bid",
-      "name": "Bid",
       "popular": false,
       "category": "Businesses"
     },
@@ -7448,18 +7340,6 @@
       "category": "Businesses"
     },
     {
-      "extension": ".co",
-      "name": "Company",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".com",
-      "name": "Commercial",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
       "extension": ".company",
       "name": "Company",
       "popular": false,
@@ -7468,12 +7348,6 @@
     {
       "extension": ".deals",
       "name": "Deals",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".dev",
-      "name": "Developer",
       "popular": false,
       "category": "Businesses"
     },
@@ -7508,26 +7382,8 @@
       "category": "Businesses"
     },
     {
-      "extension": ".guru",
-      "name": "Guru",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".holdings",
-      "name": "Holdings",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
       "extension": ".industries",
       "name": "Industries",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".law",
-      "name": "Law",
       "popular": false,
       "category": "Businesses"
     },
@@ -7568,44 +7424,8 @@
       "category": "Businesses"
     },
     {
-      "extension": ".property",
-      "name": "Property",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".report",
-      "name": "Report",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
       "extension": ".sarl",
       "name": "Sarl",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".store",
-      "name": "Store",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".vc",
-      "name": "Vc",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".ventures",
-      "name": "Ventures",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".work",
-      "name": "Work",
       "popular": false,
       "category": "Businesses"
     },
@@ -7618,18 +7438,6 @@
     {
       "extension": ".llc",
       "name": "Llc",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".inc",
-      "name": "Incorporated",
-      "popular": false,
-      "category": "Businesses"
-    },
-    {
-      "extension": ".com.co",
-      "name": "COM.CO",
       "popular": false,
       "category": "Businesses"
     },
@@ -7676,18 +7484,6 @@
       "category": "Audio & Video"
     },
     {
-      "extension": ".fm",
-      "name": "Radio",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
-      "extension": ".group",
-      "name": "Group",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
       "extension": ".guitars",
       "name": "Guitars",
       "popular": false,
@@ -7700,12 +7496,6 @@
       "category": "Audio & Video"
     },
     {
-      "extension": ".live",
-      "name": "Live",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
       "extension": ".media",
       "name": "Media",
       "popular": false,
@@ -7714,12 +7504,6 @@
     {
       "extension": ".movie",
       "name": "Movie",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
-      "extension": ".online",
-      "name": "Online",
       "popular": false,
       "category": "Audio & Video"
     },
@@ -7754,18 +7538,6 @@
       "category": "Audio & Video"
     },
     {
-      "extension": ".tv",
-      "name": "Television",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
-      "extension": ".vc",
-      "name": "Vc",
-      "popular": false,
-      "category": "Audio & Video"
-    },
-    {
       "extension": ".video",
       "name": "Video",
       "popular": false,
@@ -7788,24 +7560,6 @@
       "name": "Xn--6frz82g",
       "popular": false,
       "category": "Audio & Video"
-    },
-    {
-      "extension": ".actor",
-      "name": "Actor",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".art",
-      "name": "Art",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".audio",
-      "name": "Audio",
-      "popular": false,
-      "category": "Arts & Culture"
     },
     {
       "extension": ".center",
@@ -7832,26 +7586,8 @@
       "category": "Arts & Culture"
     },
     {
-      "extension": ".design",
-      "name": "Design",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
       "extension": ".fashion",
       "name": "Fashion",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".film",
-      "name": "Film",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".fm",
-      "name": "Radio",
       "popular": false,
       "category": "Arts & Culture"
     },
@@ -7868,12 +7604,6 @@
       "category": "Arts & Culture"
     },
     {
-      "extension": ".hiphop",
-      "name": "Hiphop",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
       "extension": ".ink",
       "name": "Ink",
       "popular": false,
@@ -7882,12 +7612,6 @@
     {
       "extension": ".irish",
       "name": "Irish",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".movie",
-      "name": "Movie",
       "popular": false,
       "category": "Arts & Culture"
     },
@@ -7928,12 +7652,6 @@
       "category": "Arts & Culture"
     },
     {
-      "extension": ".studio",
-      "name": "Studio",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
       "extension": ".style",
       "name": "Style",
       "popular": false,
@@ -7964,40 +7682,10 @@
       "category": "Arts & Culture"
     },
     {
-      "extension": ".video",
-      "name": "Video",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".work",
-      "name": "Work",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
-      "extension": ".works",
-      "name": "Works",
-      "popular": false,
-      "category": "Arts & Culture"
-    },
-    {
       "extension": ".yoga",
       "name": "Yoga",
       "popular": false,
       "category": "Arts & Culture"
-    },
-    {
-      "extension": ".cam",
-      "name": "Cam",
-      "popular": false,
-      "category": "Adult"
-    },
-    {
-      "extension": ".webcam",
-      "name": "Webcam",
-      "popular": false,
-      "category": "Adult"
     },
     {
       "extension": ".wtf",
@@ -8018,26 +7706,8 @@
       "category": "Marketing"
     },
     {
-      "extension": ".click",
-      "name": "Click",
-      "popular": false,
-      "category": "Marketing"
-    },
-    {
       "extension": ".coupons",
       "name": "Coupons",
-      "popular": false,
-      "category": "Marketing"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Marketing"
-    },
-    {
-      "extension": ".digital",
-      "name": "Digital",
       "popular": false,
       "category": "Marketing"
     },
@@ -8078,20 +7748,8 @@
       "category": "Marketing"
     },
     {
-      "extension": ".online",
-      "name": "Online",
-      "popular": false,
-      "category": "Marketing"
-    },
-    {
       "extension": ".social",
       "name": "Social",
-      "popular": false,
-      "category": "Marketing"
-    },
-    {
-      "extension": ".store",
-      "name": "Store",
       "popular": false,
       "category": "Marketing"
     },
@@ -8102,44 +7760,14 @@
       "category": "Marketing"
     },
     {
-      "extension": ".ai",
-      "name": "Artificial Intelligence",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".app",
       "name": "Application",
       "popular": false,
       "category": "Technology"
     },
     {
-      "extension": ".cloud",
-      "name": "Cloud Computing",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".codes",
-      "name": "Codes",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".computer",
       "name": "Computer",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".dev",
-      "name": "Developer",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".digital",
-      "name": "Digital",
       "popular": false,
       "category": "Technology"
     },
@@ -8162,44 +7790,14 @@
       "category": "Technology"
     },
     {
-      "extension": ".email",
-      "name": "Email",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".garden",
       "name": "Garden",
       "popular": false,
       "category": "Technology"
     },
     {
-      "extension": ".gg",
-      "name": "Gg",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".guru",
-      "name": "Guru",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".host",
       "name": "Host",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".hosting",
-      "name": "Hosting",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".io",
-      "name": "Input/Output",
       "popular": false,
       "category": "Technology"
     },
@@ -8216,18 +7814,6 @@
       "category": "Technology"
     },
     {
-      "extension": ".net",
-      "name": "Network",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".network",
-      "name": "Network",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".new",
       "name": "New",
       "popular": false,
@@ -8236,12 +7822,6 @@
     {
       "extension": ".onl",
       "name": "Onl",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".online",
-      "name": "Online",
       "popular": false,
       "category": "Technology"
     },
@@ -8294,12 +7874,6 @@
       "category": "Technology"
     },
     {
-      "extension": ".stream",
-      "name": "Stream",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".surf",
       "name": "Surf",
       "popular": false,
@@ -8308,12 +7882,6 @@
     {
       "extension": ".systems",
       "name": "Systems",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".tech",
-      "name": "Technology",
       "popular": false,
       "category": "Technology"
     },
@@ -8342,26 +7910,8 @@
       "category": "Technology"
     },
     {
-      "extension": ".wiki",
-      "name": "Wiki",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
-      "extension": ".xn--6frz82g",
-      "name": "Xn--6frz82g",
-      "popular": false,
-      "category": "Technology"
-    },
-    {
       "extension": ".apartments",
       "name": "Apartments",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
-      "extension": ".bargains",
-      "name": "Bargains",
       "popular": false,
       "category": "Real Estate"
     },
@@ -8390,18 +7940,6 @@
       "category": "Real Estate"
     },
     {
-      "extension": ".credit",
-      "name": "Credit",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
-      "extension": ".estate",
-      "name": "Estate",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
       "extension": ".farm",
       "name": "Farm",
       "popular": false,
@@ -8416,18 +7954,6 @@
     {
       "extension": ".haus",
       "name": "Haus",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
-      "extension": ".holdings",
-      "name": "Holdings",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
-      "extension": ".homes",
-      "name": "Homes",
       "popular": false,
       "category": "Real Estate"
     },
@@ -8468,12 +7994,6 @@
       "category": "Real Estate"
     },
     {
-      "extension": ".mortgage",
-      "name": "Mortgage",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
       "extension": ".place",
       "name": "Place",
       "popular": false,
@@ -8482,12 +8002,6 @@
     {
       "extension": ".properties",
       "name": "Properties",
-      "popular": false,
-      "category": "Real Estate"
-    },
-    {
-      "extension": ".property",
-      "name": "Property",
       "popular": false,
       "category": "Real Estate"
     },
@@ -8516,62 +8030,14 @@
       "category": "Real Estate"
     },
     {
-      "extension": ".app",
-      "name": "Application",
-      "popular": false,
-      "category": "Short"
-    },
-    {
       "extension": ".best",
       "name": "Best",
       "popular": false,
       "category": "Short"
     },
     {
-      "extension": ".biz",
-      "name": "Business",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".cam",
-      "name": "Cam",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".cfd",
-      "name": "Cfd",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".co",
-      "name": "Company",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".com",
-      "name": "Commercial",
-      "popular": false,
-      "category": "Short"
-    },
-    {
       "extension": ".cyou",
       "name": "Cyou",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".dev",
-      "name": "Developer",
       "popular": false,
       "category": "Short"
     },
@@ -8600,62 +8066,8 @@
       "category": "Short"
     },
     {
-      "extension": ".immo",
-      "name": "Immo",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".info",
-      "name": "Information",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".krd",
-      "name": "Krd",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".mba",
-      "name": "Mba",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".mom",
-      "name": "Mom",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".net",
-      "name": "Network",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".new",
-      "name": "New",
-      "popular": false,
-      "category": "Short"
-    },
-    {
       "extension": ".one",
       "name": "One",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".onl",
-      "name": "Onl",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".pro",
-      "name": "Professional",
       "popular": false,
       "category": "Short"
     },
@@ -8666,50 +8078,8 @@
       "category": "Short"
     },
     {
-      "extension": ".sbs",
-      "name": "Sbs",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".so",
-      "name": "So",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".tel",
-      "name": "Tel",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".to",
-      "name": "To",
-      "popular": false,
-      "category": "Short"
-    },
-    {
       "extension": ".top",
       "name": "Top",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".vip",
-      "name": "Vip",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".wtf",
-      "name": "Wtf",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".xyz",
-      "name": "Generic",
       "popular": false,
       "category": "Short"
     },
@@ -8720,26 +8090,8 @@
       "category": "Short"
     },
     {
-      "extension": ".is",
-      "name": "Is",
-      "popular": false,
-      "category": "Short"
-    },
-    {
-      "extension": ".inc",
-      "name": "Incorporated",
-      "popular": false,
-      "category": "Short"
-    },
-    {
       "extension": ".army",
       "name": "Army",
-      "popular": false,
-      "category": "Politics"
-    },
-    {
-      "extension": ".cymru",
-      "name": "Cymru",
       "popular": false,
       "category": "Politics"
     },
@@ -8752,12 +8104,6 @@
     {
       "extension": ".gripe",
       "name": "Gripe",
-      "popular": false,
-      "category": "Politics"
-    },
-    {
-      "extension": ".law",
-      "name": "Law",
       "popular": false,
       "category": "Politics"
     },
@@ -8792,12 +8138,6 @@
       "category": "Politics"
     },
     {
-      "extension": ".associates",
-      "name": "Associates",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
       "extension": ".camp",
       "name": "Camp",
       "popular": false,
@@ -8816,68 +8156,8 @@
       "category": "Organizations"
     },
     {
-      "extension": ".college",
-      "name": "College",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
       "extension": ".community",
       "name": "Community",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".company",
-      "name": "Company",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".courses",
-      "name": "Courses",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".farm",
-      "name": "Farm",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".foundation",
-      "name": "Foundation",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".fund",
-      "name": "Fund",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".global",
-      "name": "Global",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".group",
-      "name": "Group",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".hosting",
-      "name": "Hosting",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".institute",
-      "name": "Institute",
       "popular": false,
       "category": "Organizations"
     },
@@ -8888,100 +8168,10 @@
       "category": "Organizations"
     },
     {
-      "extension": ".net",
-      "name": "Network",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".org",
-      "name": "Organization",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".page",
-      "name": "Page",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".property",
-      "name": "Property",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".school",
-      "name": "School",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".schule",
-      "name": "Schule",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".support",
-      "name": "Support",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
       "extension": ".team",
       "name": "Team",
       "popular": false,
       "category": "Organizations"
-    },
-    {
-      "extension": ".technology",
-      "name": "Technology",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".university",
-      "name": "University",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".ventures",
-      "name": "Ventures",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".eco",
-      "name": "Eco",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".inc",
-      "name": "Incorporated",
-      "popular": false,
-      "category": "Organizations"
-    },
-    {
-      "extension": ".auction",
-      "name": "Auction",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".bargains",
-      "name": "Bargains",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".bid",
-      "name": "Bid",
-      "popular": false,
-      "category": "Shopping and Sales"
     },
     {
       "extension": ".blackfriday",
@@ -8990,86 +8180,8 @@
       "category": "Shopping and Sales"
     },
     {
-      "extension": ".boutique",
-      "name": "Boutique",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".cash",
-      "name": "Cash",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".cheap",
-      "name": "Cheap",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
       "extension": ".clothing",
       "name": "Clothing",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".codes",
-      "name": "Codes",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".coupons",
-      "name": "Coupons",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".creditcard",
-      "name": "Creditcard",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".deals",
-      "name": "Deals",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".design",
-      "name": "Design",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".discount",
-      "name": "Discount",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".exchange",
-      "name": "Exchange",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".fashion",
-      "name": "Fashion",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".forsale",
-      "name": "Forsale",
       "popular": false,
       "category": "Shopping and Sales"
     },
@@ -9092,12 +8204,6 @@
       "category": "Shopping and Sales"
     },
     {
-      "extension": ".gratis",
-      "name": "Gratis",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
       "extension": ".green",
       "name": "Green",
       "popular": false,
@@ -9116,32 +8222,8 @@
       "category": "Shopping and Sales"
     },
     {
-      "extension": ".market",
-      "name": "Market",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
       "extension": ".moda",
       "name": "Moda",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".onl",
-      "name": "Onl",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".review",
-      "name": "Review",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".reviews",
-      "name": "Reviews",
       "popular": false,
       "category": "Shopping and Sales"
     },
@@ -9152,20 +8234,8 @@
       "category": "Shopping and Sales"
     },
     {
-      "extension": ".shop",
-      "name": "Shop",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
       "extension": ".shopping",
       "name": "Shopping",
-      "popular": false,
-      "category": "Shopping and Sales"
-    },
-    {
-      "extension": ".store",
-      "name": "Store",
       "popular": false,
       "category": "Shopping and Sales"
     },
@@ -9176,86 +8246,8 @@
       "category": "Shopping and Sales"
     },
     {
-      "extension": ".audio",
-      "name": "Audio",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
       "extension": ".band",
       "name": "Band",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".cam",
-      "name": "Cam",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".design",
-      "name": "Design",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".digital",
-      "name": "Digital",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".film",
-      "name": "Film",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".fm",
-      "name": "Radio",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".graphics",
-      "name": "Graphics",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".group",
-      "name": "Group",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".guitars",
-      "name": "Guitars",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".hiphop",
-      "name": "Hiphop",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".live",
-      "name": "Live",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".media",
-      "name": "Media",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".movie",
-      "name": "Movie",
       "popular": false,
       "category": "Media and Music"
     },
@@ -9266,68 +8258,8 @@
       "category": "Media and Music"
     },
     {
-      "extension": ".photo",
-      "name": "Photo",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".photography",
-      "name": "Photography",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".photos",
-      "name": "Photos",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".pics",
-      "name": "Pics",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".pictures",
-      "name": "Pictures",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
       "extension": ".press",
       "name": "Press",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".productions",
-      "name": "Productions",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".rocks",
-      "name": "Rocks",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".show",
-      "name": "Show",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".studio",
-      "name": "Studio",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".tickets",
-      "name": "Tickets",
       "popular": false,
       "category": "Media and Music"
     },
@@ -9336,24 +8268,6 @@
       "name": "Today",
       "popular": false,
       "category": "Media and Music"
-    },
-    {
-      "extension": ".video",
-      "name": "Video",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".observer",
-      "name": "Observer",
-      "popular": false,
-      "category": "Media and Music"
-    },
-    {
-      "extension": ".audio",
-      "name": "Audio",
-      "popular": false,
-      "category": "Fun"
     },
     {
       "extension": ".bingo",
@@ -9380,26 +8294,8 @@
       "category": "Fun"
     },
     {
-      "extension": ".dance",
-      "name": "Dance",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
       "extension": ".fail",
       "name": "Fail",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".game",
-      "name": "Gaming",
       "popular": false,
       "category": "Fun"
     },
@@ -9410,26 +8306,8 @@
       "category": "Fun"
     },
     {
-      "extension": ".gg",
-      "name": "Gg",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".hiphop",
-      "name": "Hiphop",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
       "extension": ".juegos",
       "name": "Juegos",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".lol",
-      "name": "Lol",
       "popular": false,
       "category": "Fun"
     },
@@ -9464,36 +8342,6 @@
       "category": "Fun"
     },
     {
-      "extension": ".rocks",
-      "name": "Rocks",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".social",
-      "name": "Social",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".tickets",
-      "name": "Tickets",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".vip",
-      "name": "Vip",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
-      "extension": ".wtf",
-      "name": "Wtf",
-      "popular": false,
-      "category": "Fun"
-    },
-    {
       "extension": ".fun",
       "name": "Fun",
       "popular": false,
@@ -9524,12 +8372,6 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".bingo",
-      "name": "Bingo",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".boats",
       "name": "Boats",
       "popular": false,
@@ -9542,62 +8384,14 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".cards",
-      "name": "Cards",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".cars",
       "name": "Cars",
       "popular": false,
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".casino",
-      "name": "Casino",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".club",
-      "name": "Club",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".coach",
-      "name": "Coach",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".computer",
-      "name": "Computer",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".cooking",
-      "name": "Cooking",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".cricket",
       "name": "Cricket",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".dance",
-      "name": "Dance",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".design",
-      "name": "Design",
       "popular": false,
       "category": "Sports and Hobbies"
     },
@@ -9614,20 +8408,8 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".fashion",
-      "name": "Fashion",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".fishing",
       "name": "Fishing",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".fit",
-      "name": "Fit",
       "popular": false,
       "category": "Sports and Hobbies"
     },
@@ -9662,38 +8444,8 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".game",
-      "name": "Gaming",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".games",
-      "name": "Games",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".gg",
-      "name": "Gg",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".golf",
       "name": "Golf",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".guitars",
-      "name": "Guitars",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".hiphop",
-      "name": "Hiphop",
       "popular": false,
       "category": "Sports and Hobbies"
     },
@@ -9710,32 +8462,8 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".juegos",
-      "name": "Juegos",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".makeup",
-      "name": "Makeup",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".motorcycles",
       "name": "Motorcycles",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".poker",
-      "name": "Poker",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".quest",
-      "name": "Quest",
       "popular": false,
       "category": "Sports and Hobbies"
     },
@@ -9770,26 +8498,8 @@
       "category": "Sports and Hobbies"
     },
     {
-      "extension": ".surf",
-      "name": "Surf",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".team",
-      "name": "Team",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
       "extension": ".tennis",
       "name": "Tennis",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".training",
-      "name": "Training",
       "popular": false,
       "category": "Sports and Hobbies"
     },
@@ -9798,60 +8508,6 @@
       "name": "Yachts",
       "popular": false,
       "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".yoga",
-      "name": "Yoga",
-      "popular": false,
-      "category": "Sports and Hobbies"
-    },
-    {
-      "extension": ".auto",
-      "name": "Auto",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".autos",
-      "name": "Autos",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".boats",
-      "name": "Boats",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".camera",
-      "name": "Camera",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".car",
-      "name": "Car",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".cars",
-      "name": "Cars",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".clothing",
-      "name": "Clothing",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".coach",
-      "name": "Coach",
-      "popular": false,
-      "category": "Products"
     },
     {
       "extension": ".diamonds",
@@ -9872,12 +8528,6 @@
       "category": "Products"
     },
     {
-      "extension": ".fit",
-      "name": "Fit",
-      "popular": false,
-      "category": "Products"
-    },
-    {
       "extension": ".furniture",
       "name": "Furniture",
       "popular": false,
@@ -9886,24 +8536,6 @@
     {
       "extension": ".glass",
       "name": "Glass",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".gold",
-      "name": "Gold",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".homes",
-      "name": "Homes",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".horse",
-      "name": "Horse",
       "popular": false,
       "category": "Products"
     },
@@ -9920,18 +8552,6 @@
       "category": "Products"
     },
     {
-      "extension": ".makeup",
-      "name": "Makeup",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".motorcycles",
-      "name": "Motorcycles",
-      "popular": false,
-      "category": "Products"
-    },
-    {
       "extension": ".parts",
       "name": "Parts",
       "popular": false,
@@ -9940,18 +8560,6 @@
     {
       "extension": ".shoes",
       "name": "Shoes",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".software",
-      "name": "Software",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".solar",
-      "name": "Solar",
       "popular": false,
       "category": "Products"
     },
@@ -9968,80 +8576,8 @@
       "category": "Products"
     },
     {
-      "extension": ".watch",
-      "name": "Watch",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".webcam",
-      "name": "Webcam",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".yachts",
-      "name": "Yachts",
-      "popular": false,
-      "category": "Products"
-    },
-    {
-      "extension": ".auto",
-      "name": "Auto",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".autos",
-      "name": "Autos",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".boats",
-      "name": "Boats",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".car",
-      "name": "Car",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".cars",
-      "name": "Cars",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
       "extension": ".limo",
       "name": "Limo",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".motorcycles",
-      "name": "Motorcycles",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".racing",
-      "name": "Racing",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".rent",
-      "name": "Rent",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
-      "extension": ".rentals",
-      "name": "Rentals",
       "popular": false,
       "category": "Transport"
     },
@@ -10052,74 +8588,8 @@
       "category": "Transport"
     },
     {
-      "extension": ".yachts",
-      "name": "Yachts",
-      "popular": false,
-      "category": "Transport"
-    },
-    {
       "extension": ".baby",
       "name": "Baby",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".beauty",
-      "name": "Beauty",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".blog",
-      "name": "Blog",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".cyou",
-      "name": "Cyou",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".expert",
-      "name": "Expert",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".fit",
-      "name": "Fit",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".forum",
-      "name": "Forum",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".guru",
-      "name": "Guru",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".icu",
-      "name": "Icu",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".id",
-      "name": "Id",
       "popular": false,
       "category": "Personal"
     },
@@ -10130,20 +8600,8 @@
       "category": "Personal"
     },
     {
-      "extension": ".me",
-      "name": "Personal",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
       "extension": ".moe",
       "name": "Moe",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".mom",
-      "name": "Mom",
       "popular": false,
       "category": "Personal"
     },
@@ -10154,44 +8612,14 @@
       "category": "Personal"
     },
     {
-      "extension": ".property",
-      "name": "Property",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
       "extension": ".soy",
       "name": "Soy",
       "popular": false,
       "category": "Personal"
     },
     {
-      "extension": ".space",
-      "name": "Space",
-      "popular": false,
-      "category": "Personal"
-    },
-    {
-      "extension": ".baby",
-      "name": "Baby",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".bio",
       "name": "Bio",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".careers",
-      "name": "Careers",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".chat",
-      "name": "Chat",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10202,20 +8630,8 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".community",
-      "name": "Community",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".contact",
       "name": "Contact",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".cyou",
-      "name": "Cyou",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10232,12 +8648,6 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".dog",
       "name": "Dog",
       "popular": false,
@@ -10246,12 +8656,6 @@
     {
       "extension": ".earth",
       "name": "Earth",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".events",
-      "name": "Events",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10274,50 +8678,8 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".fashion",
-      "name": "Fashion",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".fit",
-      "name": "Fit",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".forum",
-      "name": "Forum",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".garden",
-      "name": "Garden",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".guru",
-      "name": "Guru",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".hiphop",
-      "name": "Hiphop",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".holiday",
       "name": "Holiday",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".juegos",
-      "name": "Juegos",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10334,12 +8696,6 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".love",
-      "name": "Love",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".memorial",
       "name": "Memorial",
       "popular": false,
@@ -10348,54 +8704,6 @@
     {
       "extension": ".men",
       "name": "Men",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".moda",
-      "name": "Moda",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".moe",
-      "name": "Moe",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".name",
-      "name": "Name",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".network",
-      "name": "Network",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".partners",
-      "name": "Partners",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".party",
-      "name": "Party",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".place",
-      "name": "Place",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".rehab",
-      "name": "Rehab",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10412,68 +8720,8 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".sbs",
-      "name": "Sbs",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".singles",
       "name": "Singles",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".social",
-      "name": "Social",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".style",
-      "name": "Style",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".sucks",
-      "name": "Sucks",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".tattoo",
-      "name": "Tattoo",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".to",
-      "name": "To",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".vip",
-      "name": "Vip",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".vote",
-      "name": "Vote",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".voting",
-      "name": "Voting",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".voto",
-      "name": "Voto",
       "popular": false,
       "category": "Social & Lifestyle"
     },
@@ -10490,184 +8738,10 @@
       "category": "Social & Lifestyle"
     },
     {
-      "extension": ".yoga",
-      "name": "Yoga",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".eco",
-      "name": "Eco",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
-      "extension": ".is",
-      "name": "Is",
-      "popular": false,
-      "category": "Social & Lifestyle"
-    },
-    {
       "extension": ".bar",
       "name": "Bar",
       "popular": false,
       "category": "$2 or Less"
-    },
-    {
-      "extension": ".bond",
-      "name": "Bond",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".cam",
-      "name": "Cam",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".cfd",
-      "name": "Cfd",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".click",
-      "name": "Click",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".cyou",
-      "name": "Cyou",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".digital",
-      "name": "Digital",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".guru",
-      "name": "Guru",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".icu",
-      "name": "Icu",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".life",
-      "name": "Life",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".live",
-      "name": "Live",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".online",
-      "name": "Online",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".quest",
-      "name": "Quest",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".rest",
-      "name": "Rest",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".sbs",
-      "name": "Sbs",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".shop",
-      "name": "Shop",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".site",
-      "name": "Site",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".store",
-      "name": "Store",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".today",
-      "name": "Today",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".top",
-      "name": "Top",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".website",
-      "name": "Website",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".world",
-      "name": "World",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".xyz",
-      "name": "Generic",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".space",
-      "name": "Space",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".fun",
-      "name": "Fun",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".monster",
-      "name": "Monster",
-      "popular": false,
-      "category": "$2 or Less"
-    },
-    {
-      "extension": ".bar",
-      "name": "Bar",
-      "popular": false,
-      "category": "Food & Drink"
     },
     {
       "extension": ".beer",
@@ -10690,24 +8764,6 @@
     {
       "extension": ".coffee",
       "name": "Coffee",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
-      "extension": ".cooking",
-      "name": "Cooking",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
-      "extension": ".diet",
-      "name": "Diet",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
-      "extension": ".farm",
-      "name": "Farm",
       "popular": false,
       "category": "Food & Drink"
     },
@@ -10748,20 +8804,8 @@
       "category": "Food & Drink"
     },
     {
-      "extension": ".rest",
-      "name": "Rest",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
       "extension": ".restaurant",
       "name": "Restaurant",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
-      "extension": ".tips",
-      "name": "Tips",
       "popular": false,
       "category": "Food & Drink"
     },
@@ -10784,18 +8828,6 @@
       "category": "Food & Drink"
     },
     {
-      "extension": ".eco",
-      "name": "Eco",
-      "popular": false,
-      "category": "Food & Drink"
-    },
-    {
-      "extension": ".bar",
-      "name": "Bar",
-      "popular": false,
-      "category": "Services"
-    },
-    {
       "extension": ".cab",
       "name": "Cab",
       "popular": false,
@@ -10808,38 +8840,8 @@
       "category": "Services"
     },
     {
-      "extension": ".casino",
-      "name": "Casino",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".catering",
-      "name": "Catering",
-      "popular": false,
-      "category": "Services"
-    },
-    {
       "extension": ".cleaning",
       "name": "Cleaning",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".consulting",
-      "name": "Consulting",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".contact",
-      "name": "Contact",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".contractors",
-      "name": "Contractors",
       "popular": false,
       "category": "Services"
     },
@@ -10850,116 +8852,14 @@
       "category": "Services"
     },
     {
-      "extension": ".equipment",
-      "name": "Equipment",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".events",
-      "name": "Events",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".exchange",
-      "name": "Exchange",
-      "popular": false,
-      "category": "Services"
-    },
-    {
       "extension": ".express",
       "name": "Express",
       "popular": false,
       "category": "Services"
     },
     {
-      "extension": ".florist",
-      "name": "Florist",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".garden",
-      "name": "Garden",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".help",
-      "name": "Help",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".host",
-      "name": "Host",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".hosting",
-      "name": "Hosting",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".ink",
-      "name": "Ink",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".international",
-      "name": "International",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".legal",
-      "name": "Legal",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".limo",
-      "name": "Limo",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".makeup",
-      "name": "Makeup",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".plumbing",
-      "name": "Plumbing",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".realty",
-      "name": "Realty",
-      "popular": false,
-      "category": "Services"
-    },
-    {
       "extension": ".repair",
       "name": "Repair",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".services",
-      "name": "Services",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".solutions",
-      "name": "Solutions",
       "popular": false,
       "category": "Services"
     },
@@ -10976,32 +8876,8 @@
       "category": "Services"
     },
     {
-      "extension": ".support",
-      "name": "Support",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".taxi",
-      "name": "Taxi",
-      "popular": false,
-      "category": "Services"
-    },
-    {
       "extension": ".trade",
       "name": "Trade",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".vip",
-      "name": "Vip",
-      "popular": false,
-      "category": "Services"
-    },
-    {
-      "extension": ".work",
-      "name": "Work",
       "popular": false,
       "category": "Services"
     },
@@ -11010,30 +8886,6 @@
       "name": "Hair",
       "popular": false,
       "category": "Services"
-    },
-    {
-      "extension": ".beauty",
-      "name": "Beauty",
-      "popular": false,
-      "category": "Beauty"
-    },
-    {
-      "extension": ".cfd",
-      "name": "Cfd",
-      "popular": false,
-      "category": "Beauty"
-    },
-    {
-      "extension": ".flowers",
-      "name": "Flowers",
-      "popular": false,
-      "category": "Beauty"
-    },
-    {
-      "extension": ".makeup",
-      "name": "Makeup",
-      "popular": false,
-      "category": "Beauty"
     },
     {
       "extension": ".skin",
@@ -11042,50 +8894,8 @@
       "category": "Beauty"
     },
     {
-      "extension": ".tattoo",
-      "name": "Tattoo",
-      "popular": false,
-      "category": "Beauty"
-    },
-    {
-      "extension": ".hair",
-      "name": "Hair",
-      "popular": false,
-      "category": "Beauty"
-    },
-    {
-      "extension": ".berlin",
-      "name": "BERLIN",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".capital",
-      "name": "CAPITAL",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
       "extension": ".city",
       "name": "CITY",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".de",
-      "name": "DE",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".hamburg",
-      "name": "HAMBURG",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".krd",
-      "name": "KRD",
       "popular": false,
       "category": "Cities"
     },
@@ -11096,118 +8906,10 @@
       "category": "Cities"
     },
     {
-      "extension": ".la",
-      "name": "LA",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".london",
-      "name": "LONDON",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".melbourne",
-      "name": "MELBOURNE",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".miami",
-      "name": "MIAMI",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".nagoya",
-      "name": "NAGOYA",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".nyc",
-      "name": "NYC",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".paris",
-      "name": "PARIS",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".sg",
-      "name": "SG",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".sydney",
-      "name": "SYDNEY",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".tokyo",
-      "name": "TOKYO",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
       "extension": ".town",
       "name": "TOWN",
       "popular": false,
       "category": "Cities"
-    },
-    {
-      "extension": ".vegas",
-      "name": "VEGAS",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".yokohama",
-      "name": "YOKOHAMA",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".boston",
-      "name": "BOSTON",
-      "popular": false,
-      "category": "Cities"
-    },
-    {
-      "extension": ".bike",
-      "name": "Bike",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".camp",
-      "name": "Camp",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".christmas",
-      "name": "Christmas",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".city",
-      "name": "City",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".country",
-      "name": "Country",
-      "popular": false,
-      "category": "Travel"
     },
     {
       "extension": ".cruises",
@@ -11216,56 +8918,8 @@
       "category": "Travel"
     },
     {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
       "extension": ".flights",
       "name": "Flights",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".flowers",
-      "name": "Flowers",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".global",
-      "name": "Global",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".guide",
-      "name": "Guide",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".holiday",
-      "name": "Holiday",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".limo",
-      "name": "Limo",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".nl",
-      "name": "Nl",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".place",
-      "name": "Place",
       "popular": false,
       "category": "Travel"
     },
@@ -11282,26 +8936,8 @@
       "category": "Travel"
     },
     {
-      "extension": ".rest",
-      "name": "Rest",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".tickets",
-      "name": "Tickets",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
       "extension": ".tours",
       "name": "Tours",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".town",
-      "name": "Town",
       "popular": false,
       "category": "Travel"
     },
@@ -11330,80 +8966,8 @@
       "category": "Travel"
     },
     {
-      "extension": ".world",
-      "name": "World",
-      "popular": false,
-      "category": "Travel"
-    },
-    {
-      "extension": ".bio",
-      "name": "Bio",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".care",
-      "name": "Care",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
       "extension": ".clinic",
       "name": "Clinic",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".coach",
-      "name": "Coach",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".dental",
-      "name": "Dental",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".dentist",
-      "name": "Dentist",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".diet",
-      "name": "Diet",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".energy",
-      "name": "Energy",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".fit",
-      "name": "Fit",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".fitness",
-      "name": "Fitness",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".green",
-      "name": "Green",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".health",
-      "name": "Health",
       "popular": false,
       "category": "Health and Fitness"
     },
@@ -11414,68 +8978,14 @@
       "category": "Health and Fitness"
     },
     {
-      "extension": ".plus",
-      "name": "Plus",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".recipes",
-      "name": "Recipes",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".rehab",
-      "name": "Rehab",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".run",
-      "name": "Run",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".surf",
-      "name": "Surf",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
       "extension": ".surgery",
       "name": "Surgery",
       "popular": false,
       "category": "Health and Fitness"
     },
     {
-      "extension": ".vet",
-      "name": "Vet",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
       "extension": ".vision",
       "name": "Vision",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".yoga",
-      "name": "Yoga",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".eco",
-      "name": "Eco",
-      "popular": false,
-      "category": "Health and Fitness"
-    },
-    {
-      "extension": ".doctor",
-      "name": "Doctor",
       "popular": false,
       "category": "Health and Fitness"
     },
@@ -11488,12 +8998,6 @@
     {
       "extension": ".blue",
       "name": "Blue",
-      "popular": false,
-      "category": "Colors"
-    },
-    {
-      "extension": ".green",
-      "name": "Green",
       "popular": false,
       "category": "Colors"
     },
@@ -11522,110 +9026,14 @@
       "category": "Trades & Construction"
     },
     {
-      "extension": ".center",
-      "name": "Center",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".condos",
-      "name": "Condos",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".construction",
-      "name": "Construction",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".contractors",
-      "name": "Contractors",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".homes",
-      "name": "Homes",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".place",
-      "name": "Place",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".plumbing",
-      "name": "Plumbing",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".supply",
-      "name": "Supply",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".tools",
-      "name": "Tools",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".trade",
-      "name": "Trade",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
-      "extension": ".work",
-      "name": "Work",
-      "popular": false,
-      "category": "Trades & Construction"
-    },
-    {
       "extension": ".zone",
       "name": "Zone",
       "popular": false,
       "category": "Trades & Construction"
     },
     {
-      "extension": ".casa",
-      "name": "Casa",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
       "extension": ".desi",
       "name": "Desi",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".futbol",
-      "name": "Futbol",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".gmbh",
-      "name": "Gmbh",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".immo",
-      "name": "Immo",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".immobilien",
-      "name": "Immobilien",
       "popular": false,
       "category": "Non-English"
     },
@@ -11636,130 +9044,10 @@
       "category": "Non-English"
     },
     {
-      "extension": ".juegos",
-      "name": "Juegos",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".kaufen",
-      "name": "Kaufen",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".kim",
-      "name": "Kim",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".moe",
-      "name": "Moe",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".reise",
-      "name": "Reise",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".reisen",
-      "name": "Reisen",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".sarl",
-      "name": "Sarl",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".schule",
-      "name": "Schule",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".shiksha",
-      "name": "Shiksha",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".soy",
-      "name": "Soy",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".tienda",
-      "name": "Tienda",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
       "extension": ".uno",
       "name": "Uno",
       "popular": false,
       "category": "Non-English"
-    },
-    {
-      "extension": ".viajes",
-      "name": "Viajes",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".vin",
-      "name": "Vin",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".voto",
-      "name": "Voto",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".xn--6frz82g",
-      "name": "Xn--6frz82g",
-      "popular": false,
-      "category": "Non-English"
-    },
-    {
-      "extension": ".christmas",
-      "name": "Christmas",
-      "popular": false,
-      "category": "Religion"
-    },
-    {
-      "extension": ".church",
-      "name": "Church",
-      "popular": false,
-      "category": "Religion"
-    },
-    {
-      "extension": ".day",
-      "name": "Day",
-      "popular": false,
-      "category": "Religion"
-    },
-    {
-      "extension": ".faith",
-      "name": "Faith",
-      "popular": false,
-      "category": "Religion"
-    },
-    {
-      "extension": ".holiday",
-      "name": "Holiday",
-      "popular": false,
-      "category": "Religion"
     },
     {
       "extension": ".airforce",
@@ -11829,9 +9117,10 @@
     }
   ],
   "metadata": {
-    "totalTlds": 965,
+    "totalTlds": 513,
     "totalCategories": 35,
-    "extractedAt": "2025-07-01T11:24:11.486Z",
+    "totalReferences": 513,
+    "extractedAt": "2025-07-01T12:10:29.460Z",
     "version": "1.0.0"
   }
 }
