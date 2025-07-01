@@ -13,7 +13,7 @@ import {
 import { getStatusColor } from '@/lib/utils';
 import { UnifiedLookupProgress, UnifiedDomainResult } from '@/types/domain';
 import { Loader2, Filter, RefreshCw } from 'lucide-react';
-import { useHomepageState } from '@/hooks/useHomepageState';
+import { useHomepageState } from '@/hooks/use-homepage-state';
 import { useResultFilters } from '@/hooks/use-result-filters';
 import { FilterToggleButton } from '@/components/filter-toggle-button';
 import { ErrorBoundary } from '@/components/error-boundary';
