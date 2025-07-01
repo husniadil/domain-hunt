@@ -19,8 +19,7 @@ export function DomainResultCard({
   return (
     <div className="flex items-center justify-between text-xs p-2 bg-container-bg border border-container-border rounded">
       <span className="font-mono">
-        {result.domain}
-        {result.tld}
+        {result.domain}.{result.tld}
       </span>
       <div className="flex items-center space-x-2">
         <Badge
