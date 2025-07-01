@@ -22,9 +22,7 @@ export function useBookmarkSync(
   const syncBookmarksWithUnifiedResult = useCallback(
     (
       unifiedResult: UnifiedDomainResult,
-      setUnifiedResult: (result: UnifiedDomainResult) => void,
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      syncedResultRef?: React.MutableRefObject<string | null>
+      setUnifiedResult: (result: UnifiedDomainResult) => void
     ) => {
       if (!unifiedResult) return;
 
@@ -83,11 +81,7 @@ export function useBookmarkSync(
     const resultHash = `${unifiedResult.overallProgress?.total}-${unifiedResult.overallProgress?.completed}`;
     if (syncedResultRef.current === resultHash) return;
 
-    syncBookmarksWithUnifiedResult(
-      unifiedResult,
-      setUnifiedResult,
-      syncedResultRef
-    );
+    syncBookmarksWithUnifiedResult(unifiedResult, setUnifiedResult);
 
     // Mark this result as synced
     syncedResultRef.current = resultHash;
