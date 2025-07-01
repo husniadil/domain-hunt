@@ -138,7 +138,10 @@ export default function BookmarksPage() {
       ).length;
       const successful = totalChecked - failed;
 
-      if (failed === 0) {
+      // Guard against edge case of zero results
+      if (totalChecked === 0) {
+        toast.info('No domains were checked');
+      } else if (failed === 0) {
         toast.success(
           `Successfully rechecked ${totalChecked} bookmarked domains`
         );
