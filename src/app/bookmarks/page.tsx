@@ -87,32 +87,44 @@ export default function BookmarksPage() {
     setIsChecking(true);
     try {
       // Check only the actual bookmarked domain+TLD pairs
-      // Process all bookmarks in parallel to reduce waiting time
-      const results = await Promise.all(
-        bookmarks.map(async bookmark => {
-          try {
-            const domainCheckResult = await checkDomain(
-              bookmark.domain,
-              bookmark.tld
-            );
-            return {
-              domain: domainCheckResult.domain,
-              tld: domainCheckResult.tld,
-              status: domainCheckResult.status,
-            };
-          } catch (error) {
-            console.error(
-              `Error checking ${bookmark.domain}${bookmark.tld}:`,
-              error
-            );
-            return {
-              domain: bookmark.domain,
-              tld: bookmark.tld,
-              status: 'error' as DomainResult['status'],
-            };
-          }
-        })
-      );
+      // Process bookmarks with concurrency limit to avoid overloading client/server
+      const CONCURRENCY_LIMIT = 5; // Process max 5 domains simultaneously
+      const results: {
+        domain: string;
+        tld: string;
+        status: DomainResult['status'];
+      }[] = [];
+
+      // Process bookmarks in batches with concurrency control
+      for (let i = 0; i < bookmarks.length; i += CONCURRENCY_LIMIT) {
+        const batch = bookmarks.slice(i, i + CONCURRENCY_LIMIT);
+        const batchResults = await Promise.all(
+          batch.map(async bookmark => {
+            try {
+              const domainCheckResult = await checkDomain(
+                bookmark.domain,
+                bookmark.tld
+              );
+              return {
+                domain: domainCheckResult.domain,
+                tld: domainCheckResult.tld,
+                status: domainCheckResult.status,
+              };
+            } catch (error) {
+              console.error(
+                `Error checking ${bookmark.domain}${bookmark.tld}:`,
+                error
+              );
+              return {
+                domain: bookmark.domain,
+                tld: bookmark.tld,
+                status: 'error' as DomainResult['status'],
+              };
+            }
+          })
+        );
+        results.push(...batchResults);
+      }
 
       // Update bookmark statuses
       for (const result of results) {
