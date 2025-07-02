@@ -60,11 +60,6 @@ export function DomainResults({
                   onRetry={onRetryDomain}
                 />
               ))}
-              {domainResult.results.length > 12 && (
-                <div className="text-xs text-muted-foreground text-center p-1">
-                  ... and {domainResult.results.length - 12} more
-                </div>
-              )}
             </div>
           </div>
         )
