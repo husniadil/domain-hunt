@@ -1,12 +1,6 @@
 'use client';
 
-import {
-  TLD,
-  TLDConfig,
-  TLDCategory,
-  isValidTLDConfig,
-  hasCategorizedStructure,
-} from '@/types/tld';
+import { TLD, TLDConfig, TLDCategory, isValidTLDConfig } from '@/types/tld';
 
 // Default TLD fallback used when dynamic loading fails
 const DEFAULT_TLDS: TLD[] = [
@@ -136,9 +130,6 @@ export function isTldDataLoading(): boolean {
  * Get TLD extensions array for validation
  */
 export function getTldExtensions(config: TLDConfig): string[] {
-  if (hasCategorizedStructure(config)) {
-    return config.tlds?.map(tld => tld.extension) || [];
-  }
   return config.tlds?.map(tld => tld.extension) || [];
 }
 

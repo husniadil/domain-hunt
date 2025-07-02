@@ -46,7 +46,12 @@ export function VirtualTldGrid({
   // If below threshold, render normal grid
   if (!shouldUseVirtualScrolling) {
     return (
-      <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:grid-cols-3">
+      <div
+        className="grid gap-4"
+        style={{
+          gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
+        }}
+      >
         {tlds.map(tld => (
           <TldCheckbox
             key={tld.extension}
@@ -136,7 +141,12 @@ function VirtualizedTldGrid({
               }}
               className="px-4"
             >
-              <div className="grid grid-cols-3 gap-4 h-full items-center">
+              <div
+                className="grid gap-4 h-full items-center"
+                style={{
+                  gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
+                }}
+              >
                 {row.map(tld => (
                   <TldCheckbox
                     key={tld.extension}

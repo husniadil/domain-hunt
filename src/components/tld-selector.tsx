@@ -220,9 +220,18 @@ export function TldSelector({
     return { tlds: matchingTlds, categories: filteredCategories };
   }, [internalSearchQuery, TLDS, CATEGORIES]);
 
+  // Interface for category selection state
+  interface CategoryState {
+    selectedCount: number;
+    totalCount: number;
+    isAllSelected: boolean;
+    isNoneSelected: boolean;
+    isPartiallySelected: boolean;
+  }
+
   // Memoized category selection states for performance
   const categorySelectionStates = useMemo(() => {
-    const states = new Map();
+    const states = new Map<string, CategoryState>();
 
     if (filteredData.categories) {
       filteredData.categories.forEach(category => {
