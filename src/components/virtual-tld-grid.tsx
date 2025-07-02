@@ -338,9 +338,10 @@ function VirtualizedTldGrid({
     >
       <div
         style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
+          height: `${rowVirtualizer.getTotalSize() + 8}px`,
           width: '100%',
           position: 'relative',
+          paddingBottom: '4px',
         }}
       >
         {rowVirtualizer.getVirtualItems().map(virtualItem => {
@@ -358,7 +359,7 @@ function VirtualizedTldGrid({
                 left: 0,
                 width: '100%',
                 height: `${virtualItem.size}px`,
-                transform: `translateY(${virtualItem.start}px)`,
+                transform: `translateY(${virtualItem.start + 4}px)`,
               }}
               className="px-4"
               role="row"
