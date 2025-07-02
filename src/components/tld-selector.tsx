@@ -129,7 +129,6 @@ export function TldSelector({
         searchQuery={internalSearchQuery}
         onSearchChange={handleSearchChange}
         onClearSearch={clearSearch}
-        isSearching={isSearching}
       />
 
       <SearchResultsInfo
