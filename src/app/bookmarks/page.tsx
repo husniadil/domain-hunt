@@ -67,7 +67,7 @@ export default function BookmarksPage() {
     setStats(getBookmarkStats());
   };
 
-  const handleBookmarkToggle = (isBookmarked: boolean) => {
+  const handleBookmarkToggle = (id: string, isBookmarked: boolean) => {
     // Reload bookmarks when one is removed
     if (!isBookmarked) {
       loadBookmarks();

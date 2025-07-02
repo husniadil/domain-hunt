@@ -4,7 +4,7 @@ import { BookmarkItem } from '@/components/bookmark-item';
 interface BookmarkListProps {
   filteredBookmarks: Bookmark[];
   totalBookmarks: number;
-  onBookmarkToggle: (isBookmarked: boolean) => void;
+  onBookmarkToggle: (id: string, isBookmarked: boolean) => void;
 }
 
 export function BookmarkList({
@@ -47,7 +47,7 @@ export function BookmarkList({
         <BookmarkItem
           key={bookmark.id}
           bookmark={bookmark}
-          onToggle={onBookmarkToggle}
+          onToggle={isBookmarked => onBookmarkToggle(bookmark.id, isBookmarked)}
         />
       ))}
     </div>

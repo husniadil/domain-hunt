@@ -3,20 +3,11 @@ import { BookmarkButton } from '@/components/bookmark-button';
 import { Bookmark } from '@/types/bookmark';
 import { getStatusColor } from '@/lib/utils';
 import { DEFAULT_ERROR_STATUS } from '@/constants/domain-status';
+import { formatDate } from '@/utils/date-formatting';
 
 interface BookmarkItemProps {
   bookmark: Bookmark;
   onToggle: (isBookmarked: boolean) => void;
-}
-
-function formatDate(date: Date) {
-  return new Intl.DateTimeFormat('en-US', {
-    month: 'short',
-    day: 'numeric',
-    year: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  }).format(date);
 }
 
 export function BookmarkItem({ bookmark, onToggle }: BookmarkItemProps) {
