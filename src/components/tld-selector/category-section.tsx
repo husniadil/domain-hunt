@@ -150,7 +150,7 @@ export function CategorySection({
               getTldHighlightState={getTldHighlightState}
               onToggle={onTldToggle}
               containerHeight={category.tlds.length > 50 ? 400 : undefined}
-              itemHeight={40}
+              itemHeight={48}
               columnsPerRow={3}
               onBulkSelect={onBulkSelect}
               categoryId={category.id}
