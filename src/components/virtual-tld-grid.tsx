@@ -58,11 +58,19 @@ export function VirtualTldGrid({
     return rows;
   }, [tlds, columnsPerRow]);
 
-  // Enhanced keyboard navigation handler
+  // Enhanced keyboard navigation handler with optimized performance
   const handleKeyDown = useCallback(
-    (e: React.KeyboardEvent, extension: string) => {
-      const currentIndex = tlds.findIndex(tld => tld.extension === extension);
-      if (currentIndex === -1) return;
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    (e: React.KeyboardEvent, _extension: string) => {
+      // Performance optimization: use data-index attribute from closest parent with data-index
+      const targetElement = e.currentTarget as HTMLElement;
+      const wrapperElement = targetElement.closest(
+        '[data-index]'
+      ) as HTMLElement;
+      const currentIndexStr = wrapperElement?.getAttribute('data-index');
+      const currentIndex = currentIndexStr ? parseInt(currentIndexStr, 10) : -1;
+
+      if (currentIndex === -1 || currentIndex >= tlds.length) return;
 
       let newIndex = currentIndex;
 
@@ -171,18 +179,19 @@ export function VirtualTldGrid({
         }}
       >
         {tlds.map((tld, index) => (
-          <TldCheckbox
-            key={tld.extension}
-            tld={tld}
-            isSelected={selectedTlds.includes(tld.extension)}
-            isHighlighted={getTldHighlightState(tld)}
-            onToggle={onToggle}
-            tabIndex={index === focusedIndex ? 0 : -1}
-            onKeyDown={handleKeyDown}
-            data-index={index}
-            aria-setsize={tlds.length}
-            aria-posinset={index + 1}
-          />
+          <div key={tld.extension} role="gridcell">
+            <TldCheckbox
+              tld={tld}
+              isSelected={selectedTlds.includes(tld.extension)}
+              isHighlighted={getTldHighlightState(tld)}
+              onToggle={onToggle}
+              tabIndex={index === focusedIndex ? 0 : -1}
+              onKeyDown={handleKeyDown}
+              data-index={index}
+              aria-setsize={tlds.length}
+              aria-posinset={index + 1}
+            />
+          </div>
         ))}
 
         {/* Hidden help text for screen readers */}
@@ -298,18 +307,19 @@ function VirtualizedTldGrid({
                 {row.map((tld, colIndex) => {
                   const index = startIndex + colIndex;
                   return (
-                    <TldCheckbox
-                      key={tld.extension}
-                      tld={tld}
-                      isSelected={selectedTlds.includes(tld.extension)}
-                      isHighlighted={getTldHighlightState(tld)}
-                      onToggle={onToggle}
-                      tabIndex={index === focusedIndex ? 0 : -1}
-                      onKeyDown={handleKeyDown}
-                      data-index={index}
-                      aria-setsize={tlds.length}
-                      aria-posinset={index + 1}
-                    />
+                    <div key={tld.extension} role="gridcell">
+                      <TldCheckbox
+                        tld={tld}
+                        isSelected={selectedTlds.includes(tld.extension)}
+                        isHighlighted={getTldHighlightState(tld)}
+                        onToggle={onToggle}
+                        tabIndex={index === focusedIndex ? 0 : -1}
+                        onKeyDown={handleKeyDown}
+                        data-index={index}
+                        aria-setsize={tlds.length}
+                        aria-posinset={index + 1}
+                      />
+                    </div>
                   );
                 })}
                 {/* Fill empty cells in incomplete rows */}
