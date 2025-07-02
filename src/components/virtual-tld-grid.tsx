@@ -1,6 +1,12 @@
 'use client';
 
-import React, { useMemo, useRef } from 'react';
+import React, {
+  useMemo,
+  useRef,
+  useState,
+  useCallback,
+  useEffect,
+} from 'react';
 import { useVirtualizer } from '@tanstack/react-virtual';
 import { TldCheckbox } from '@/components/tld-checkbox';
 import { TLD } from '@/types/tld';
@@ -13,14 +19,17 @@ interface VirtualTldGridProps {
   containerHeight?: number;
   itemHeight?: number;
   columnsPerRow?: number;
+  // Enhanced keyboard navigation props
+  onBulkSelect?: (extensions: string[]) => void;
+  categoryId?: string;
 }
 
 // Virtual scrolling threshold - only use virtual scrolling for lists > 50 items
 const VIRTUAL_SCROLL_THRESHOLD = 50;
 
 /**
- * Virtual scrolling TLD grid component for large category lists
- * Provides optimal performance for categories with >50 TLDs
+ * Virtual scrolling TLD grid component with enhanced keyboard navigation
+ * Provides optimal performance for categories with >50 TLDs and full accessibility
  */
 export function VirtualTldGrid({
   tlds,
@@ -30,9 +39,15 @@ export function VirtualTldGrid({
   containerHeight = 400,
   itemHeight = 40,
   columnsPerRow = 3,
+  onBulkSelect,
+  categoryId = 'default',
 }: VirtualTldGridProps) {
   // Check if virtual scrolling is needed
   const shouldUseVirtualScrolling = tlds.length > VIRTUAL_SCROLL_THRESHOLD;
+
+  // Enhanced keyboard navigation state
+  const [focusedIndex, setFocusedIndex] = useState<number>(0);
+  const gridRef = useRef<HTMLDivElement>(null);
 
   // Group TLDs into rows for virtual scrolling
   const rowData = useMemo(() => {
@@ -43,29 +58,143 @@ export function VirtualTldGrid({
     return rows;
   }, [tlds, columnsPerRow]);
 
-  // If below threshold, render normal grid
+  // Enhanced keyboard navigation handler
+  const handleKeyDown = useCallback(
+    (e: React.KeyboardEvent, extension: string) => {
+      const currentIndex = tlds.findIndex(tld => tld.extension === extension);
+      if (currentIndex === -1) return;
+
+      let newIndex = currentIndex;
+
+      switch (e.key) {
+        case 'ArrowRight':
+          e.preventDefault();
+          newIndex = Math.min(currentIndex + 1, tlds.length - 1);
+          break;
+        case 'ArrowLeft':
+          e.preventDefault();
+          newIndex = Math.max(currentIndex - 1, 0);
+          break;
+        case 'ArrowDown':
+          e.preventDefault();
+          newIndex = Math.min(currentIndex + columnsPerRow, tlds.length - 1);
+          break;
+        case 'ArrowUp':
+          e.preventDefault();
+          newIndex = Math.max(currentIndex - columnsPerRow, 0);
+          break;
+        case 'Home':
+          e.preventDefault();
+          newIndex = 0;
+          break;
+        case 'End':
+          e.preventDefault();
+          newIndex = tlds.length - 1;
+          break;
+        // Enhanced bulk selection with keyboard
+        case 'a':
+        case 'A':
+          if (e.ctrlKey || e.metaKey) {
+            e.preventDefault();
+            onBulkSelect?.(tlds.map(tld => tld.extension));
+            return;
+          }
+          break;
+        // Escape to clear focus
+        case 'Escape':
+          e.preventDefault();
+          if (gridRef.current) {
+            gridRef.current.focus();
+          }
+          return;
+      }
+
+      if (newIndex !== currentIndex) {
+        setFocusedIndex(newIndex);
+
+        // Auto-focus the new checkbox
+        const newTld = tlds[newIndex];
+        if (newTld) {
+          const checkboxElement = document.getElementById(
+            `tld-${newTld.extension.replace('.', '-')}`
+          );
+          if (checkboxElement) {
+            checkboxElement.focus();
+          }
+        }
+      }
+    },
+    [tlds, columnsPerRow, onBulkSelect]
+  );
+
+  // Focus management effect
+  useEffect(() => {
+    const focusedTld = tlds[focusedIndex];
+    if (focusedTld) {
+      const checkboxElement = document.getElementById(
+        `tld-${focusedTld.extension.replace('.', '-')}`
+      );
+      if (checkboxElement && document.activeElement !== checkboxElement) {
+        checkboxElement.focus();
+      }
+    }
+  }, [focusedIndex, tlds]);
+
+  // If below threshold, render enhanced normal grid with keyboard navigation
   if (!shouldUseVirtualScrolling) {
     return (
       <div
-        className="grid gap-4"
+        ref={gridRef}
+        role="grid"
+        aria-label={`TLD selection grid for ${categoryId} category`}
+        aria-describedby={`${categoryId}-help`}
+        className="grid gap-4 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1"
         style={{
           gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
         }}
+        tabIndex={-1}
+        onKeyDown={e => {
+          if (e.key === 'Tab' && !e.shiftKey) {
+            // Focus first checkbox on Tab
+            const firstTld = tlds[0];
+            if (firstTld) {
+              e.preventDefault();
+              const firstCheckbox = document.getElementById(
+                `tld-${firstTld.extension.replace('.', '-')}`
+              );
+              if (firstCheckbox) {
+                firstCheckbox.focus();
+                setFocusedIndex(0);
+              }
+            }
+          }
+        }}
       >
-        {tlds.map(tld => (
+        {tlds.map((tld, index) => (
           <TldCheckbox
             key={tld.extension}
             tld={tld}
             isSelected={selectedTlds.includes(tld.extension)}
             isHighlighted={getTldHighlightState(tld)}
             onToggle={onToggle}
+            tabIndex={index === focusedIndex ? 0 : -1}
+            onKeyDown={handleKeyDown}
+            data-index={index}
+            aria-setsize={tlds.length}
+            aria-posinset={index + 1}
           />
         ))}
+
+        {/* Hidden help text for screen readers */}
+        <div id={`${categoryId}-help`} className="sr-only">
+          Use arrow keys to navigate, Space to select, Ctrl+A to select all,
+          Escape to return to category controls
+        </div>
       </div>
     );
   }
 
-  // Create container ref for virtual scrolling
+  // Create container ref for virtual scrolling with enhanced accessibility
   return (
     <VirtualizedTldGrid
       rowData={rowData}
@@ -75,12 +204,16 @@ export function VirtualTldGrid({
       containerHeight={containerHeight}
       itemHeight={itemHeight}
       columnsPerRow={columnsPerRow}
+      focusedIndex={focusedIndex}
+      handleKeyDown={handleKeyDown}
+      categoryId={categoryId}
+      tlds={tlds}
     />
   );
 }
 
 /**
- * Internal virtualized grid component
+ * Internal virtualized grid component with enhanced accessibility
  */
 function VirtualizedTldGrid({
   rowData,
@@ -90,6 +223,10 @@ function VirtualizedTldGrid({
   containerHeight,
   itemHeight,
   columnsPerRow,
+  focusedIndex,
+  handleKeyDown,
+  categoryId,
+  tlds,
 }: {
   rowData: TLD[][];
   selectedTlds: string[];
@@ -98,6 +235,10 @@ function VirtualizedTldGrid({
   containerHeight: number;
   itemHeight: number;
   columnsPerRow: number;
+  focusedIndex: number;
+  handleKeyDown: (e: React.KeyboardEvent, extension: string) => void;
+  categoryId: string;
+  tlds: TLD[];
 }) {
   // Create virtualizer
   const rowVirtualizer = useVirtualizer({
@@ -112,10 +253,14 @@ function VirtualizedTldGrid({
   return (
     <div
       ref={parentRef}
-      className="border rounded-md overflow-auto"
+      role="grid"
+      aria-label={`Virtual TLD selection grid for ${categoryId} category`}
+      aria-describedby={`${categoryId}-virtual-help`}
+      className="border rounded-md overflow-auto focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
       style={{
         height: `${containerHeight}px`,
       }}
+      tabIndex={-1}
     >
       <div
         style={{
@@ -127,6 +272,8 @@ function VirtualizedTldGrid({
         {rowVirtualizer.getVirtualItems().map(virtualItem => {
           const row = rowData[virtualItem.index];
           if (!row) return null;
+
+          const startIndex = virtualItem.index * columnsPerRow;
 
           return (
             <div
@@ -140,6 +287,7 @@ function VirtualizedTldGrid({
                 transform: `translateY(${virtualItem.start}px)`,
               }}
               className="px-4"
+              role="row"
             >
               <div
                 className="grid gap-4 h-full items-center"
@@ -147,25 +295,43 @@ function VirtualizedTldGrid({
                   gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
                 }}
               >
-                {row.map(tld => (
-                  <TldCheckbox
-                    key={tld.extension}
-                    tld={tld}
-                    isSelected={selectedTlds.includes(tld.extension)}
-                    isHighlighted={getTldHighlightState(tld)}
-                    onToggle={onToggle}
-                  />
-                ))}
+                {row.map((tld, colIndex) => {
+                  const index = startIndex + colIndex;
+                  return (
+                    <TldCheckbox
+                      key={tld.extension}
+                      tld={tld}
+                      isSelected={selectedTlds.includes(tld.extension)}
+                      isHighlighted={getTldHighlightState(tld)}
+                      onToggle={onToggle}
+                      tabIndex={index === focusedIndex ? 0 : -1}
+                      onKeyDown={handleKeyDown}
+                      data-index={index}
+                      aria-setsize={tlds.length}
+                      aria-posinset={index + 1}
+                    />
+                  );
+                })}
                 {/* Fill empty cells in incomplete rows */}
                 {Array.from({ length: columnsPerRow - row.length }).map(
                   (_, i) => (
-                    <div key={`empty-${i}`} />
+                    <div
+                      key={`empty-${i}`}
+                      role="gridcell"
+                      aria-hidden="true"
+                    />
                   )
                 )}
               </div>
             </div>
           );
         })}
+      </div>
+
+      {/* Hidden help text for screen readers */}
+      <div id={`${categoryId}-virtual-help`} className="sr-only">
+        Virtual scrolling grid. Use arrow keys to navigate, Space to select,
+        Ctrl+A to select all, Escape to return to category controls
       </div>
     </div>
   );

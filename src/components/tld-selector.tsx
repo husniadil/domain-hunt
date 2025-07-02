@@ -338,9 +338,19 @@ export function TldSelector({
     [normalizedSearchQuery]
   );
 
-  // Optimized TLD grid renderer with virtual scrolling for large lists
+  // Enhanced bulk selection handler for keyboard shortcuts
+  const handleBulkSelect = useCallback(
+    (extensions: string[]) => {
+      const newSelectedTlds = [...new Set([...selectedTlds, ...extensions])];
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
+
+  // Optimized TLD grid renderer with enhanced accessibility and keyboard navigation
   const renderTldGrid = useCallback(
-    (tlds: TLD[]) => (
+    (tlds: TLD[], categoryId: string = 'default') => (
       <VirtualTldGrid
         tlds={tlds}
         selectedTlds={selectedTlds}
@@ -349,9 +359,11 @@ export function TldSelector({
         containerHeight={tlds.length > 50 ? 400 : undefined}
         itemHeight={40}
         columnsPerRow={3}
+        onBulkSelect={handleBulkSelect}
+        categoryId={categoryId}
       />
     ),
-    [selectedTlds, getTldHighlightState, handleTldToggle]
+    [selectedTlds, getTldHighlightState, handleTldToggle, handleBulkSelect]
   );
 
   // Enhanced keyboard handler for category toggle
@@ -471,7 +483,9 @@ export function TldSelector({
         >
           {/* Only render TLD grid when category is expanded (lazy loading) */}
           {shouldExpand && (
-            <div className="pt-1">{renderTldGrid(category.tlds)}</div>
+            <div className="pt-1">
+              {renderTldGrid(category.tlds, category.id)}
+            </div>
           )}
         </div>
       </div>
@@ -480,41 +494,114 @@ export function TldSelector({
 
   return (
     <div className={cn('space-y-4', className)}>
-      {/* Search Input */}
+      {/* ARIA Live Regions for Screen Reader Announcements */}
+      <div
+        id="tld-announcements"
+        aria-live="polite"
+        aria-atomic="true"
+        className="sr-only"
+      >
+        {isSearching &&
+          !hasNoResults &&
+          `Found ${filteredData.tlds.length} TLD${filteredData.tlds.length === 1 ? '' : 's'} matching "${internalSearchQuery}"`}
+        {hasNoResults && 'No TLDs found matching your search.'}
+        {selectedTlds.length > 0 &&
+          `${selectedTlds.length} TLD${selectedTlds.length === 1 ? '' : 's'} selected`}
+      </div>
+
+      {/* Skip Link for Large Categories */}
+      <div className="sr-only">
+        <a
+          href="#tld-summary"
+          className="skip-link focus:not-sr-only focus:absolute focus:top-2 focus:left-2 focus:z-50 focus:px-3 focus:py-2 focus:bg-primary focus:text-primary-foreground focus:rounded-md"
+        >
+          Skip to TLD selection summary
+        </a>
+      </div>
+
+      {/* Search Input with Enhanced Loading States */}
       <div className="relative">
         <Input
           type="text"
           placeholder="Search TLDs by extension (.com), name (Commercial), or category..."
           value={internalSearchQuery}
           onChange={handleSearchChange}
-          className="pr-8"
+          className={cn(
+            'pr-8 transition-all duration-200 ease-in-out',
+            isSearching && 'ring-2 ring-blue-500/30'
+          )}
+          aria-describedby="search-help"
+          aria-expanded={isSearching}
+          aria-controls="tld-results"
         />
+
+        {/* Search Loading Indicator */}
+        {isSearching && (
+          <div
+            className="absolute right-8 top-1/2 -translate-y-1/2 animate-pulse"
+            role="status"
+            aria-label="Searching TLDs"
+          >
+            <div className="w-4 h-4 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+          </div>
+        )}
+
         {internalSearchQuery && (
           <button
             onClick={clearSearch}
-            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground"
+            className={cn(
+              'absolute top-1/2 -translate-y-1/2 text-muted-foreground transition-all duration-200',
+              'hover:text-foreground hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded',
+              isSearching ? 'right-12' : 'right-2'
+            )}
             title="Clear search"
+            aria-label="Clear search query"
           >
             ✕
           </button>
         )}
+
+        {/* Hidden search help text */}
+        <div id="search-help" className="sr-only">
+          Search by TLD extension, name, or category. Results update
+          automatically as you type.
+        </div>
       </div>
 
-      {/* Search Results Info */}
+      {/* Enhanced Search Results Info with Smooth Animation */}
       {isSearching && (
-        <div className="text-sm text-muted-foreground">
-          {hasNoResults
-            ? 'No TLDs found matching your search.'
-            : `Found ${filteredData.tlds.length} TLD${filteredData.tlds.length === 1 ? '' : 's'} matching "${internalSearchQuery}"`}
+        <div
+          id="tld-results"
+          className="text-sm text-muted-foreground animate-in fade-in duration-300"
+          role="status"
+          aria-live="polite"
+        >
+          {hasNoResults ? (
+            <div className="flex items-center gap-2 text-yellow-600 dark:text-yellow-400">
+              <span>⚠️</span>
+              No TLDs found matching your search. Try adjusting your search
+              terms.
+            </div>
+          ) : (
+            <div className="flex items-center gap-2 text-green-600 dark:text-green-400">
+              <span>✓</span>
+              Found {filteredData.tlds.length} TLD
+              {filteredData.tlds.length === 1 ? '' : 's'} matching &ldquo;
+              {internalSearchQuery}&rdquo;
+            </div>
+          )}
         </div>
       )}
 
-      {/* TLD Summary Header */}
-      <div className="flex items-center justify-between">
+      {/* Enhanced TLD Summary Header with Skip Target */}
+      <div
+        id="tld-summary"
+        className="flex items-center justify-between scroll-mt-4"
+      >
         <div className="flex items-center gap-2">
           <h3 className="text-sm font-medium">Select TLD Extensions</h3>
           {selectedTlds.length > 0 && (
-            <span className="text-sm text-muted-foreground">
+            <span className="text-sm text-muted-foreground animate-in slide-in-from-left duration-200">
               ({selectedTlds.length} selected)
             </span>
           )}
@@ -526,17 +613,48 @@ export function TldSelector({
             size="sm"
             onClick={handleSelectAll}
             disabled={allSelected}
+            className={cn(
+              'transition-all duration-200 hover:scale-105 active:scale-95',
+              allSelected && 'opacity-50'
+            )}
+            aria-describedby="select-all-help"
+            title={`Select all ${TLD_EXTENSIONS.length} TLD extensions`}
           >
-            Select All
+            <span className="flex items-center gap-1">
+              ✓ Select All
+              {allSelected && (
+                <span className="text-xs">({TLD_EXTENSIONS.length})</span>
+              )}
+            </span>
           </Button>
           <Button
             variant="outline"
             size="sm"
             onClick={handleDeselectAll}
             disabled={noneSelected}
+            className={cn(
+              'transition-all duration-200 hover:scale-105 active:scale-95',
+              noneSelected && 'opacity-50'
+            )}
+            aria-describedby="clear-help"
+            title="Clear all selected TLD extensions"
           >
-            Clear
+            <span className="flex items-center gap-1">
+              ✕ Clear
+              {!noneSelected && (
+                <span className="text-xs">({selectedTlds.length})</span>
+              )}
+            </span>
           </Button>
+
+          {/* Hidden help text for screen readers */}
+          <div id="select-all-help" className="sr-only">
+            Select all available TLD extensions. Use Ctrl+A while focused on any
+            checkbox for keyboard access.
+          </div>
+          <div id="clear-help" className="sr-only">
+            Clear all currently selected TLD extensions.
+          </div>
         </div>
       </div>
 
@@ -621,7 +739,7 @@ export function TldSelector({
         </div>
       ) : (
         /* Fallback: Flat Grid Layout */
-        renderTldGrid(filteredData.tlds)
+        renderTldGrid(filteredData.tlds, 'all-tlds')
       )}
 
       {/* Selected Extensions Summary */}
