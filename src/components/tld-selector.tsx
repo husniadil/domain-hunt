@@ -305,7 +305,15 @@ export function TldSelector({
   };
 
   const handleShowMoreToggle = () => {
+    // Store current scroll position to maintain it when content expands
+    const currentScrollY = window.scrollY;
+
     onShowAllCategoriesChange?.(!showAllCategories);
+
+    // Restore scroll position after state update to prevent auto-scroll down
+    requestAnimationFrame(() => {
+      window.scrollTo(0, currentScrollY);
+    });
   };
 
   const allSelected = selectedTlds.length === TLD_EXTENSIONS.length;
@@ -722,20 +730,16 @@ export function TldSelector({
               );
             })()}
 
-          {/* Collapsible Categories - auto-expanded during search with smooth transitions */}
-          <div
-            className={`transition-all duration-300 ease-in-out ${
-              showAllCategories || isSearching
-                ? 'opacity-100'
-                : 'max-h-0 opacity-0 overflow-hidden'
-            }`}
-          >
-            <div className="space-y-4 pt-4">
-              {filteredData.categories
-                .filter(cat => cat.id !== 'popular')
-                .map(renderCategorySection)}
+          {/* Collapsible Categories - conditional rendering to prevent scrollbar issues */}
+          {(showAllCategories || isSearching) && (
+            <div className="animate-in fade-in duration-300">
+              <div className="space-y-4 pt-4">
+                {filteredData.categories
+                  .filter(cat => cat.id !== 'popular')
+                  .map(renderCategorySection)}
+              </div>
             </div>
-          </div>
+          )}
         </div>
       ) : (
         /* Fallback: Flat Grid Layout */
