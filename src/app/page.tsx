@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { DomainInput } from '@/components/domain-input';
 import { TldSelector } from '@/components/tld-selector';
+import { TldDataLoader } from '@/components/tld-data-loader';
 import { Badge } from '@/components/ui/badge';
 import {
   checkDomainsUnified,
@@ -230,14 +231,19 @@ export default function Home() {
               initialDomains={domains}
             />
 
-            <TldSelector
-              onTldsChange={setSelectedTlds}
-              initialTlds={selectedTlds}
-              collapsedCategories={collapsedCategories}
-              showAllCategories={showAllCategories}
-              onCollapsedCategoriesChange={setCollapsedCategories}
-              onShowAllCategoriesChange={setShowAllCategories}
-            />
+            <TldDataLoader>
+              {tldData => (
+                <TldSelector
+                  tldData={tldData}
+                  onTldsChange={setSelectedTlds}
+                  initialTlds={selectedTlds}
+                  collapsedCategories={collapsedCategories}
+                  showAllCategories={showAllCategories}
+                  onCollapsedCategoriesChange={setCollapsedCategories}
+                  onShowAllCategoriesChange={setShowAllCategories}
+                />
+              )}
+            </TldDataLoader>
 
             <ActionButtons
               domains={domains}
