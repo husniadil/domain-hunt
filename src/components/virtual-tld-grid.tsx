@@ -27,6 +27,26 @@ interface VirtualTldGridProps {
 // Virtual scrolling threshold - only use virtual scrolling for lists > 50 items
 const VIRTUAL_SCROLL_THRESHOLD = 50;
 
+// Shared screen reader help text component
+function ScreenReaderHelp({
+  categoryId,
+  isVirtual = false,
+}: {
+  categoryId: string;
+  isVirtual?: boolean;
+}) {
+  return (
+    <div
+      id={`${categoryId}-${isVirtual ? 'virtual-' : ''}help`}
+      className="sr-only"
+    >
+      {isVirtual ? 'Virtual scrolling grid. ' : ''}
+      Use arrow keys to navigate, Space to select, Ctrl+A to select all, Escape
+      to return to category controls, Shift+Tab for reverse navigation
+    </div>
+  );
+}
+
 /**
  * Virtual scrolling TLD grid component with enhanced keyboard navigation
  * Provides optimal performance for categories with >50 TLDs and full accessibility
@@ -48,6 +68,9 @@ export function VirtualTldGrid({
   // Enhanced keyboard navigation state
   const [focusedIndex, setFocusedIndex] = useState<number>(0);
   const gridRef = useRef<HTMLDivElement>(null);
+
+  // Cache element references for performance
+  const checkboxRefsMap = useRef<Map<string, HTMLElement | null>>(new Map());
 
   // Group TLDs into rows for virtual scrolling
   const rowData = useMemo(() => {
@@ -115,17 +138,40 @@ export function VirtualTldGrid({
             gridRef.current.focus();
           }
           return;
+        case 'Tab':
+          // Handle Shift+Tab for reverse navigation
+          if (e.shiftKey) {
+            e.preventDefault();
+            if (currentIndex === 0) {
+              // Focus back to grid container
+              if (gridRef.current) {
+                gridRef.current.focus();
+              }
+            } else {
+              newIndex = Math.max(currentIndex - 1, 0);
+            }
+          } else {
+            // Regular Tab - let it bubble up
+            return;
+          }
+          break;
       }
 
       if (newIndex !== currentIndex) {
         setFocusedIndex(newIndex);
 
-        // Auto-focus the new checkbox
+        // Auto-focus the new checkbox using cached refs
         const newTld = tlds[newIndex];
         if (newTld) {
-          const checkboxElement = document.getElementById(
-            `tld-${newTld.extension.replace('.', '-')}`
-          );
+          const checkboxId = `tld-${newTld.extension.replace('.', '-')}`;
+          let checkboxElement = checkboxRefsMap.current.get(checkboxId);
+
+          // Fallback to DOM query if not cached
+          if (!checkboxElement) {
+            checkboxElement = document.getElementById(checkboxId);
+            checkboxRefsMap.current.set(checkboxId, checkboxElement);
+          }
+
           if (checkboxElement) {
             checkboxElement.focus();
           }
@@ -135,13 +181,19 @@ export function VirtualTldGrid({
     [tlds, columnsPerRow, onBulkSelect]
   );
 
-  // Focus management effect
+  // Focus management effect with cached refs
   useEffect(() => {
     const focusedTld = tlds[focusedIndex];
     if (focusedTld) {
-      const checkboxElement = document.getElementById(
-        `tld-${focusedTld.extension.replace('.', '-')}`
-      );
+      const checkboxId = `tld-${focusedTld.extension.replace('.', '-')}`;
+      let checkboxElement = checkboxRefsMap.current.get(checkboxId);
+
+      // Fallback to DOM query if not cached
+      if (!checkboxElement) {
+        checkboxElement = document.getElementById(checkboxId);
+        checkboxRefsMap.current.set(checkboxId, checkboxElement);
+      }
+
       if (checkboxElement && document.activeElement !== checkboxElement) {
         checkboxElement.focus();
       }
@@ -167,9 +219,14 @@ export function VirtualTldGrid({
             const firstTld = tlds[0];
             if (firstTld) {
               e.preventDefault();
-              const firstCheckbox = document.getElementById(
-                `tld-${firstTld.extension.replace('.', '-')}`
-              );
+              const checkboxId = `tld-${firstTld.extension.replace('.', '-')}`;
+              let firstCheckbox = checkboxRefsMap.current.get(checkboxId);
+
+              if (!firstCheckbox) {
+                firstCheckbox = document.getElementById(checkboxId);
+                checkboxRefsMap.current.set(checkboxId, firstCheckbox);
+              }
+
               if (firstCheckbox) {
                 firstCheckbox.focus();
                 setFocusedIndex(0);
@@ -194,11 +251,7 @@ export function VirtualTldGrid({
           </div>
         ))}
 
-        {/* Hidden help text for screen readers */}
-        <div id={`${categoryId}-help`} className="sr-only">
-          Use arrow keys to navigate, Space to select, Ctrl+A to select all,
-          Escape to return to category controls
-        </div>
+        <ScreenReaderHelp categoryId={categoryId} />
       </div>
     );
   }
@@ -338,11 +391,7 @@ function VirtualizedTldGrid({
         })}
       </div>
 
-      {/* Hidden help text for screen readers */}
-      <div id={`${categoryId}-virtual-help`} className="sr-only">
-        Virtual scrolling grid. Use arrow keys to navigate, Space to select,
-        Ctrl+A to select all, Escape to return to category controls
-      </div>
+      <ScreenReaderHelp categoryId={categoryId} isVirtual />
     </div>
   );
 }
