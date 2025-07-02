@@ -194,7 +194,19 @@ export function VirtualTldGrid({
         checkboxRefsMap.current.set(checkboxId, checkboxElement);
       }
 
-      if (checkboxElement && document.activeElement !== checkboxElement) {
+      // Only focus if current focus is not on a search input to prevent focus jumping
+      const activeElement = document.activeElement;
+      const isSearchInputFocused =
+        activeElement &&
+        ((activeElement.tagName === 'INPUT' &&
+          activeElement.getAttribute('type') === 'text') ||
+          activeElement.getAttribute('role') === 'searchbox');
+
+      if (
+        checkboxElement &&
+        document.activeElement !== checkboxElement &&
+        !isSearchInputFocused
+      ) {
         checkboxElement.focus();
       }
     }

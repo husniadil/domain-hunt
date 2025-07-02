@@ -53,9 +53,8 @@ const TldCheckbox = memo<TldCheckboxProps>(
           'focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2',
           'hover:bg-muted/30 p-2 -m-2',
           // Enhanced animation on selection
-          isSelected && 'bg-primary/5 dark:bg-primary/10',
-          // Smooth highlight animation
-          isHighlighted && 'bg-yellow-100/80 dark:bg-yellow-900/40'
+          isSelected && 'bg-primary/5 dark:bg-primary/10'
+          // Note: Removed background highlight, keeping bold text styling for search matches
         )}
         data-index={dataIndex}
       >

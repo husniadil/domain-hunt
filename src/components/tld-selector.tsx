@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
@@ -140,29 +140,72 @@ export function TldSelector({
     setInternalSearchQuery(searchQuery);
   }, [searchQuery]);
 
-  // Debounced search handler
+  // Debounced search handler with proper cleanup and loading state
+  const debounceTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
+  const [isSearchPending, setIsSearchPending] = useState(false);
+
   const debouncedSearchChange = useCallback(
     (query: string) => {
-      const timeoutId = setTimeout(() => {
+      // Clear existing timeout
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+
+      // Set pending state for queries that need processing
+      if (query.trim()) {
+        setIsSearchPending(true);
+      }
+
+      // Set new timeout
+      debounceTimeoutRef.current = setTimeout(() => {
         onSearchChange?.(query);
+        setIsSearchPending(false);
       }, 300);
-      return () => clearTimeout(timeoutId);
     },
     [onSearchChange]
   );
+
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (debounceTimeoutRef.current) {
+        clearTimeout(debounceTimeoutRef.current);
+      }
+    };
+  }, []);
 
   const handleSearchChange = useCallback(
     (e: React.ChangeEvent<HTMLInputElement>) => {
       const query = e.target.value;
       setInternalSearchQuery(query);
-      debouncedSearchChange(query);
+
+      // Clear pending state immediately for empty queries
+      if (!query.trim()) {
+        setIsSearchPending(false);
+        if (debounceTimeoutRef.current) {
+          clearTimeout(debounceTimeoutRef.current);
+        }
+        onSearchChange?.('');
+      } else {
+        debouncedSearchChange(query);
+      }
     },
-    [debouncedSearchChange]
+    [debouncedSearchChange, onSearchChange]
   );
 
   const clearSearch = useCallback(() => {
     setInternalSearchQuery('');
+    setIsSearchPending(false);
+    if (debounceTimeoutRef.current) {
+      clearTimeout(debounceTimeoutRef.current);
+    }
     onSearchChange?.('');
+
+    // Focus back to search input to prevent focus jumping to domain checkboxes
+    setTimeout(() => {
+      searchInputRef.current?.focus();
+    }, 0);
   }, [onSearchChange]);
 
   const handleTldToggle = useCallback(
@@ -530,12 +573,19 @@ export function TldSelector({
       {/* Search Input with Enhanced Loading States */}
       <div className="relative">
         <Input
+          ref={searchInputRef}
           type="text"
           placeholder="Search TLDs by extension (.com), name (Commercial), or category..."
           value={internalSearchQuery}
           onChange={handleSearchChange}
           className={cn(
-            'pr-8 transition-all duration-200 ease-in-out',
+            'transition-all duration-200 ease-in-out',
+            // Dynamic padding: no query (pr-3), query only (pr-8), query + loading (pr-12)
+            internalSearchQuery && isSearchPending
+              ? 'pr-12'
+              : internalSearchQuery
+                ? 'pr-8'
+                : 'pr-3',
             isSearching && 'ring-2 ring-blue-500/30'
           )}
           aria-describedby="search-help"
@@ -543,10 +593,10 @@ export function TldSelector({
           aria-controls="tld-results"
         />
 
-        {/* Search Loading Indicator */}
-        {isSearching && (
+        {/* Search Loading Indicator - positioned left of X button */}
+        {isSearchPending && internalSearchQuery && (
           <div
-            className="absolute right-8 top-1/2 -translate-y-1/2 animate-pulse"
+            className="absolute right-8 top-1/2 -translate-y-1/2"
             role="status"
             aria-label="Searching TLDs"
           >
@@ -554,14 +604,11 @@ export function TldSelector({
           </div>
         )}
 
+        {/* Clear button - always at far right when query exists */}
         {internalSearchQuery && (
           <button
             onClick={clearSearch}
-            className={cn(
-              'absolute top-1/2 -translate-y-1/2 text-muted-foreground transition-all duration-200',
-              'hover:text-foreground hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded',
-              isSearching ? 'right-12' : 'right-2'
-            )}
+            className="absolute right-2 top-1/2 -translate-y-1/2 text-muted-foreground transition-all duration-200 hover:text-foreground hover:scale-110 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-1 rounded"
             title="Clear search"
             aria-label="Clear search query"
           >
