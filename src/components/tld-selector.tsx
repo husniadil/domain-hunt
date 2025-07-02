@@ -1,10 +1,10 @@
 'use client';
 
 import { useState, useEffect, useMemo, useCallback } from 'react';
-import { Checkbox } from '@/components/ui/checkbox';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { cn } from '@/lib/utils';
+import { VirtualTldGrid } from '@/components/virtual-tld-grid';
 import {
   TLD,
   TLDConfig,
@@ -13,9 +13,10 @@ import {
   isValidTLD,
   hasCategorizedStructure,
 } from '@/types/tld';
-import tldData from '../../data/tlds.json';
 
 interface TldSelectorProps {
+  // TLD data prop (replaces static import)
+  tldData: TLDConfig;
   onTldsChange?: (tlds: string[]) => void;
   className?: string;
   initialTlds?: string[];
@@ -108,12 +109,8 @@ const validateTldData = (
   return { tlds: validTlds, categories };
 };
 
-const TLD_DATA = validateTldData(tldData as TLDConfig);
-const TLDS: TLD[] = TLD_DATA.tlds;
-const CATEGORIES: TLDCategory[] | null = TLD_DATA.categories;
-const TLD_EXTENSIONS = TLDS.map(tld => tld.extension);
-
 export function TldSelector({
+  tldData,
   onTldsChange,
   className,
   initialTlds = [],
@@ -124,6 +121,11 @@ export function TldSelector({
   searchQuery = '',
   onSearchChange,
 }: TldSelectorProps) {
+  // Process TLD data with validation (moved from module level)
+  const processedTldData = useMemo(() => validateTldData(tldData), [tldData]);
+  const TLDS: TLD[] = processedTldData.tlds;
+  const CATEGORIES: TLDCategory[] | null = processedTldData.categories;
+  const TLD_EXTENSIONS = useMemo(() => TLDS.map(tld => tld.extension), [TLDS]);
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
   const [internalSearchQuery, setInternalSearchQuery] = useState(searchQuery);
 
@@ -163,14 +165,17 @@ export function TldSelector({
     onSearchChange?.('');
   }, [onSearchChange]);
 
-  const handleTldToggle = (tld: string, checked: boolean) => {
-    const newSelectedTlds = checked
-      ? [...selectedTlds, tld]
-      : selectedTlds.filter(t => t !== tld);
+  const handleTldToggle = useCallback(
+    (tld: string, checked: boolean) => {
+      const newSelectedTlds = checked
+        ? [...selectedTlds, tld]
+        : selectedTlds.filter(t => t !== tld);
 
-    setSelectedTlds(newSelectedTlds);
-    onTldsChange?.(newSelectedTlds);
-  };
+      setSelectedTlds(newSelectedTlds);
+      onTldsChange?.(newSelectedTlds);
+    },
+    [selectedTlds, onTldsChange]
+  );
 
   const handleSelectAll = () => {
     setSelectedTlds([...TLD_EXTENSIONS]);
@@ -213,27 +218,48 @@ export function TldSelector({
     })).filter(category => category.tlds.length > 0);
 
     return { tlds: matchingTlds, categories: filteredCategories };
-  }, [internalSearchQuery]);
+  }, [internalSearchQuery, TLDS, CATEGORIES]);
 
-  // Category selection state calculations
+  // Memoized category selection states for performance
+  const categorySelectionStates = useMemo(() => {
+    const states = new Map();
+
+    if (filteredData.categories) {
+      filteredData.categories.forEach(category => {
+        const categoryTlds = category.tlds.map(tld => tld.extension);
+        const selectedInCategory = selectedTlds.filter(tld =>
+          categoryTlds.includes(tld)
+        );
+
+        states.set(category.id, {
+          selectedCount: selectedInCategory.length,
+          totalCount: categoryTlds.length,
+          isAllSelected: selectedInCategory.length === categoryTlds.length,
+          isNoneSelected: selectedInCategory.length === 0,
+          isPartiallySelected:
+            selectedInCategory.length > 0 &&
+            selectedInCategory.length < categoryTlds.length,
+        });
+      });
+    }
+
+    return states;
+  }, [filteredData.categories, selectedTlds]);
+
+  // Optimized category selection state getter
   const getCategorySelectionState = useCallback(
     (category: TLDCategory) => {
-      const categoryTlds = category.tlds.map(tld => tld.extension);
-      const selectedInCategory = selectedTlds.filter(tld =>
-        categoryTlds.includes(tld)
+      return (
+        categorySelectionStates.get(category.id) || {
+          selectedCount: 0,
+          totalCount: 0,
+          isAllSelected: false,
+          isNoneSelected: true,
+          isPartiallySelected: false,
+        }
       );
-
-      return {
-        selectedCount: selectedInCategory.length,
-        totalCount: categoryTlds.length,
-        isAllSelected: selectedInCategory.length === categoryTlds.length,
-        isNoneSelected: selectedInCategory.length === 0,
-        isPartiallySelected:
-          selectedInCategory.length > 0 &&
-          selectedInCategory.length < categoryTlds.length,
-      };
     },
-    [selectedTlds]
+    [categorySelectionStates]
   );
 
   // Category bulk selection handlers
@@ -285,40 +311,38 @@ export function TldSelector({
   const isSearching = internalSearchQuery.trim().length > 0;
   const hasNoResults = isSearching && filteredData.tlds.length === 0;
 
-  // Render TLD grid for a category or flat list with optional search highlighting
-  const renderTldGrid = (tlds: TLD[]) => (
-    <div className="grid grid-cols-3 gap-4 sm:grid-cols-3 md:grid-cols-3">
-      {tlds.map(tld => {
-        const query = internalSearchQuery.toLowerCase().trim();
-        const isHighlighted =
-          query &&
-          (tld.extension.toLowerCase().includes(query) ||
-            tld.name.toLowerCase().includes(query));
+  // Memoized search query for performance optimization
+  const normalizedSearchQuery = useMemo(
+    () => internalSearchQuery.toLowerCase().trim(),
+    [internalSearchQuery]
+  );
 
-        return (
-          <div key={tld.extension} className="flex items-center space-x-3">
-            <Checkbox
-              id={`tld-${tld.extension.replace('.', '-')}`}
-              checked={selectedTlds.includes(tld.extension)}
-              onCheckedChange={checked =>
-                handleTldToggle(tld.extension, !!checked)
-              }
-            />
-            <label
-              htmlFor={`tld-${tld.extension.replace('.', '-')}`}
-              className={cn(
-                'text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70 cursor-pointer py-1 text-left',
-                isHighlighted &&
-                  'bg-yellow-100 dark:bg-yellow-900/30 px-2 py-1 rounded'
-              )}
-              title={tld.name}
-            >
-              {tld.extension}
-            </label>
-          </div>
-        );
-      })}
-    </div>
+  // Memoized TLD highlight checker for performance optimization
+  const getTldHighlightState = useCallback(
+    (tld: TLD): boolean => {
+      return !!(
+        normalizedSearchQuery &&
+        (tld.extension.toLowerCase().includes(normalizedSearchQuery) ||
+          tld.name.toLowerCase().includes(normalizedSearchQuery))
+      );
+    },
+    [normalizedSearchQuery]
+  );
+
+  // Optimized TLD grid renderer with virtual scrolling for large lists
+  const renderTldGrid = useCallback(
+    (tlds: TLD[]) => (
+      <VirtualTldGrid
+        tlds={tlds}
+        selectedTlds={selectedTlds}
+        getTldHighlightState={getTldHighlightState}
+        onToggle={handleTldToggle}
+        containerHeight={tlds.length > 50 ? 400 : undefined}
+        itemHeight={40}
+        columnsPerRow={3}
+      />
+    ),
+    [selectedTlds, getTldHighlightState, handleTldToggle]
   );
 
   // Enhanced keyboard handler for category toggle
@@ -427,7 +451,7 @@ export function TldSelector({
           </div>
         </div>
 
-        {/* Category Content with smooth animations */}
+        {/* Category Content with lazy loading and smooth animations */}
         <div
           id={`category-content-${category.id}`}
           className={cn(
@@ -436,7 +460,10 @@ export function TldSelector({
           )}
           aria-hidden={!shouldExpand}
         >
-          <div className="pt-1">{renderTldGrid(category.tlds)}</div>
+          {/* Only render TLD grid when category is expanded (lazy loading) */}
+          {shouldExpand && (
+            <div className="pt-1">{renderTldGrid(category.tlds)}</div>
+          )}
         </div>
       </div>
     );
