@@ -389,6 +389,38 @@ function parseWhoisAvailability(
       hasRaw: !!firstServerData['raw'],
     });
 
+    // Special handling for .to domains and similar TLDs that return error field
+    if (firstServerData['error']) {
+      const errorMessage = String(firstServerData['error']).toLowerCase();
+      console.info('Found error field in whois response', { errorMessage });
+
+      // Check if error indicates domain is not found/available
+      const availabilityErrorPatterns = [
+        'no match',
+        'not found',
+        'no matching record',
+        'domain not found',
+        'domain name not found',
+        'no data found',
+        'no entries found',
+        'not registered',
+        'status: free',
+        'available',
+      ];
+
+      const foundPattern = availabilityErrorPatterns.find(pattern =>
+        errorMessage.includes(pattern)
+      );
+
+      if (foundPattern) {
+        console.info('Error indicates domain is available', {
+          pattern: foundPattern,
+          errorMessage,
+        });
+        return 'available';
+      }
+    }
+
     // Check for availability patterns first
     const availabilityCheck = checkAvailabilityPatterns(firstServerData);
 
