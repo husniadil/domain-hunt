@@ -7,6 +7,13 @@ import {
   hasCategorizedStructure,
 } from '@/types/tld';
 
+// Extend Window interface for log deduplication
+declare global {
+  interface Window {
+    _tldValidationLogged?: Set<string>;
+  }
+}
+
 // Enhanced default TLD list used as fallback when JSON data is invalid
 const DEFAULT_TLDS: TLD[] = [
   { extension: '.com', name: 'Commercial', popular: true, category: 'Popular' },
@@ -74,13 +81,23 @@ export const validateTldData = (
   // Extract categories if present and valid
   const categories = hasCategorizedStructure(config) ? config.categories : null;
 
-  // Log successful data loading with categorization info
-  if (categories) {
-    console.info(
-      `Loaded ${validTlds.length} TLDs across ${categories.length} categories`
-    );
-  } else {
-    console.info(`Loaded ${validTlds.length} TLDs (legacy flat structure)`);
+  // Log successful data loading with categorization info (only once)
+  const logKey = `${validTlds.length}-${categories?.length || 0}`;
+  if (typeof window !== 'undefined') {
+    if (!window._tldValidationLogged) {
+      window._tldValidationLogged = new Set();
+    }
+
+    if (!window._tldValidationLogged.has(logKey)) {
+      window._tldValidationLogged.add(logKey);
+      if (categories) {
+        console.info(
+          `Loaded ${validTlds.length} TLDs across ${categories.length} categories`
+        );
+      } else {
+        console.info(`Loaded ${validTlds.length} TLDs (legacy flat structure)`);
+      }
+    }
   }
 
   return { tlds: validTlds, categories };
