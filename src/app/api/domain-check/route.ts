@@ -394,6 +394,30 @@ function parseWhoisAvailability(
       const errorMessage = String(firstServerData['error']).toLowerCase();
       console.info('Found error field in whois response', { errorMessage });
 
+      // Check if error indicates a connection/server issue (should return unknown, not available)
+      const connectionErrorPatterns = [
+        'connect econnrefused',
+        'connection refused',
+        'connection timeout',
+        'timeout',
+        'network',
+        'server not found',
+        'host not found',
+        'service unavailable',
+      ];
+
+      const foundConnectionError = connectionErrorPatterns.find(pattern =>
+        errorMessage.includes(pattern)
+      );
+
+      if (foundConnectionError) {
+        console.warn('Whois server connection error detected', {
+          pattern: foundConnectionError,
+          errorMessage,
+        });
+        return 'unknown'; // Cannot determine availability due to server issues
+      }
+
       // Check if error indicates domain is not found/available
       const availabilityErrorPatterns = [
         'no match',
@@ -419,6 +443,10 @@ function parseWhoisAvailability(
         });
         return 'available';
       }
+
+      // For other error types, return unknown
+      console.warn('Unhandled whois error type', { errorMessage });
+      return 'unknown';
     }
 
     // Check for availability patterns first
