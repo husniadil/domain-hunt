@@ -420,25 +420,25 @@ function parseWhoisAvailability(
 
       // Check if error indicates domain is not found/available
       const availabilityErrorPatterns = [
-        'no match',
-        'not found',
-        'no matching record',
-        'domain not found',
-        'domain name not found',
-        'no data found',
-        'no entries found',
-        'not registered',
-        'status: free',
-        'available',
+        /\bno match\b/i,
+        /\bnot found\b/i,
+        /\bno matching record\b/i,
+        /\bdomain not found\b/i,
+        /\bdomain name not found\b/i,
+        /\bno data found\b/i,
+        /\bno entries found\b/i,
+        /\bnot registered\b/i,
+        /\bstatus: free\b/i,
+        /\bavailable\b/i,
       ];
 
       const foundPattern = availabilityErrorPatterns.find(pattern =>
-        errorMessage.includes(pattern)
+        pattern.test(errorMessage)
       );
 
       if (foundPattern) {
         console.info('Error indicates domain is available', {
-          pattern: foundPattern,
+          pattern: foundPattern.source,
           errorMessage,
         });
         return 'available';

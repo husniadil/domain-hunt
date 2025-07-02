@@ -220,7 +220,7 @@ export function VirtualTldGrid({
         role="grid"
         aria-label={`TLD selection grid for ${categoryId} category`}
         aria-describedby={`${categoryId}-help`}
-        className="grid gap-4 focus:outline-none rounded-md p-1"
+        className="grid gap-4 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-1"
         style={{
           gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
         }}
@@ -330,7 +330,7 @@ function VirtualizedTldGrid({
       role="grid"
       aria-label={`Virtual TLD selection grid for ${categoryId} category`}
       aria-describedby={`${categoryId}-virtual-help`}
-      className="border rounded-md overflow-auto focus:outline-none"
+      className="border rounded-md overflow-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
       style={{
         height: `${containerHeight}px`,
       }}

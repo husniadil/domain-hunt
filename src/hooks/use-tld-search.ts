@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { TLD, TLDCategory } from '@/types/tld';
 
 interface UseTldSearchProps {
@@ -29,19 +29,31 @@ export function useTldSearch({
   onSearchChange,
 }: UseTldSearchProps): UseTldSearchReturn {
   const [internalQuery, setInternalQuery] = useState(externalQuery);
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Sync with external query changes
   useEffect(() => {
     setInternalQuery(externalQuery);
   }, [externalQuery]);
 
+  // Cleanup timeout on unmount
+  useEffect(() => {
+    return () => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+    };
+  }, []);
+
   // Debounced search handler
   const debouncedSearchChange = useCallback(
     (query: string) => {
-      const timeoutId = setTimeout(() => {
+      if (timeoutRef.current) {
+        clearTimeout(timeoutRef.current);
+      }
+      timeoutRef.current = setTimeout(() => {
         onSearchChange?.(query);
       }, 300);
-      return () => clearTimeout(timeoutId);
     },
     [onSearchChange]
   );

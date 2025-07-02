@@ -46,14 +46,15 @@ export function useTldSelection({
 
   const handleTldToggle = useCallback(
     (tld: string, checked: boolean) => {
-      const newSelectedTlds = checked
-        ? [...selectedTlds, tld]
-        : selectedTlds.filter(t => t !== tld);
-
-      setSelectedTlds(newSelectedTlds);
-      onTldsChange?.(newSelectedTlds);
+      setSelectedTlds(prevSelectedTlds => {
+        const newSelectedTlds = checked
+          ? [...prevSelectedTlds, tld]
+          : prevSelectedTlds.filter(t => t !== tld);
+        onTldsChange?.(newSelectedTlds);
+        return newSelectedTlds;
+      });
     },
-    [selectedTlds, onTldsChange]
+    [onTldsChange]
   );
 
   const handleSelectAll = useCallback(() => {
@@ -69,11 +70,15 @@ export function useTldSelection({
   // Enhanced bulk selection handler for keyboard shortcuts
   const handleBulkSelect = useCallback(
     (extensions: string[]) => {
-      const newSelectedTlds = [...new Set([...selectedTlds, ...extensions])];
-      setSelectedTlds(newSelectedTlds);
-      onTldsChange?.(newSelectedTlds);
+      setSelectedTlds(prevSelectedTlds => {
+        const newSelectedTlds = [
+          ...new Set([...prevSelectedTlds, ...extensions]),
+        ];
+        onTldsChange?.(newSelectedTlds);
+        return newSelectedTlds;
+      });
     },
-    [selectedTlds, onTldsChange]
+    [onTldsChange]
   );
 
   // Memoized category selection states for performance
@@ -122,23 +127,29 @@ export function useTldSelection({
   const handleCategorySelectAll = useCallback(
     (category: TLDCategory) => {
       const categoryTlds = category.tlds.map(tld => tld.extension);
-      const newSelectedTlds = [...new Set([...selectedTlds, ...categoryTlds])];
-      setSelectedTlds(newSelectedTlds);
-      onTldsChange?.(newSelectedTlds);
+      setSelectedTlds(prevSelectedTlds => {
+        const newSelectedTlds = [
+          ...new Set([...prevSelectedTlds, ...categoryTlds]),
+        ];
+        onTldsChange?.(newSelectedTlds);
+        return newSelectedTlds;
+      });
     },
-    [selectedTlds, onTldsChange]
+    [onTldsChange]
   );
 
   const handleCategoryDeselectAll = useCallback(
     (category: TLDCategory) => {
       const categoryTlds = category.tlds.map(tld => tld.extension);
-      const newSelectedTlds = selectedTlds.filter(
-        tld => !categoryTlds.includes(tld)
-      );
-      setSelectedTlds(newSelectedTlds);
-      onTldsChange?.(newSelectedTlds);
+      setSelectedTlds(prevSelectedTlds => {
+        const newSelectedTlds = prevSelectedTlds.filter(
+          tld => !categoryTlds.includes(tld)
+        );
+        onTldsChange?.(newSelectedTlds);
+        return newSelectedTlds;
+      });
     },
-    [selectedTlds, onTldsChange]
+    [onTldsChange]
   );
 
   const allSelected = selectedTlds.length === tldExtensions.length;
