@@ -429,7 +429,7 @@ function parseWhoisAvailability(
         /\bno entries found\b/i,
         /\bnot registered\b/i,
         /\bstatus: free\b/i,
-        /\bavailable\b/i,
+        /\b(?<!not\s|un)available\b/i,
       ];
 
       const foundPattern = availabilityErrorPatterns.find(pattern =>

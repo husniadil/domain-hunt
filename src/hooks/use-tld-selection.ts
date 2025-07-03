@@ -46,17 +46,12 @@ export function useTldSelection({
 
   const handleTldToggle = useCallback(
     (tld: string, checked: boolean) => {
-      let newTlds: string[];
       setSelectedTlds(prevSelectedTlds => {
-        newTlds = checked
+        const newSelectedTlds = checked
           ? [...prevSelectedTlds, tld]
           : prevSelectedTlds.filter(t => t !== tld);
-        return newTlds;
-      });
-
-      // Use queueMicrotask to defer the callback safely
-      queueMicrotask(() => {
-        onTldsChange?.(newTlds);
+        onTldsChange?.(newSelectedTlds);
+        return newSelectedTlds;
       });
     },
     [onTldsChange]

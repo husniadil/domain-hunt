@@ -68,6 +68,9 @@ export function useTldSearch({
   );
 
   const clearSearch = useCallback(() => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
     setInternalQuery('');
     onSearchChange?.('');
   }, [onSearchChange]);
