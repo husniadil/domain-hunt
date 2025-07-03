@@ -1,4 +1,4 @@
-import { useState, useEffect, useMemo, useCallback } from 'react';
+import { useState, useEffect, useMemo, useCallback, useRef } from 'react';
 import { TLDCategory } from '@/types/tld';
 
 interface CategoryState {
@@ -37,6 +37,7 @@ export function useTldSelection({
   onTldsChange,
 }: UseTldSelectionProps): UseTldSelectionReturn {
   const [selectedTlds, setSelectedTlds] = useState<string[]>([]);
+  const pendingChangeRef = useRef<string[] | null>(null);
 
   // Sync with initialTlds changes (including when cleared)
   useEffect(() => {
@@ -44,47 +45,47 @@ export function useTldSelection({
     onTldsChange?.(initialTlds);
   }, [initialTlds, onTldsChange]);
 
-  const handleTldToggle = useCallback(
-    (tld: string, checked: boolean) => {
-      setSelectedTlds(prevSelectedTlds => {
-        const newSelectedTlds = checked
-          ? [...prevSelectedTlds, tld]
-          : prevSelectedTlds.filter(t => t !== tld);
-        onTldsChange?.(newSelectedTlds);
-        return newSelectedTlds;
-      });
-    },
-    [onTldsChange]
-  );
+  const handleTldToggle = useCallback((tld: string, checked: boolean) => {
+    setSelectedTlds(prevSelectedTlds => {
+      const newSelectedTlds = checked
+        ? [...prevSelectedTlds, tld]
+        : prevSelectedTlds.filter(t => t !== tld);
+      pendingChangeRef.current = newSelectedTlds;
+      return newSelectedTlds;
+    });
+  }, []);
+
+  // Effect to handle onTldsChange after state updates
+  useEffect(() => {
+    if (pendingChangeRef.current !== null) {
+      onTldsChange?.(pendingChangeRef.current);
+      pendingChangeRef.current = null;
+    }
+  }, [selectedTlds, onTldsChange]);
 
   const handleSelectAll = useCallback(() => {
-    setSelectedTlds([...tldExtensions]);
-    queueMicrotask(() => {
-      onTldsChange?.(tldExtensions);
+    setSelectedTlds(() => {
+      const newTlds = [...tldExtensions];
+      pendingChangeRef.current = newTlds;
+      return newTlds;
     });
-  }, [tldExtensions, onTldsChange]);
+  }, [tldExtensions]);
 
   const handleDeselectAll = useCallback(() => {
-    setSelectedTlds([]);
-    queueMicrotask(() => {
-      onTldsChange?.([]);
+    setSelectedTlds(() => {
+      pendingChangeRef.current = [];
+      return [];
     });
-  }, [onTldsChange]);
+  }, []);
 
   // Enhanced bulk selection handler for keyboard shortcuts
-  const handleBulkSelect = useCallback(
-    (extensions: string[]) => {
-      let newTlds: string[];
-      setSelectedTlds(prevSelectedTlds => {
-        newTlds = [...new Set([...prevSelectedTlds, ...extensions])];
-        return newTlds;
-      });
-      queueMicrotask(() => {
-        onTldsChange?.(newTlds);
-      });
-    },
-    [onTldsChange]
-  );
+  const handleBulkSelect = useCallback((extensions: string[]) => {
+    setSelectedTlds(prevSelectedTlds => {
+      const newTlds = [...new Set([...prevSelectedTlds, ...extensions])];
+      pendingChangeRef.current = newTlds;
+      return newTlds;
+    });
+  }, []);
 
   // Memoized category selection states for performance
   const categorySelectionStates = useMemo(() => {
@@ -129,35 +130,25 @@ export function useTldSelection({
   );
 
   // Category bulk selection handlers
-  const handleCategorySelectAll = useCallback(
-    (category: TLDCategory) => {
-      const categoryTlds = category.tlds.map(tld => tld.extension);
-      let newTlds: string[];
-      setSelectedTlds(prevSelectedTlds => {
-        newTlds = [...new Set([...prevSelectedTlds, ...categoryTlds])];
-        return newTlds;
-      });
-      queueMicrotask(() => {
-        onTldsChange?.(newTlds);
-      });
-    },
-    [onTldsChange]
-  );
+  const handleCategorySelectAll = useCallback((category: TLDCategory) => {
+    const categoryTlds = category.tlds.map(tld => tld.extension);
+    setSelectedTlds(prevSelectedTlds => {
+      const newTlds = [...new Set([...prevSelectedTlds, ...categoryTlds])];
+      pendingChangeRef.current = newTlds;
+      return newTlds;
+    });
+  }, []);
 
-  const handleCategoryDeselectAll = useCallback(
-    (category: TLDCategory) => {
-      const categoryTlds = category.tlds.map(tld => tld.extension);
-      let newTlds: string[];
-      setSelectedTlds(prevSelectedTlds => {
-        newTlds = prevSelectedTlds.filter(tld => !categoryTlds.includes(tld));
-        return newTlds;
-      });
-      queueMicrotask(() => {
-        onTldsChange?.(newTlds);
-      });
-    },
-    [onTldsChange]
-  );
+  const handleCategoryDeselectAll = useCallback((category: TLDCategory) => {
+    const categoryTlds = category.tlds.map(tld => tld.extension);
+    setSelectedTlds(prevSelectedTlds => {
+      const newTlds = prevSelectedTlds.filter(
+        tld => !categoryTlds.includes(tld)
+      );
+      pendingChangeRef.current = newTlds;
+      return newTlds;
+    });
+  }, []);
 
   const allSelected = selectedTlds.length === tldExtensions.length;
   const noneSelected = selectedTlds.length === 0;
