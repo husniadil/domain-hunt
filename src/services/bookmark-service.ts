@@ -12,7 +12,6 @@ import { DOMAIN_STATUS } from '@/constants/domain-status';
 import { DomainResult } from '@/types/domain';
 
 const STORAGE_KEY = 'domain-hunt-bookmarks';
-const CURRENT_VERSION = 1;
 
 // Helper function to create bookmark ID from domain and TLD
 export const createBookmarkId = (domain: string, tld: string): BookmarkId => {
@@ -74,7 +73,6 @@ const loadBookmarks = (): BookmarkStorage => {
       return {
         bookmarks: [],
         lastSyncAt: new Date(),
-        version: CURRENT_VERSION,
       };
     }
 
@@ -90,19 +88,12 @@ const loadBookmarks = (): BookmarkStorage => {
         : undefined,
     }));
 
-    // Handle version migration if needed
-    if (parsed.version !== CURRENT_VERSION) {
-      // Future: Add migration logic here
-      parsed.version = CURRENT_VERSION;
-    }
-
     return parsed;
   } catch (error) {
     console.error('Failed to load bookmarks from localStorage:', error);
     return {
       bookmarks: [],
       lastSyncAt: new Date(),
-      version: CURRENT_VERSION,
     };
   }
 };
