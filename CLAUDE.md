@@ -94,7 +94,7 @@ UnifiedDomainResult {
 #### `homepage-state-service` & `filter-state-service`
 
 - Handle localStorage persistence with SSR safety
-- Implement expiration and validation logic
+- Implement expiration logic for homepage state
 - Provide clear APIs for state management
 
 ### API Architecture
@@ -132,7 +132,7 @@ UnifiedDomainResult {
 #### Persistence Strategy
 
 - **Homepage State**: Domains, TLDs, results (24h expiration)
-- **Bookmark State**: Versioned storage with migration support
+- **Bookmark State**: Simple storage without versioning
 - **Filter State**: User preferences for result filtering
 - **Theme State**: Dark/light mode via next-themes
 
@@ -177,7 +177,7 @@ UnifiedDomainResult {
 #### Local Storage Keys
 
 - `domain-hunt-homepage-state` - Homepage state
-- `domain-hunt-bookmarks-v1` - Bookmark data
+- `domain-hunt-bookmarks` - Bookmark data
 - `domain-hunt-filter-states` - Filter preferences
 
 #### Performance Optimizations
