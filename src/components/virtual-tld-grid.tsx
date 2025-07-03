@@ -163,7 +163,7 @@ export function VirtualTldGrid({
         // Auto-focus the new checkbox using cached refs
         const newTld = tlds[newIndex];
         if (newTld) {
-          const checkboxId = `tld-${newTld.extension.replace('.', '-')}`;
+          const checkboxId = `tld-${newTld.extension.replace('.', '-')}-${newIndex}`;
           let checkboxElement = checkboxRefsMap.current.get(checkboxId);
 
           // Fallback to DOM query if not cached
@@ -185,7 +185,7 @@ export function VirtualTldGrid({
   useEffect(() => {
     const focusedTld = tlds[focusedIndex];
     if (focusedTld) {
-      const checkboxId = `tld-${focusedTld.extension.replace('.', '-')}`;
+      const checkboxId = `tld-${focusedTld.extension.replace('.', '-')}-${focusedIndex}`;
       let checkboxElement = checkboxRefsMap.current.get(checkboxId);
 
       // Fallback to DOM query if not cached
@@ -231,7 +231,7 @@ export function VirtualTldGrid({
             const firstTld = tlds[0];
             if (firstTld) {
               e.preventDefault();
-              const checkboxId = `tld-${firstTld.extension.replace('.', '-')}`;
+              const checkboxId = `tld-${firstTld.extension.replace('.', '-')}-0`;
               let firstCheckbox = checkboxRefsMap.current.get(checkboxId);
 
               if (!firstCheckbox) {
