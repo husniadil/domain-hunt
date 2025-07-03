@@ -389,6 +389,66 @@ function parseWhoisAvailability(
       hasRaw: !!firstServerData['raw'],
     });
 
+    // Special handling for .to domains and similar TLDs that return error field
+    if (firstServerData['error']) {
+      const errorMessage = String(firstServerData['error']).toLowerCase();
+      console.info('Found error field in whois response', { errorMessage });
+
+      // Check if error indicates a connection/server issue (should return unknown, not available)
+      const connectionErrorPatterns = [
+        'connect econnrefused',
+        'connection refused',
+        'connection timeout',
+        'timeout',
+        'network',
+        'server not found',
+        'host not found',
+        'service unavailable',
+      ];
+
+      const foundConnectionError = connectionErrorPatterns.find(pattern =>
+        errorMessage.includes(pattern)
+      );
+
+      if (foundConnectionError) {
+        console.warn('Whois server connection error detected', {
+          pattern: foundConnectionError,
+          errorMessage,
+        });
+        return 'unknown'; // Cannot determine availability due to server issues
+      }
+
+      // Check if error indicates domain is not found/available
+      const availabilityErrorPatterns = [
+        /\bno match\b/i,
+        /\bnot found\b/i,
+        /\bno matching record\b/i,
+        /\bdomain not found\b/i,
+        /\bdomain name not found\b/i,
+        /\bno data found\b/i,
+        /\bno entries found\b/i,
+        /\bnot registered\b/i,
+        /\bstatus: free\b/i,
+        /\b(?<!not\s|un)available\b/i,
+      ];
+
+      const foundPattern = availabilityErrorPatterns.find(pattern =>
+        pattern.test(errorMessage)
+      );
+
+      if (foundPattern) {
+        console.info('Error indicates domain is available', {
+          pattern: foundPattern.source,
+          errorMessage,
+        });
+        return 'available';
+      }
+
+      // For other error types, return unknown
+      console.warn('Unhandled whois error type', { errorMessage });
+      return 'unknown';
+    }
+
     // Check for availability patterns first
     const availabilityCheck = checkAvailabilityPatterns(firstServerData);
 

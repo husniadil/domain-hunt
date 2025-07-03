@@ -57,7 +57,7 @@ export function VirtualTldGrid({
   getTldHighlightState,
   onToggle,
   containerHeight = 400,
-  itemHeight = 40,
+  itemHeight = 48,
   columnsPerRow = 3,
   onBulkSelect,
   categoryId = 'default',
@@ -163,7 +163,7 @@ export function VirtualTldGrid({
         // Auto-focus the new checkbox using cached refs
         const newTld = tlds[newIndex];
         if (newTld) {
-          const checkboxId = `tld-${newTld.extension.replace('.', '-')}`;
+          const checkboxId = `tld-${newTld.extension.replace('.', '-')}-${newIndex}`;
           let checkboxElement = checkboxRefsMap.current.get(checkboxId);
 
           // Fallback to DOM query if not cached
@@ -185,7 +185,7 @@ export function VirtualTldGrid({
   useEffect(() => {
     const focusedTld = tlds[focusedIndex];
     if (focusedTld) {
-      const checkboxId = `tld-${focusedTld.extension.replace('.', '-')}`;
+      const checkboxId = `tld-${focusedTld.extension.replace('.', '-')}-${focusedIndex}`;
       let checkboxElement = checkboxRefsMap.current.get(checkboxId);
 
       // Fallback to DOM query if not cached
@@ -194,7 +194,19 @@ export function VirtualTldGrid({
         checkboxRefsMap.current.set(checkboxId, checkboxElement);
       }
 
-      if (checkboxElement && document.activeElement !== checkboxElement) {
+      // Only focus if current focus is not on a search input to prevent focus jumping
+      const activeElement = document.activeElement;
+      const isSearchInputFocused =
+        activeElement &&
+        ((activeElement.tagName === 'INPUT' &&
+          activeElement.getAttribute('type') === 'text') ||
+          activeElement.getAttribute('role') === 'searchbox');
+
+      if (
+        checkboxElement &&
+        document.activeElement !== checkboxElement &&
+        !isSearchInputFocused
+      ) {
         checkboxElement.focus();
       }
     }
@@ -208,7 +220,7 @@ export function VirtualTldGrid({
         role="grid"
         aria-label={`TLD selection grid for ${categoryId} category`}
         aria-describedby={`${categoryId}-help`}
-        className="grid gap-4 focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 rounded-md p-1"
+        className="grid gap-6 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-2"
         style={{
           gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
         }}
@@ -219,7 +231,7 @@ export function VirtualTldGrid({
             const firstTld = tlds[0];
             if (firstTld) {
               e.preventDefault();
-              const checkboxId = `tld-${firstTld.extension.replace('.', '-')}`;
+              const checkboxId = `tld-${firstTld.extension.replace('.', '-')}-0`;
               let firstCheckbox = checkboxRefsMap.current.get(checkboxId);
 
               if (!firstCheckbox) {
@@ -318,7 +330,7 @@ function VirtualizedTldGrid({
       role="grid"
       aria-label={`Virtual TLD selection grid for ${categoryId} category`}
       aria-describedby={`${categoryId}-virtual-help`}
-      className="border rounded-md overflow-auto focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2"
+      className="border rounded-md overflow-auto focus:outline-none focus:ring-2 focus:ring-blue-500"
       style={{
         height: `${containerHeight}px`,
       }}
@@ -326,9 +338,10 @@ function VirtualizedTldGrid({
     >
       <div
         style={{
-          height: `${rowVirtualizer.getTotalSize()}px`,
+          height: `${rowVirtualizer.getTotalSize() + 16}px`,
           width: '100%',
           position: 'relative',
+          paddingBottom: '8px',
         }}
       >
         {rowVirtualizer.getVirtualItems().map(virtualItem => {
@@ -346,13 +359,13 @@ function VirtualizedTldGrid({
                 left: 0,
                 width: '100%',
                 height: `${virtualItem.size}px`,
-                transform: `translateY(${virtualItem.start}px)`,
+                transform: `translateY(${virtualItem.start + 8}px)`,
               }}
               className="px-4"
               role="row"
             >
               <div
-                className="grid gap-4 h-full items-center"
+                className="grid gap-6 h-full items-center"
                 style={{
                   gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
                 }}
