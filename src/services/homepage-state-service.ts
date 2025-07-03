@@ -1,9 +1,4 @@
 import { UnifiedDomainResult } from '@/types/domain';
-import { isValidNumber } from '@/utils/validation';
-import {
-  migrateHomepageState,
-  SCHEMA_VERSION,
-} from '@/utils/homepage-state-migration';
 
 // Constants for localStorage keys
 const HOMEPAGE_STATE_KEY = 'domain-hunt-homepage-state';
@@ -11,25 +6,17 @@ const STATE_EXPIRY_HOURS = 24; // State expires after 24 hours
 
 // Types for persisted state
 export interface HomepageState {
-  // Existing fields (maintain compatibility)
   domains: string[];
   selectedTlds: string[];
   unifiedResult: UnifiedDomainResult | null;
   savedAt: number;
-
-  // New fields for categorized TLD UI
   collapsedCategories: string[]; // IDs of collapsed categories
   showAllCategories: boolean; // "Show More" toggle state
   searchQuery?: string; // Search state persistence (optional)
-
-  // Migration tracking
-  version: number; // Schema version for future migrations
 }
 
 // Helper functions for state persistence
-export const saveHomepageState = (
-  state: Omit<HomepageState, 'savedAt' | 'version'>
-) => {
+export const saveHomepageState = (state: Omit<HomepageState, 'savedAt'>) => {
   if (typeof window === 'undefined') return;
 
   try {
@@ -46,7 +33,6 @@ export const saveHomepageState = (
           }
         : null,
       savedAt: Date.now(),
-      version: SCHEMA_VERSION, // Always save with current version
     };
     localStorage.setItem(HOMEPAGE_STATE_KEY, JSON.stringify(serializableState));
   } catch (error) {
@@ -81,43 +67,38 @@ export const loadHomepageState = (): Partial<HomepageState> | null => {
     }
 
     // Check if state is expired
-    const savedAt = isValidNumber(rawState.savedAt) ? rawState.savedAt : 0;
+    const savedAt = typeof rawState.savedAt === 'number' ? rawState.savedAt : 0;
     const hoursElapsed = (Date.now() - savedAt) / (1000 * 60 * 60);
     if (hoursElapsed > STATE_EXPIRY_HOURS) {
       localStorage.removeItem(HOMEPAGE_STATE_KEY);
       return null;
     }
 
-    // Determine version and migrate if necessary
-    const version = isValidNumber(rawState.version) ? rawState.version : 0; // Default to 0 for old format
-    const migratedState = migrateHomepageState(rawState, version);
-
-    if (!migratedState) {
-      localStorage.removeItem(HOMEPAGE_STATE_KEY);
-      return null;
-    }
-
     // Convert serialized unifiedResult back to proper format if it exists
     if (
-      migratedState.unifiedResult &&
-      migratedState.unifiedResult.resultsByDomain
+      rawState.unifiedResult &&
+      typeof rawState.unifiedResult === 'object' &&
+      'resultsByDomain' in rawState.unifiedResult &&
+      rawState.unifiedResult.resultsByDomain
     ) {
       try {
-        migratedState.unifiedResult = {
-          ...migratedState.unifiedResult,
-          // Convert array back to Map (handles both old and new formats)
-          resultsByDomain: new Map(migratedState.unifiedResult.resultsByDomain),
+        rawState.unifiedResult = {
+          ...rawState.unifiedResult,
+          // Convert array back to Map
+          resultsByDomain: new Map(
+            rawState.unifiedResult.resultsByDomain as [string, unknown][]
+          ),
         };
       } catch (mapError) {
         console.warn(
           'Failed to convert resultsByDomain to Map, clearing results:',
           mapError
         );
-        migratedState.unifiedResult = null;
+        rawState.unifiedResult = null;
       }
     }
 
-    return migratedState;
+    return rawState as Partial<HomepageState>;
   } catch (error) {
     console.error('Failed to load homepage state:', error);
     localStorage.removeItem(HOMEPAGE_STATE_KEY);

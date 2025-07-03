@@ -21,7 +21,6 @@ export interface Bookmark {
 export interface BookmarkStorage {
   bookmarks: Bookmark[];
   lastSyncAt: Date;
-  version: number; // For future schema migrations
 }
 
 // Bookmark operations result
