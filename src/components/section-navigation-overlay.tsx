@@ -151,7 +151,12 @@ export function SectionNavigationOverlay({
       const currentState = loadHomepageState();
       if (currentState) {
         saveHomepageState({
-          ...currentState,
+          domains: currentState.domains || [],
+          selectedTlds: currentState.selectedTlds || [],
+          unifiedResult: currentState.unifiedResult || null,
+          collapsedCategories: currentState.collapsedCategories || [],
+          showAllCategories: currentState.showAllCategories || false,
+          searchQuery: currentState.searchQuery,
           scrollPosition: {
             currentSection,
             overlayVisible: isVisible,
