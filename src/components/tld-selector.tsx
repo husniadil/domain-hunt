@@ -208,7 +208,7 @@ export function TldSelector({
                   ))}
               </div>
 
-              {/* Bottom Show Less Toggle - only show when categories are expanded and not searching */}
+              {/* Bottom collapse toggle - only show when categories are expanded and not searching */}
               {showAllCategories && !isSearching && (
                 <div className="mt-6">
                   <ShowMoreToggle
