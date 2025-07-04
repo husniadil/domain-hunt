@@ -192,7 +192,7 @@ export function SectionNavigationOverlay({
         )}
         aria-label="Go to previous section"
       >
-        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5" />
+        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
       </Button>
 
       {/* Section Indicator */}
@@ -225,7 +225,7 @@ export function SectionNavigationOverlay({
         )}
         aria-label="Go to next section"
       >
-        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
+        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5 text-primary" />
       </Button>
     </div>
   );
