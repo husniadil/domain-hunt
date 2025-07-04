@@ -220,7 +220,7 @@ export function VirtualTldGrid({
         role="grid"
         aria-label={`TLD selection grid for ${categoryId} category`}
         aria-describedby={`${categoryId}-help`}
-        className="grid gap-6 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-2"
+        className="grid gap-6 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-4"
         style={{
           gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
         }}
@@ -338,10 +338,9 @@ function VirtualizedTldGrid({
     >
       <div
         style={{
-          height: `${rowVirtualizer.getTotalSize() + 16}px`,
+          height: `${rowVirtualizer.getTotalSize() + 8}px`,
           width: '100%',
           position: 'relative',
-          paddingBottom: '8px',
         }}
       >
         {rowVirtualizer.getVirtualItems().map(virtualItem => {
@@ -359,7 +358,7 @@ function VirtualizedTldGrid({
                 left: 0,
                 width: '100%',
                 height: `${virtualItem.size}px`,
-                transform: `translateY(${virtualItem.start + 8}px)`,
+                transform: `translateY(${virtualItem.start + 4}px)`,
               }}
               className="px-4"
               role="row"
