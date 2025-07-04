@@ -13,6 +13,10 @@ export interface HomepageState {
   collapsedCategories: string[]; // IDs of collapsed categories
   showAllCategories: boolean; // "Show More" toggle state
   searchQuery?: string; // Search state persistence (optional)
+  scrollPosition?: {
+    currentSection: 'header' | 'input' | 'results' | 'bottom';
+    overlayVisible: boolean;
+  }; // Scroll state for navigation overlay
 }
 
 // Helper functions for state persistence

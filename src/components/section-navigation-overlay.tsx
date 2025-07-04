@@ -4,6 +4,10 @@ import { useEffect, useState, useCallback, useMemo } from 'react';
 import { ChevronUp, ChevronDown } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
+import {
+  saveHomepageState,
+  loadHomepageState,
+} from '@/services/homepage-state-service';
 
 interface SectionNavigationOverlayProps {
   className?: string;
@@ -19,6 +23,7 @@ export function SectionNavigationOverlay({
   const [currentSection, setCurrentSection] = useState<Section>('header');
   const [isVisible, setIsVisible] = useState(false);
   const [hasResults, setHasResults] = useState(false);
+  const [hasRestoredScroll, setHasRestoredScroll] = useState(false);
 
   // Detect if results section exists
   useEffect(() => {
@@ -39,63 +44,7 @@ export function SectionNavigationOverlay({
     return hasResults ? SECTIONS : ['header', 'input', 'bottom'];
   }, [hasResults]);
 
-  // Track scroll position and update current section
-  useEffect(() => {
-    const handleScroll = () => {
-      const headerSection = document.querySelector('[data-section="header"]');
-      const inputSection = document.querySelector('[data-section="input"]');
-      const resultsSection = document.querySelector('[data-section="results"]');
-
-      if (!headerSection || !inputSection) return;
-
-      const scrollY = window.scrollY;
-      const viewportHeight = window.innerHeight;
-      const documentHeight = document.documentElement.scrollHeight;
-
-      // Determine current section first
-      const inputTop = inputSection.getBoundingClientRect().top + scrollY;
-      const resultsTop = resultsSection
-        ? resultsSection.getBoundingClientRect().top + scrollY
-        : null;
-
-      let currentSectionState: Section = 'header';
-
-      // Check if we're near the bottom (within 200px of bottom)
-      if (scrollY + viewportHeight >= documentHeight - 200) {
-        currentSectionState = 'bottom';
-      }
-      // Check results section
-      else if (
-        resultsSection &&
-        resultsTop !== null &&
-        scrollY >= resultsTop - 100
-      ) {
-        currentSectionState = 'results';
-      }
-      // Check input section
-      else if (scrollY >= inputTop - 100) {
-        currentSectionState = 'input';
-      }
-      // Default to header section
-      else {
-        currentSectionState = 'header';
-      }
-
-      setCurrentSection(currentSectionState);
-
-      // Show/hide overlay - only show if we're not at the very top (header section)
-      // and there's enough content to scroll through
-      const shouldShow =
-        currentSectionState !== 'header' &&
-        documentHeight > viewportHeight * 1.5;
-      setIsVisible(shouldShow);
-    };
-
-    handleScroll();
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
-
+  // Define scrollToSection function first (will be used in restore effect)
   const scrollToSection = useCallback((section: Section) => {
     if (section === 'header') {
       // First section - scroll all the way to top
@@ -175,6 +124,98 @@ export function SectionNavigationOverlay({
         });
       }
     }
+  }, []);
+
+  // Restore scroll position on page load
+  useEffect(() => {
+    if (!hasRestoredScroll) {
+      const savedState = loadHomepageState();
+      const scrollPosition = savedState?.scrollPosition;
+
+      if (scrollPosition && scrollPosition.overlayVisible) {
+        // Only restore if overlay was visible when saved
+        setTimeout(() => {
+          scrollToSection(scrollPosition.currentSection);
+          setHasRestoredScroll(true);
+        }, 100); // Small delay to ensure DOM is ready
+      } else {
+        setHasRestoredScroll(true);
+      }
+    }
+  }, [hasRestoredScroll, scrollToSection]);
+
+  // Save scroll position when section or visibility changes
+  useEffect(() => {
+    if (hasRestoredScroll) {
+      // Get current homepage state to preserve other data
+      const currentState = loadHomepageState();
+      if (currentState) {
+        saveHomepageState({
+          ...currentState,
+          scrollPosition: {
+            currentSection,
+            overlayVisible: isVisible,
+          },
+        });
+      }
+    }
+  }, [currentSection, isVisible, hasRestoredScroll]);
+
+  // Track scroll position and update current section
+  useEffect(() => {
+    const handleScroll = () => {
+      const headerSection = document.querySelector('[data-section="header"]');
+      const inputSection = document.querySelector('[data-section="input"]');
+      const resultsSection = document.querySelector('[data-section="results"]');
+
+      if (!headerSection || !inputSection) return;
+
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Determine current section first
+      const inputTop = inputSection.getBoundingClientRect().top + scrollY;
+      const resultsTop = resultsSection
+        ? resultsSection.getBoundingClientRect().top + scrollY
+        : null;
+
+      let currentSectionState: Section = 'header';
+
+      // Check if we're near the bottom (within 200px of bottom)
+      if (scrollY + viewportHeight >= documentHeight - 200) {
+        currentSectionState = 'bottom';
+      }
+      // Check results section
+      else if (
+        resultsSection &&
+        resultsTop !== null &&
+        scrollY >= resultsTop - 100
+      ) {
+        currentSectionState = 'results';
+      }
+      // Check input section
+      else if (scrollY >= inputTop - 100) {
+        currentSectionState = 'input';
+      }
+      // Default to header section
+      else {
+        currentSectionState = 'header';
+      }
+
+      setCurrentSection(currentSectionState);
+
+      // Show/hide overlay - only show if we're not at the very top (header section)
+      // and there's enough content to scroll through
+      const shouldShow =
+        currentSectionState !== 'header' &&
+        documentHeight > viewportHeight * 1.5;
+      setIsVisible(shouldShow);
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
   const navigateUp = useCallback(() => {
