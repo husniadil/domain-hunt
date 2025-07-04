@@ -27,6 +27,11 @@ interface VirtualTldGridProps {
 // Virtual scrolling threshold - only use virtual scrolling for lists > 50 items
 const VIRTUAL_SCROLL_THRESHOLD = 50;
 
+// Layout constants for consistent spacing
+const GRID_PADDING = 'p-4'; // Grid container padding
+const VIRTUAL_CONTAINER_BOTTOM_PADDING = 8; // Bottom padding for virtual container
+const VIRTUAL_ROW_OFFSET = 4; // Vertical offset for virtual rows
+
 // Shared screen reader help text component
 function ScreenReaderHelp({
   categoryId,
@@ -220,7 +225,7 @@ export function VirtualTldGrid({
         role="grid"
         aria-label={`TLD selection grid for ${categoryId} category`}
         aria-describedby={`${categoryId}-help`}
-        className="grid gap-6 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md p-2"
+        className={`grid gap-6 focus:outline-none focus:ring-2 focus:ring-blue-500 rounded-md ${GRID_PADDING}`}
         style={{
           gridTemplateColumns: `repeat(${columnsPerRow}, minmax(0, 1fr))`,
         }}
@@ -338,10 +343,9 @@ function VirtualizedTldGrid({
     >
       <div
         style={{
-          height: `${rowVirtualizer.getTotalSize() + 16}px`,
+          height: `${rowVirtualizer.getTotalSize() + VIRTUAL_CONTAINER_BOTTOM_PADDING}px`,
           width: '100%',
           position: 'relative',
-          paddingBottom: '8px',
         }}
       >
         {rowVirtualizer.getVirtualItems().map(virtualItem => {
@@ -359,7 +363,7 @@ function VirtualizedTldGrid({
                 left: 0,
                 width: '100%',
                 height: `${virtualItem.size}px`,
-                transform: `translateY(${virtualItem.start + 8}px)`,
+                transform: `translateY(${virtualItem.start + VIRTUAL_ROW_OFFSET}px)`,
               }}
               className="px-4"
               role="row"

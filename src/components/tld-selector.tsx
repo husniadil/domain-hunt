@@ -207,6 +207,17 @@ export function TldSelector({
                     />
                   ))}
               </div>
+
+              {/* Bottom collapse toggle - only show when categories are expanded and not searching */}
+              {showAllCategories && !isSearching && (
+                <div className="mt-6">
+                  <ShowMoreToggle
+                    categories={filteredData.categories}
+                    showAllCategories={showAllCategories}
+                    onToggle={handleShowMoreToggle}
+                  />
+                </div>
+              )}
             </div>
           )}
         </div>
