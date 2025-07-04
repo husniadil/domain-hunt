@@ -1,0 +1,232 @@
+'use client';
+
+import { useEffect, useState, useCallback, useMemo } from 'react';
+import { ChevronUp, ChevronDown } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import { cn } from '@/lib/utils';
+
+interface SectionNavigationOverlayProps {
+  className?: string;
+}
+
+type Section = 'header' | 'input' | 'results' | 'bottom';
+
+const SECTIONS: Section[] = ['header', 'input', 'results', 'bottom'];
+
+export function SectionNavigationOverlay({
+  className,
+}: SectionNavigationOverlayProps) {
+  const [currentSection, setCurrentSection] = useState<Section>('header');
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasResults, setHasResults] = useState(false);
+
+  // Detect if results section exists
+  useEffect(() => {
+    const checkResults = () => {
+      const resultsSection = document.querySelector('[data-section="results"]');
+      setHasResults(!!resultsSection);
+    };
+
+    checkResults();
+    const observer = new MutationObserver(checkResults);
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    return () => observer.disconnect();
+  }, []);
+
+  // Get available sections based on content
+  const availableSections: Section[] = useMemo(() => {
+    return hasResults ? SECTIONS : ['header', 'input', 'bottom'];
+  }, [hasResults]);
+
+  // Track scroll position and update current section
+  useEffect(() => {
+    const handleScroll = () => {
+      const headerSection = document.querySelector('[data-section="header"]');
+      const inputSection = document.querySelector('[data-section="input"]');
+      const resultsSection = document.querySelector('[data-section="results"]');
+
+      if (!headerSection || !inputSection) return;
+
+      const scrollY = window.scrollY;
+      const viewportHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight;
+
+      // Show/hide overlay based on scroll position
+      const shouldShow = scrollY > 100 && documentHeight > viewportHeight * 1.5;
+      setIsVisible(shouldShow);
+
+      // Determine current section
+      const inputTop = inputSection.getBoundingClientRect().top + scrollY;
+      const resultsTop = resultsSection
+        ? resultsSection.getBoundingClientRect().top + scrollY
+        : null;
+
+      // Check if we're near the bottom (within 200px of bottom)
+      if (scrollY + viewportHeight >= documentHeight - 200) {
+        setCurrentSection('bottom');
+      }
+      // Check results section
+      else if (
+        resultsSection &&
+        resultsTop !== null &&
+        scrollY >= resultsTop - 100
+      ) {
+        setCurrentSection('results');
+      }
+      // Check input section
+      else if (scrollY >= inputTop - 100) {
+        setCurrentSection('input');
+      }
+      // Default to header section
+      else {
+        setCurrentSection('header');
+      }
+    };
+
+    handleScroll();
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const scrollToSection = useCallback((section: Section) => {
+    if (section === 'bottom') {
+      window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
+    const element = document.querySelector(`[data-section="${section}"]`);
+    if (element) {
+      // For results section, add extra offset to show the title properly
+      if (section === 'results') {
+        const elementRect = element.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        const offset = 60; // Add 60px offset to show title
+        window.scrollTo({
+          top: absoluteElementTop - offset,
+          behavior: 'smooth',
+        });
+      } else {
+        element.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start',
+          inline: 'nearest',
+        });
+      }
+    }
+  }, []);
+
+  const navigateUp = useCallback(() => {
+    const currentIndex = availableSections.indexOf(currentSection);
+    if (currentIndex > 0) {
+      const previousSection = availableSections[currentIndex - 1];
+      scrollToSection(previousSection);
+    }
+  }, [currentSection, availableSections, scrollToSection]);
+
+  const navigateDown = useCallback(() => {
+    const currentIndex = availableSections.indexOf(currentSection);
+    if (currentIndex < availableSections.length - 1) {
+      const nextSection = availableSections[currentIndex + 1];
+      scrollToSection(nextSection);
+    }
+  }, [currentSection, availableSections, scrollToSection]);
+
+  // Handle keyboard navigation
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (
+        e.target instanceof HTMLInputElement ||
+        e.target instanceof HTMLTextAreaElement
+      ) {
+        return; // Don't interfere with input fields
+      }
+
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        navigateUp();
+      } else if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        navigateDown();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [navigateUp, navigateDown]);
+
+  const canGoUp = availableSections.indexOf(currentSection) > 0;
+  const canGoDown =
+    availableSections.indexOf(currentSection) < availableSections.length - 1;
+
+  // Don't show if there's only one section or if not visible
+  if (availableSections.length <= 1 || !isVisible) {
+    return null;
+  }
+
+  return (
+    <div
+      className={cn(
+        'fixed right-4 top-1/2 -translate-y-1/2 z-40 flex flex-col space-y-2',
+        'transition-all duration-300 ease-in-out',
+        isVisible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-4',
+        className
+      )}
+    >
+      {/* Up Arrow */}
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={navigateUp}
+        disabled={!canGoUp}
+        className={cn(
+          'h-10 w-10 rounded-full shadow-lg backdrop-blur-sm',
+          'hover:scale-110 transition-all duration-200',
+          'bg-background/80 hover:bg-background/90',
+          'border border-border/50',
+          'sm:h-12 sm:w-12', // Larger on desktop
+          !canGoUp && 'opacity-40 cursor-not-allowed'
+        )}
+        aria-label="Go to previous section"
+      >
+        <ChevronUp className="h-4 w-4 sm:h-5 sm:w-5" />
+      </Button>
+
+      {/* Section Indicator */}
+      <div className="flex flex-col items-center space-y-1 py-2">
+        {availableSections.map(section => (
+          <div
+            key={section}
+            className={cn(
+              'w-2 h-2 rounded-full transition-all duration-200',
+              'bg-muted-foreground/30',
+              currentSection === section && 'bg-primary w-3 h-3'
+            )}
+          />
+        ))}
+      </div>
+
+      {/* Down Arrow */}
+      <Button
+        variant="secondary"
+        size="sm"
+        onClick={navigateDown}
+        disabled={!canGoDown}
+        className={cn(
+          'h-10 w-10 rounded-full shadow-lg backdrop-blur-sm',
+          'hover:scale-110 transition-all duration-200',
+          'bg-background/80 hover:bg-background/90',
+          'border border-border/50',
+          'sm:h-12 sm:w-12', // Larger on desktop
+          !canGoDown && 'opacity-40 cursor-not-allowed'
+        )}
+        aria-label="Go to next section"
+      >
+        <ChevronDown className="h-4 w-4 sm:h-5 sm:w-5" />
+      </Button>
+    </div>
+  );
+}

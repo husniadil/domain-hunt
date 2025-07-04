@@ -19,6 +19,7 @@ import { ProgressDisplay } from '@/components/progress-display';
 import { FilterStats } from '@/components/filter-stats';
 import { ActionButtons } from '@/components/action-buttons';
 import { DomainResults } from '@/components/domain-results';
+import { SectionNavigationOverlay } from '@/components/section-navigation-overlay';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
@@ -222,9 +223,13 @@ export default function Home() {
     <ErrorBoundary>
       <div className="container mx-auto px-4 py-8 sm:px-6 lg:px-8">
         <div className="flex flex-col items-center justify-center space-y-8 text-center min-h-[calc(100vh-8rem)]">
-          <HomepageHeader />
+          {/* Header Section */}
+          <div data-section="header">
+            <HomepageHeader />
+          </div>
 
-          <div className="w-full max-w-md space-y-6">
+          {/* Input Section */}
+          <div data-section="input" className="w-full max-w-md space-y-6">
             <DomainInput
               onDomainsChange={setDomains}
               className="text-center"
@@ -257,47 +262,51 @@ export default function Home() {
 
             {/* Progress Display */}
             <ProgressDisplay progress={progress} />
-
-            {/* Unified Results Section */}
-            {unifiedResult && (
-              <div className="w-full space-y-4 text-left">
-                <div className="flex justify-between items-center">
-                  <h3 className="text-lg font-semibold">
-                    Domain Check Results
-                  </h3>
-                  <div className="flex items-center space-x-2">
-                    <Badge variant="outline" className="text-xs">
-                      {unifiedResult.totalDuration}ms
-                    </Badge>
-                    {unifiedResult.cancelled && (
-                      <Badge
-                        variant="outline"
-                        className="text-xs bg-yellow-100 text-yellow-800"
-                      >
-                        Cancelled
-                      </Badge>
-                    )}
-                  </div>
-                </div>
-
-                {/* Toggleable Filter Stats */}
-                <FilterStats
-                  counts={counts}
-                  toggleStates={toggleStates}
-                  onToggle={onToggle}
-                />
-
-                {/* Results by Domain */}
-                <DomainResults
-                  filteredResults={filteredResults}
-                  isEmpty={isEmpty}
-                  retryingDomains={retryingDomains}
-                  onRetryDomain={handleRetryDomain}
-                />
-              </div>
-            )}
           </div>
+
+          {/* Results Section */}
+          {unifiedResult && (
+            <div
+              data-section="results"
+              className="w-full max-w-md space-y-4 text-left"
+            >
+              <div className="flex justify-between items-center">
+                <h3 className="text-lg font-semibold">Domain Check Results</h3>
+                <div className="flex items-center space-x-2">
+                  <Badge variant="outline" className="text-xs">
+                    {unifiedResult.totalDuration}ms
+                  </Badge>
+                  {unifiedResult.cancelled && (
+                    <Badge
+                      variant="outline"
+                      className="text-xs bg-yellow-100 text-yellow-800"
+                    >
+                      Cancelled
+                    </Badge>
+                  )}
+                </div>
+              </div>
+
+              {/* Toggleable Filter Stats */}
+              <FilterStats
+                counts={counts}
+                toggleStates={toggleStates}
+                onToggle={onToggle}
+              />
+
+              {/* Results by Domain */}
+              <DomainResults
+                filteredResults={filteredResults}
+                isEmpty={isEmpty}
+                retryingDomains={retryingDomains}
+                onRetryDomain={handleRetryDomain}
+              />
+            </div>
+          )}
         </div>
+
+        {/* Section Navigation Overlay */}
+        <SectionNavigationOverlay />
       </div>
     </ErrorBoundary>
   );
