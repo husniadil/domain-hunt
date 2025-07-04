@@ -52,19 +52,17 @@ export function SectionNavigationOverlay({
       const viewportHeight = window.innerHeight;
       const documentHeight = document.documentElement.scrollHeight;
 
-      // Show/hide overlay based on scroll position
-      const shouldShow = scrollY > 100 && documentHeight > viewportHeight * 1.5;
-      setIsVisible(shouldShow);
-
-      // Determine current section
+      // Determine current section first
       const inputTop = inputSection.getBoundingClientRect().top + scrollY;
       const resultsTop = resultsSection
         ? resultsSection.getBoundingClientRect().top + scrollY
         : null;
 
+      let currentSectionState: Section = 'header';
+
       // Check if we're near the bottom (within 200px of bottom)
       if (scrollY + viewportHeight >= documentHeight - 200) {
-        setCurrentSection('bottom');
+        currentSectionState = 'bottom';
       }
       // Check results section
       else if (
@@ -72,16 +70,25 @@ export function SectionNavigationOverlay({
         resultsTop !== null &&
         scrollY >= resultsTop - 100
       ) {
-        setCurrentSection('results');
+        currentSectionState = 'results';
       }
       // Check input section
       else if (scrollY >= inputTop - 100) {
-        setCurrentSection('input');
+        currentSectionState = 'input';
       }
       // Default to header section
       else {
-        setCurrentSection('header');
+        currentSectionState = 'header';
       }
+
+      setCurrentSection(currentSectionState);
+
+      // Show/hide overlay - only show if we're not at the very top (header section)
+      // and there's enough content to scroll through
+      const shouldShow =
+        currentSectionState !== 'header' &&
+        documentHeight > viewportHeight * 1.5;
+      setIsVisible(shouldShow);
     };
 
     handleScroll();
@@ -90,7 +97,17 @@ export function SectionNavigationOverlay({
   }, []);
 
   const scrollToSection = useCallback((section: Section) => {
+    if (section === 'header') {
+      // First section - scroll all the way to top
+      window.scrollTo({
+        top: 0,
+        behavior: 'smooth',
+      });
+      return;
+    }
+
     if (section === 'bottom') {
+      // Last section - scroll all the way to bottom
       window.scrollTo({
         top: document.documentElement.scrollHeight,
         behavior: 'smooth',
@@ -100,10 +117,51 @@ export function SectionNavigationOverlay({
 
     const element = document.querySelector(`[data-section="${section}"]`);
     if (element) {
+      const elementRect = element.getBoundingClientRect();
+      const absoluteElementTop = elementRect.top + window.pageYOffset;
+
+      // For input section, scroll to show the TLD search input clearly (below the domain pills)
+      if (section === 'input') {
+        // Look for the TLD search input with the specific placeholder text
+        const tldSearchInput = element.querySelector(
+          'input[placeholder*="Search TLDs by extension"]'
+        );
+
+        if (tldSearchInput) {
+          const inputRect = tldSearchInput.getBoundingClientRect();
+          const inputTop = inputRect.top + window.pageYOffset;
+          const offset = 80; // Less offset to focus more on the input
+          window.scrollTo({
+            top: inputTop - offset,
+            behavior: 'smooth',
+          });
+        } else {
+          // Fallback: look for "Select TLD Extensions" text and scroll to it
+          const tldSelectorTitle = Array.from(
+            element.querySelectorAll('*')
+          ).find(el => el.textContent?.includes('Select TLD Extensions'));
+
+          if (tldSelectorTitle) {
+            const titleRect = tldSelectorTitle.getBoundingClientRect();
+            const titleTop = titleRect.top + window.pageYOffset;
+            const offset = 60; // Show title with some context
+            window.scrollTo({
+              top: titleTop - offset,
+              behavior: 'smooth',
+            });
+          } else {
+            // Final fallback: scroll significantly down from the start of input section
+            // to skip the domain pills entirely
+            const offset = 50;
+            window.scrollTo({
+              top: absoluteElementTop + 300 - offset, // Skip domain pills area
+              behavior: 'smooth',
+            });
+          }
+        }
+      }
       // For results section, add extra offset to show the title properly
-      if (section === 'results') {
-        const elementRect = element.getBoundingClientRect();
-        const absoluteElementTop = elementRect.top + window.pageYOffset;
+      else if (section === 'results') {
         const offset = 60; // Add 60px offset to show title
         window.scrollTo({
           top: absoluteElementTop - offset,
