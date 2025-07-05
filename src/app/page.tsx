@@ -19,8 +19,10 @@ import { ProgressDisplay } from '@/components/progress-display';
 import { FilterStats } from '@/components/filter-stats';
 import { ActionButtons } from '@/components/action-buttons';
 import { DomainResults } from '@/components/domain-results';
-import { SectionNavigationOverlay } from '@/components/section-navigation-overlay';
-import { useScrollNavigation } from '@/hooks/use-scroll-navigation';
+import {
+  SectionNavigationOverlay,
+  calculateScrollToResults,
+} from '@/components/section-navigation-overlay';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
@@ -55,9 +57,6 @@ export default function Home() {
 
   // Handle bookmark synchronization with cross-tab support
   useBookmarkSync(unifiedResult, setUnifiedResult);
-
-  // Use scroll navigation hook
-  const { scrollToSection } = useScrollNavigation();
 
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
@@ -96,17 +95,26 @@ export default function Home() {
       // Replace old results with new ones directly (no intermediate null state)
       setUnifiedResult(result);
 
-      // Auto-scroll to results section using the centralized navigation
+      // Auto-scroll to results section using the shared utility
       // Use longer delay to ensure DOM is fully updated with results
       setTimeout(() => {
-        const resultsSection = document.querySelector(
-          '[data-section="results"]'
-        );
-        if (resultsSection) {
-          scrollToSection('results');
+        const calculation = calculateScrollToResults();
+        if (calculation) {
+          window.scrollTo({
+            top: calculation.targetScrollY,
+            behavior: 'smooth',
+          });
         } else {
           // Fallback: wait a bit more for DOM update
-          setTimeout(() => scrollToSection('results'), 200);
+          setTimeout(() => {
+            const calculation = calculateScrollToResults();
+            if (calculation) {
+              window.scrollTo({
+                top: calculation.targetScrollY,
+                behavior: 'smooth',
+              });
+            }
+          }, 200);
         }
       }, 150);
 
