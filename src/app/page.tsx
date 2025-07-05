@@ -20,6 +20,7 @@ import { FilterStats } from '@/components/filter-stats';
 import { ActionButtons } from '@/components/action-buttons';
 import { DomainResults } from '@/components/domain-results';
 import { SectionNavigationOverlay } from '@/components/section-navigation-overlay';
+import { useScrollNavigation } from '@/hooks/use-scroll-navigation';
 import { toast } from 'sonner';
 import { formatErrorForToast, isOffline } from '@/utils/error-handling';
 import {
@@ -55,6 +56,9 @@ export default function Home() {
   // Handle bookmark synchronization with cross-tab support
   useBookmarkSync(unifiedResult, setUnifiedResult);
 
+  // Use scroll navigation hook
+  const { scrollToSection } = useScrollNavigation();
+
   const handleCheckDomains = async () => {
     if (domains.length === 0 || selectedTlds.length === 0) {
       toast.warning(
@@ -75,7 +79,10 @@ export default function Home() {
     const controller = new AbortController();
     setAbortController(controller);
     setIsChecking(true);
-    setUnifiedResult(null);
+
+    // DON'T clear unifiedResult here to prevent layout shift!
+    // We'll replace it when new results are ready
+
     setProgress(null);
 
     try {
@@ -86,7 +93,22 @@ export default function Home() {
         abortSignal: controller.signal,
       });
 
+      // Replace old results with new ones directly (no intermediate null state)
       setUnifiedResult(result);
+
+      // Auto-scroll to results section using the centralized navigation
+      // Use longer delay to ensure DOM is fully updated with results
+      setTimeout(() => {
+        const resultsSection = document.querySelector(
+          '[data-section="results"]'
+        );
+        if (resultsSection) {
+          scrollToSection('results');
+        } else {
+          // Fallback: wait a bit more for DOM update
+          setTimeout(() => scrollToSection('results'), 200);
+        }
+      }, 150);
 
       // Show success toast with summary
       const totalChecked = result.overallProgress.completed;
