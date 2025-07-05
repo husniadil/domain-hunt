@@ -5,10 +5,7 @@ import {
   loadHomepageState,
   saveHomepageState,
 } from '@/services/homepage-state-service';
-
-export type NavigationSection = 'header' | 'input' | 'results';
-
-const SECTIONS: NavigationSection[] = ['header', 'input', 'results'];
+import { NavigationSection, NAVIGATION_SECTIONS } from '@/types/navigation';
 
 // Constants for retry mechanism
 const MAX_RETRIES = 10;
@@ -56,7 +53,7 @@ export const useScrollNavigation = (): ScrollNavigationState &
 
   // Get available sections based on content
   const availableSections: NavigationSection[] = useMemo(() => {
-    return hasResults ? SECTIONS : ['header', 'input'];
+    return hasResults ? [...NAVIGATION_SECTIONS] : ['header', 'input'];
   }, [hasResults]);
 
   // Shared utility for calculating scroll position
