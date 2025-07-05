@@ -193,3 +193,42 @@ UnifiedDomainResult {
 - Structured console logging
 - Error categorization for troubleshooting
 - Performance timing in API responses
+
+## Claude Code Workflow
+
+This project is developed using Claude Code (claude.ai/code) with an automated GitHub workflow that enables systematic planning, issue creation, and pull request management.
+
+### Workflow Commands
+
+The development process uses specialized workflow commands:
+
+#### Planning & Issue Creation
+
+- **@plan** - Brainstorm features, analyze requirements, and create GitHub issues with proper labels
+- Supports all work types: hotfixes, features, bugs, enhancements, documentation, and tasks
+
+#### Development Workflow
+
+- **@createpr** - Analyze GitHub issues and create pull requests with implementation
+- **@fixpr** - Address PR feedback and re-submit changes
+- **@mergepr** - Merge PRs and handle post-merge tasks
+
+#### Development Guidelines
+
+- **Quality First**: Always run formatting (`pnpm format`), linting (`pnpm lint`), and build (`pnpm build`) before committing
+- **Conventional Commits**: All commits follow conventional commit format (feat, fix, docs, refactor, test, chore, hotfix)
+- **Issue-Driven**: Each feature/bug fix starts with a GitHub issue for proper tracking
+
+### Automated Development Process
+
+1. **Planning Phase** - Use @plan to analyze requirements and create detailed GitHub issues
+2. **Implementation Phase** - Use @createpr to develop features with proper testing and quality checks
+3. **Review Phase** - Use @fixpr if changes are needed based on feedback
+4. **Deployment Phase** - Use @mergepr to integrate changes and close issues
+
+### Benefits
+
+- **Systematic Approach**: Every change is planned, documented, and tracked
+- **Quality Assurance**: Built-in quality checks and testing requirements
+- **Transparency**: Full visibility into development process through GitHub issues and PRs
+- **Collaboration**: Clear communication through structured issue descriptions and PR documentation
