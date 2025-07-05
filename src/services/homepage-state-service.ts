@@ -1,4 +1,5 @@
 import { UnifiedDomainResult } from '@/types/domain';
+import { NavigationSection } from '@/types/navigation';
 
 // Constants for localStorage keys
 const HOMEPAGE_STATE_KEY = 'domain-hunt-homepage-state';
@@ -13,6 +14,9 @@ export interface HomepageState {
   collapsedCategories: string[]; // IDs of collapsed categories
   showAllCategories: boolean; // "Show More" toggle state
   searchQuery?: string; // Search state persistence (optional)
+  scrollPosition?: {
+    currentSection: NavigationSection;
+  }; // Scroll state for navigation overlay
 }
 
 // Helper functions for state persistence
