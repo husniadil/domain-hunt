@@ -10,7 +10,7 @@ interface SectionNavigationOverlayProps {
   className?: string;
 }
 
-// Re-export untuk backward compatibility
+// Re-export for backward compatibility
 export { calculateScrollToResults } from '@/hooks/use-scroll-navigation';
 
 export function SectionNavigationOverlay({
@@ -80,7 +80,11 @@ export function SectionNavigationOverlay({
       </Button>
 
       {/* Section Indicator */}
-      <div className="flex flex-col items-center space-y-1 py-2">
+      <div
+        className="flex flex-col items-center space-y-1 py-2"
+        role="navigation"
+        aria-label="Section indicator"
+      >
         {availableSections.map(section => (
           <div
             key={section}
@@ -89,6 +93,10 @@ export function SectionNavigationOverlay({
               'bg-muted-foreground/30',
               currentSection === section && 'bg-primary w-3 h-3'
             )}
+            role="img"
+            aria-current={currentSection === section ? 'step' : undefined}
+            aria-label={`${section} section${currentSection === section ? ' (current)' : ''}`}
+            title={`${section} section${currentSection === section ? ' (current)' : ''}`}
           />
         ))}
       </div>
