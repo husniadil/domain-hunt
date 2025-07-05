@@ -14,7 +14,7 @@ export interface HomepageState {
   showAllCategories: boolean; // "Show More" toggle state
   searchQuery?: string; // Search state persistence (optional)
   scrollPosition?: {
-    currentSection: 'header' | 'input' | 'results';
+    currentSection: 'header' | 'input' | 'results' | 'bottom';
   }; // Scroll state for navigation overlay
 }
 
