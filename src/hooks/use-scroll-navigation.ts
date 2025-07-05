@@ -6,9 +6,9 @@ import {
   saveHomepageState,
 } from '@/services/homepage-state-service';
 
-export type NavigationSection = 'header' | 'input' | 'results' | 'bottom';
+export type NavigationSection = 'header' | 'input' | 'results';
 
-const SECTIONS: NavigationSection[] = ['header', 'input', 'results', 'bottom'];
+const SECTIONS: NavigationSection[] = ['header', 'input', 'results'];
 
 // Constants for retry mechanism
 const MAX_RETRIES = 10;
