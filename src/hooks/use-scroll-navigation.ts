@@ -1,14 +1,18 @@
 'use client';
 
-import { useEffect, useState, useCallback, useMemo } from 'react';
+import { useEffect, useState, useCallback, useMemo, useRef } from 'react';
 import {
   loadHomepageState,
   saveHomepageState,
 } from '@/services/homepage-state-service';
 
-export type NavigationSection = 'header' | 'input' | 'results';
+export type NavigationSection = 'header' | 'input' | 'results' | 'bottom';
 
-const SECTIONS: NavigationSection[] = ['header', 'input', 'results'];
+const SECTIONS: NavigationSection[] = ['header', 'input', 'results', 'bottom'];
+
+// Constants for retry mechanism
+const MAX_RETRIES = 10;
+const RETRY_DELAY_MS = 100;
 
 export interface ScrollNavigationState {
   currentSection: NavigationSection;
@@ -31,6 +35,11 @@ export const useScrollNavigation = (): ScrollNavigationState &
   const [hasResults, setHasResults] = useState(false);
   const [hasRestoredScroll, setHasRestoredScroll] = useState(false);
 
+  // Use ref to hold latest scrollToSection to avoid dependency issues
+  const scrollToSectionRef = useRef<(section: NavigationSection) => void>(
+    () => {}
+  );
+
   // Detect if results section exists
   useEffect(() => {
     const checkResults = () => {
@@ -50,22 +59,29 @@ export const useScrollNavigation = (): ScrollNavigationState &
     return hasResults ? SECTIONS : ['header', 'input'];
   }, [hasResults]);
 
+  // Shared utility for calculating scroll position
+  const calculateScrollPosition = useCallback(
+    (selector: string, offset: number) => {
+      const element = document.querySelector(selector);
+      if (element) {
+        const elementRect = element.getBoundingClientRect();
+        const absoluteElementTop = elementRect.top + window.pageYOffset;
+        const targetScrollY = absoluteElementTop - offset;
+        return {
+          targetScrollY,
+          absoluteElementTop,
+          elementHeight: elementRect.height,
+        };
+      }
+      return null;
+    },
+    []
+  );
+
   // Calculate scroll position for results section
   const calculateScrollToResults = useCallback(() => {
-    const element = document.querySelector('[data-section="results"]');
-    if (element) {
-      const elementRect = element.getBoundingClientRect();
-      const absoluteElementTop = elementRect.top + window.pageYOffset;
-      const offset = 60;
-      const targetScrollY = absoluteElementTop - offset;
-      return {
-        targetScrollY,
-        absoluteElementTop,
-        elementHeight: elementRect.height,
-      };
-    }
-    return null;
-  }, []);
+    return calculateScrollPosition('[data-section="results"]', 60);
+  }, [calculateScrollPosition]);
 
   // Main scroll to section function
   const scrollToSection = useCallback(
@@ -127,17 +143,23 @@ export const useScrollNavigation = (): ScrollNavigationState &
             }
           }
         }
-        // For results section, use consistent calculation
+        // For results section, use consistent calculation with retry
         else if (section === 'results') {
-          setTimeout(() => {
+          let retries = 0;
+          const scrollToResults = () => {
             const calculation = calculateScrollToResults();
             if (calculation) {
               window.scrollTo({
                 top: calculation.targetScrollY,
                 behavior: 'smooth',
               });
+            } else if (retries < MAX_RETRIES) {
+              retries++;
+              setTimeout(scrollToResults, RETRY_DELAY_MS);
             }
-          }, 100);
+          };
+
+          scrollToResults();
         } else {
           element.scrollIntoView({
             behavior: 'smooth',
@@ -149,6 +171,9 @@ export const useScrollNavigation = (): ScrollNavigationState &
     },
     [calculateScrollToResults]
   );
+
+  // Update ref with latest scrollToSection
+  scrollToSectionRef.current = scrollToSection;
 
   // Restore scroll position on page load
   useEffect(() => {
@@ -166,7 +191,7 @@ export const useScrollNavigation = (): ScrollNavigationState &
             if (resultsSection) {
               // Wait longer for content to fully load and stabilize
               setTimeout(() => {
-                scrollToSection(scrollPosition.currentSection);
+                scrollToSectionRef.current?.(scrollPosition.currentSection);
                 setHasRestoredScroll(true);
               }, 500); // Increased delay to match content loading
             } else {
@@ -177,7 +202,7 @@ export const useScrollNavigation = (): ScrollNavigationState &
         } else {
           // For header/input sections, restore immediately
           setTimeout(() => {
-            scrollToSection(scrollPosition.currentSection);
+            scrollToSectionRef.current?.(scrollPosition.currentSection);
             setHasRestoredScroll(true);
           }, 100);
         }
@@ -185,8 +210,7 @@ export const useScrollNavigation = (): ScrollNavigationState &
         setHasRestoredScroll(true);
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [hasRestoredScroll]); // Intentionally excluding scrollToSection to avoid loops
+  }, [hasRestoredScroll]);
 
   // Save scroll position when section changes
   useEffect(() => {
@@ -283,13 +307,12 @@ export const useScrollNavigation = (): ScrollNavigationState &
   };
 };
 
-// Export untuk external usage (seperti di homepage)
-export const calculateScrollToResults = () => {
-  const element = document.querySelector('[data-section="results"]');
+// Shared utility for external usage
+const calculateScrollPositionStatic = (selector: string, offset: number) => {
+  const element = document.querySelector(selector);
   if (element) {
     const elementRect = element.getBoundingClientRect();
     const absoluteElementTop = elementRect.top + window.pageYOffset;
-    const offset = 60;
     const targetScrollY = absoluteElementTop - offset;
     return {
       targetScrollY,
@@ -298,4 +321,9 @@ export const calculateScrollToResults = () => {
     };
   }
   return null;
+};
+
+// Export for external usage (e.g., homepage)
+export const calculateScrollToResults = () => {
+  return calculateScrollPositionStatic('[data-section="results"]', 60);
 };
